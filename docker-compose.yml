@@ -1,0 +1,86 @@
+services:
+  hm_api:
+    image: hm_api
+    build:
+      context: .
+      dockerfile: HospitalManager.API/Dockerfile
+    container_name: aspnet-api
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8081
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ORACLE_DB_CONNECTION_STRING=User Id=admin;Password=StrongPWD1;Data Source=oracle-db:1521/FREEPDB1;
+    ports:
+      - "8081:8081"
+    depends_on:
+      - oracle-db
+      - hm_idp
+    networks:
+      - app-network
+    volumes:
+      - ./HospitalManager.API:/app
+      - /app/bin
+      - /app/obj
+
+  oracle-db:
+    image: gvenzl/oracle-xe
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      ORACLE_PASSWORD: StrongPWD1
+      APP_USER: admin
+      APP_USER_PASSWORD: StrongPWD1
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+  
+  hm_idp:
+    image: hm_idp
+    build:
+      context: .
+      dockerfile: HospitalManager.IDP/Dockerfile
+    container_name: hm_idp
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5001:5001"
+    networks:
+      - app-network
+    volumes:
+      - ./HospitalManager.IDP:/app
+      - /app/bin
+      - /app/obj
+  
+  hm_client:
+    image: hm_client
+    build:
+      context: .
+      dockerfile: HospitalManager.Client/Dockerfile
+    container_name: hm_client
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5123
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5123:5123"
+    networks:
+      - app-network
+    depends_on:
+      - hm_api
+    volumes:
+      - ./HospitalManager.Client:/app
+      - /app/bin
+      - /app/obj
+    
+volumes:
+  oracle-data:
+
+networks:
+  app-network:
+    driver: bridge
