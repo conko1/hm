@@ -27,10 +27,14 @@ This ensures that the Dockerfile for the ASP.NET Core API is located inside the 
 
 ## 4. Run Docker Compose
 
-Open a terminal (PowerShell or Command Prompt) and navigate to the folder where your docker-compose.yml is located
-Then run:
+Open a terminal (PowerShell or Command Prompt) and navigate to the folder where your docker-compose.yml is located\
+For the first run:
 ```bash
 docker-compose up --build
+```
+For subsequent runs:
+```bash
+docker-compose up
 ```
 
 ## 5. Access the Services
