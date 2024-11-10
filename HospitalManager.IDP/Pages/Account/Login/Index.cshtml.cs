@@ -36,8 +36,9 @@ public class Index : PageModel
         IEventService events,
         TestUserStore? users = null)
     {
+        //TODO: Add local user service once database with entity added
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-        _users = users ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
+        _users = users;
             
         _interaction = interaction;
         _schemeProvider = schemeProvider;
