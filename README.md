@@ -44,7 +44,12 @@ Live Client server should be accessible at `http://localhost:5123`.\
 Live IDP server should be accessible at `http://localhost:5001`.\
 Live Database should be accessible at `localhost:1521` with credentials `username: admin` and `password: StrongPWD1`.
 
-## 6. Add migrations and update database
+## 6. Add domain translation
+
+In order to be able to run identity provider on docker container there is need to add to local hosts file\
+mapping translation from hm_idp to 127.0.0.1
+
+## 7. Add migrations and update database
 
 This project is using EF Core.
 
