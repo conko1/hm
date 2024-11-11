@@ -30,7 +30,8 @@ builder.Services.AddAuthentication(options =>
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.Authority = "https://localhost:5001/";
+        options.Authority = "http://hm_idp:5001/";
+        options.RequireHttpsMetadata = false;
         options.ClientId = "hospitalmanagerclient";
         options.ClientSecret = "secret";
         options.ResponseType = "code";
@@ -48,6 +49,7 @@ builder.Services.AddAuthentication(options =>
         //     NameClaimType = "given_name",
         //     RoleClaimType = "role"
         // };
+        
     });
 
 builder.Services.AddAuthorization(options =>

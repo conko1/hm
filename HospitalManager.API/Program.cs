@@ -23,8 +23,9 @@ JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "https://localhost:5001/";
+        options.Authority = "http://hm_idp:5001/";
         options.Audience = "hospitalmanagerapi";
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new()
         {
             NameClaimType = "given_name",
