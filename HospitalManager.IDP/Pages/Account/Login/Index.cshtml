@@ -1,4 +1,5 @@
 @page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model HospitalManager.IDP.Pages.Login.Index
 
 <div class="login-page">
@@ -44,7 +45,15 @@
                                 </div>
                             }
                             
-                            <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
+                            <div class="form-group">
+                                <a
+                                    asp-page="/User/Registration/Index"
+                                    asp-route-returnUrl="@Model.Input.ReturnUrl"
+                                    class="btn btn-secondary">
+                                    Sign Up
+                                </a>
+                            </div>
+                            <button class="btn btn-primary" name="Input.Button" value="login">Sign in</button>
                             <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
                         </form>
                     </div>

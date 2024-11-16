@@ -10,7 +10,7 @@ public static class Config
         { 
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResource("roles", "Your role(s)", new [] {"role"}),
+            new IdentityResource("roles", "Your role", new [] {"role"}),
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -19,7 +19,7 @@ public static class Config
             new ApiResource(
                 "hospitalmanagerapi", 
                 "Hospital manage API",
-                new [] { "role"}
+                new [] { "roles" }
             )
             {
                 Scopes = { "hospitalmanagerapi.fullaccess" }
@@ -37,11 +37,11 @@ public static class Config
         {
             new Client()
             {
-                ClientName = "Hospital manager gallery",
+                ClientName = "Hospital manager",
                 ClientId = "hospitalmanagerclient",
                 AllowedGrantTypes = GrantTypes.Code,
-                // AllowOfflineAccess = true,
-                // UpdateAccessTokenClaimsOnRefresh = true,
+                AllowOfflineAccess = true,
+                UpdateAccessTokenClaimsOnRefresh = true,
                 RedirectUris =
                 {
                     "http://localhost:5123/signin-oidc",
