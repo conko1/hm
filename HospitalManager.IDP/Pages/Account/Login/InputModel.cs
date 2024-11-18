@@ -7,6 +7,7 @@ namespace HospitalManager.IDP.Pages.Login;
 
 public class InputModel
 {
+    public bool IsTokenAvailable { get; set; }
     [Required]
     public string? Username { get; set; }
     [Required]

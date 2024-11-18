@@ -6,12 +6,12 @@ using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
-using Duende.IdentityServer.Test;
 using HospitalManager.IDP.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace HospitalManager.IDP.Pages.Login;
 
@@ -24,6 +24,7 @@ public class Index : PageModel
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
     private readonly ILocalUserService _localUserService;
+    private readonly IRegistrationTokenHandler _registrationTokenHandler;
 
     public ViewModel View { get; set; } = default!;
 
@@ -35,19 +36,33 @@ public class Index : PageModel
         IAuthenticationSchemeProvider schemeProvider,
         IIdentityProviderStore identityProviderStore,
         IEventService events,
-        ILocalUserService localUserService)
+        ILocalUserService localUserService,
+        IRegistrationTokenHandler registrationTokenHandler)
     {
         _interaction = interaction;
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
         _events = events;
         _localUserService = localUserService ?? throw new ArgumentNullException(nameof(localUserService));
+        _registrationTokenHandler = registrationTokenHandler ?? throw new ArgumentNullException(nameof(registrationTokenHandler));
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
         await BuildModelAsync(returnUrl);
-            
+        
+        var nestedQuery = QueryHelpers.ParseQuery(new Uri("http://dummy" + returnUrl).Query);
+
+        if (nestedQuery.TryGetValue("rgtkn", out var value))
+        {
+            _registrationTokenHandler.setToken(value);
+            Input.IsTokenAvailable = true;
+        } 
+        else
+        {
+            Input.IsTokenAvailable = false;
+        }
+        
         if (View.IsExternalLoginOnly)
         {
             // we only have one option for logging in and it's an external provider

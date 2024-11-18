@@ -13,11 +13,17 @@ public class IndexModel : PageModel
 {
     private readonly ILocalUserService _localUserService;
     private readonly IIdentityServerInteractionService _interaction;
+    private readonly IRegistrationTokenHandler _registrationTokenHandler;
 
-    public IndexModel(ILocalUserService localUserService, IIdentityServerInteractionService interaction)
+    public IndexModel(
+        ILocalUserService localUserService,
+        IIdentityServerInteractionService interaction,
+        IRegistrationTokenHandler registrationTokenHandler
+        )
     {
         _localUserService = localUserService ?? throw new ArgumentNullException(nameof(localUserService));
         _interaction = interaction ?? throw new ArgumentNullException(nameof(interaction));
+        _registrationTokenHandler = registrationTokenHandler ?? throw new ArgumentNullException(nameof(registrationTokenHandler));
     }
 
     [BindProperty]
@@ -26,7 +32,9 @@ public class IndexModel : PageModel
     public IActionResult OnGet(string returnUrl)
     {
         BuildModel(returnUrl);
-
+        
+        Console.WriteLine(_registrationTokenHandler.getToken());
+        
         return Page();
     }
 

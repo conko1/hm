@@ -15,6 +15,8 @@ internal static class HostingExtensions
         builder.Services.AddScoped<IPasswordHasher<Entities.User>, PasswordHasher<Entities.User>>();
         
         builder.Services.AddScoped<ILocalUserService, LocalUserService>();
+
+        builder.Services.AddSingleton<IRegistrationTokenHandler, RegistrationTokenHandler>();
         
         builder.Services.AddDbContext<IdentityDbContext>(options =>
         {

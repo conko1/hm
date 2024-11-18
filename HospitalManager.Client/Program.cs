@@ -44,6 +44,19 @@ builder.Services.AddAuthentication(options =>
         // options.GetClaimsFromUserInfoEndpoint = true;
         options.Scope.Add("roles");
         options.Scope.Add("hospitalmanagerapi.fullaccess");
+        options.Events.OnRedirectToIdentityProvider  = ctx =>
+        {
+            foreach (var query in ctx.HttpContext.Request.Query)
+            {
+                if (query.Key != "rgtkn")
+                {
+                    continue;
+                }
+                ctx.ProtocolMessage.Parameters.Add(query.Key, query.Value);
+                return Task.CompletedTask;
+            }
+            return Task.CompletedTask;
+        };
         // options.Scope.Add("offline_access");
         // // options.ClaimActions.Remove("aud");
         // // options.ClaimActions.DeleteClaim("sid");
