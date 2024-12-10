@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <Folder Include="Components\Pages\Doctor\" />
-      <Folder Include="Components\Pages\Pacient\" />
     </ItemGroup>
 
 </Project>
