@@ -11,4 +11,9 @@
       <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.10" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Pages\Doctor\" />
+      <Folder Include="Components\Pages\Pacient\" />
+    </ItemGroup>
+
 </Project>
