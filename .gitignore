@@ -27,6 +27,8 @@ bld/
 [Ll]og/
 
 HospitalManager.IDP/HospitalIDP.db
+HospitalManager.IDP/HospitalIDP.db-shm
+HospitalManager.IDP/HospitalIDP.db-wal
 
 # Visual Studio 2015 cache/options directory
 .vs/
