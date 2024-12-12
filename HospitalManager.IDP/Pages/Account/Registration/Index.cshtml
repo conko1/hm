@@ -1,5 +1,5 @@
 @page
-@model HospitalManager.IDP.Pages.User.Registration.IndexModel
+@model HospitalManager.IDP.Pages.Account.Registration.IndexModel
 
 @{
     <div>
@@ -25,6 +25,14 @@
                                     <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
                                 </div>
 
+                                @* TODO: Remove after invitation implementation *@
+                                <div>
+                                    <input type="radio" asp-for="Input.Role" checked value="Pacient" id="rolePacient" />
+                                    <label for="rolePacient">Pacient</label>
+                                    <input type="radio" asp-for="Input.Role" value="Doktor" id="roleDoktor" />
+                                    <label for="roleDoktor">Doktor</label>
+                                </div>
+                                
                                 <div class="form-group">
                                     <button class="btn btn-primary">Register</button>
                                 </div>

@@ -30,6 +30,7 @@ internal static class HostingExtensions
                 options.Authentication.CookieSameSiteMode = SameSiteMode.Lax;
                 options.Authentication.CheckSessionCookieSameSiteMode = SameSiteMode.Lax;
             })
+            .AddProfileService<LocalUserProfileService>()
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiResources(Config.ApiResources)
             .AddInMemoryApiScopes(Config.ApiScopes)

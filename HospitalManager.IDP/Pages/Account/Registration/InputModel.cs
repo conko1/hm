@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HospitalManager.IDP.Pages.User.Registration;
+namespace HospitalManager.IDP.Pages.Account.Registration;
 
 public class InputModel
 {
@@ -14,4 +14,7 @@ public class InputModel
     [DataType(DataType.Password)]
     [Display(Name="Password")]
     public string Password { get; set; }
+    
+    //TODO: Remove after invitation implementation
+    public string Role { get; set; }
 }
