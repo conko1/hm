@@ -1,0 +1,52 @@
+﻿@page "/patients"
+@attribute [StreamRendering]
+
+<PageTitle>Patients</PageTitle>
+<h1>Zoznam pridelených pacientov</h1>
+<table class="table mt-5">
+    <thead>
+    <tr>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Birth number</th>
+        <th scope="col">Handle</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var patient in patients)
+    {
+    <tr>
+        <td>@patient.FirstName</td>
+        <td>@patient.LastName</td>
+        <td>@patient.BirthNumber</td>
+        <td>
+            <NavLink href="/patientDetails/111111" class="btn btn-secondary">Test Route</NavLink>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+[Inject] private NavigationManager NavigationManager { get; set; }
+
+private List<Patient> patients = new List<Patient>
+{
+    new Patient { FirstName = "Mark", LastName = "Otto", BirthNumber = "111111" },
+    new Patient { FirstName = "Jacob", LastName = "Thornton", BirthNumber = "000000" },
+    new Patient { FirstName = "Larry", LastName = "Bird", BirthNumber = "88888888" }
+}; 
+
+private void NavigateToDetails(string birthNumber) {
+    Console.WriteLine($"Navigating to patient details with BirthNumber: {birthNumber}");
+    NavigationManager.NavigateTo($"/patientDetails/{birthNumber}");
+}
+
+
+private class Patient
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string BirthNumber { get; set; }
+}
+}
