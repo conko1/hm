@@ -1,0 +1,30 @@
+﻿
+<div class="card m-3" style="width: 100%; border-radius: 8px;">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title" style="font-weight: bold; color: #343a40;">@ExaminationName</h5>
+            <span class="badge bg-secondary" style="align-self: center;">@State</span>
+        </div>
+
+        <p class="card-text text-muted" style="margin-bottom: 8px;">Last updated: @Edited</p>
+        <p class="card-text">Creted: @Created</p>
+
+        <div class="d-flex justify-content-between">
+            <a href="#" class="btn btn-link text-primary">Detail</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ExaminationName { get; set; }
+
+    [Parameter]
+    public DateTime Edited { get; set; }
+
+    [Parameter]
+    public DateTime Created { get; set; }
+
+    [Parameter]
+    public string State { get; set; }
+}

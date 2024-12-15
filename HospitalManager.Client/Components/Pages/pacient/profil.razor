@@ -1,9 +1,54 @@
 ﻿@page "/profil"
+@using HospitalManager.Client.Components.Layout.Patient
 
-<h3>profil</h3>
+<div class="container row">
 
+    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="bi bi-person-circle m-5" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+    </svg>
+
+    <div class="row align-items-center mb-3 mt-4">
+        <p class="col-auto text-muted fs-5 fw-bold">Your contact detils</p>
+        <hr class="col"/>
+    </div>
+
+    <div class="ms-4">
+        <ProfileField Text="Given name(s)" Value="@Name"/>
+
+        <ProfileField Text="Surname" Value="@Surname" />
+
+        <ProfileField Text="Phone number" Value="@Phone" />
+
+        <ProfileField Text="E-mail" Value="@Mail" />
+
+        <ProfileField Text="Street" Value="@Street" />
+
+        <ProfileField Text="City" Value="@City" />
+
+        <ProfileField Text="Post code (PSČ)" Value="@PostCode" />
+    </div>
+
+
+    <div class="row align-items-center mb-3 mt-5">
+        <p class="col-auto text-muted fs-5 fw-bold">Health insurance company</p>
+        <hr class="col" />
+    </div>
+
+    <div class="ms-4">
+        <ProfileField Text="Health insurance company"/>
+    </div>
+
+    <button type="button" class="btn btn-success w-25 m-4">Save</button>
+</div>
 
 
 @code {
-
+    public string Name { get; set; } = "michal";
+    public string Surname { get; set; } = "bezo";
+    public string Phone { get; set; } = "526622";
+    public string Mail { get; set; } = "michalko@gmail.com";
+    public string Street { get; set; } = "Vajnorska";
+    public string City { get; set; } = "Bratislava";
+    public string PostCode { get; set; } = "255 65";
 }

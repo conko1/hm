@@ -1,4 +1,24 @@
-﻿<h3>Reciepes</h3>
+﻿@page "/recipes"
+@using HospitalManager.Client.Components.Layout.Patient
+
+
+
+
+<h1 class="text-primary fw-bold">Actual recipes</h1>
+@* nepouzite a neexpirovane *@
+<RecipeBar MedicineName="xanax"></RecipeBar>
+<RecipeBar MedicineName="coaxil"></RecipeBar>
+<RecipeBar MedicineName="lexaurin"></RecipeBar>
+
+
+<h4 class="text-primary fw-bold"> in past</h4>
+@* pouzite a (expirovane alebo neexpirovane) *@
+<RecipeBar MedicineName="stoptusin"></RecipeBar>
+<RecipeBar MedicineName="nurofen"></RecipeBar>
+<RecipeBar MedicineName="aspirin"></RecipeBar>
+<RecipeBar MedicineName="ibalgin"></RecipeBar>
+<RecipeBar MedicineName="paralen"></RecipeBar>
+<RecipeBar MedicineName="aspirin"></RecipeBar>
 
 @code {
 

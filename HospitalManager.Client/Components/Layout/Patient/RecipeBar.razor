@@ -1,0 +1,37 @@
+﻿
+
+<div class="card m-3" style="width: 100%; border-radius: 8px;">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title" style="font-weight: bold; color: #343a40;">@MedicineName</h5>
+            <span class="badge bg-secondary" style="align-self: center;">@(Used ? "used" : "nedd to use")</span>
+        </div>
+
+        <p class="card-text text-muted" style="margin-bottom: 8px;">Last updated: @Edited</p>
+        <p class="card-text">Creted: @Created</p>
+
+        <div class="d-flex justify-content-between">
+            <a href="#" class="btn btn-link text-primary">Detail</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string DoctorName { get; set; } = "Vydra";
+    [Parameter]
+    public string MedicineName { get; set; } = "xanax";
+    [Parameter]
+    public string Dosage { get; set; } = "2times a day";
+    [Parameter]
+    public int Quantity { get; set; } = 2;
+    [Parameter]
+    public DateTime RecipeExpiration { get; set; }
+    [Parameter]
+    public DateTime Created { get; set; }
+    [Parameter]
+    public DateTime Edited { get; set; }
+    [Parameter]
+    public bool Used { get; set; } = true;
+
+}

@@ -1,0 +1,69 @@
+@page "/doctors"
+
+<div class="container mt-4">
+
+    <h1 class="fw-bold text-primary">Choose your doctor</h1>
+    <p class="text-muted">Choose from the list the practice you want to communicate with, or just start typing</p>
+
+    <div class="input-group mb-4">
+        <input type="text" class="form-control" placeholder="Search for a doctor or clinic" @bind="searchQuery" aria-label="Search">
+        <button class="btn btn-secondary" @onclick="Search">
+            search
+        </button>
+    </div>
+
+    <h5 class="fw-bold text-primary">Most recently visited doctors:</h5>
+
+    @foreach (var clinic in recentClinics)
+    {
+        <div class="card mt-5" style="border-radius: 8px;">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-circle text-primary fs-3 me-3"></i>
+                    <div>
+                        <h5 class="card-title fw-bold mb-1">@clinic.Name</h5>
+                        <p class="mb-1">
+                            <i class="bi bi-person text-primary"></i>
+                            <span>@clinic.Doctor</span>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-geo-alt text-primary"></i>
+                            <span>@clinic.Address</span>
+                        </p>
+                        <p class="text-muted">Created: @clinic.LastVisited.ToString("dd. MM. yyyy")</p>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-link text-primary" @onclick="() => SelectClinic(clinic)">Select</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string searchQuery;
+
+    private List<Department> recentClinics = new List<Department>
+    {
+        new Department { Name = "Eye clinic", Doctor = "MUDR. mario vydra", Address = "Bratislava", LastVisited = new DateTime(2024, 12, 13) }
+    };
+
+    private void Search()
+    {
+
+    }
+
+    private void SelectClinic(Department department)
+    {
+        //prepnut na examination
+    }
+
+    public class Department
+    {
+        public string Name { get; set; }
+        public string Doctor { get; set; }
+        public string Address { get; set; }
+        public DateTime LastVisited { get; set; }
+    }
+}

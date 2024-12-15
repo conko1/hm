@@ -1,0 +1,17 @@
+﻿
+
+<div class="form-group mb-4">
+    <label for="inputField" class="form-label text-primary fw-bold">@Text</label>
+    <input id="inputField" class="form-control border-success" placeholder="@Value"/>
+</div>
+
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public string Value { get; set; } 
+
+}
+

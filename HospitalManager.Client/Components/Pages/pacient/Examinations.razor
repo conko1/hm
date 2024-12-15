@@ -1,5 +1,24 @@
-﻿<h3>Examinations</h3>
+﻿@page "/examinations"
+@using HospitalManager.Client.Components.Layout.Patient
+
+<h1 class="text-primary fw-bold">My ongoing requests (pocet)</h1>
+<p class="text-muted">Here are your current requests in this practice.</p>
+
+<button type="button" class="btn btn-success m-3" @onClick="OnCreateNewRequestClick">Create new request</button>
+
+<h4 class="text-primary fw-bold">Resolved requests</h4>
+<p>Here are your previous requests in this practice.</p>
+
+@for (int i = 0; i < 3; i++)
+{
+    <ExaminationBar ExaminationName="konzultovat vysledky"></ExaminationBar>
+}
+
+
 
 @code {
+    private void OnCreateNewRequestClick()
+    {
 
+    }
 }
