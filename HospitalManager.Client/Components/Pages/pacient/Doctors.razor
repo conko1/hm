@@ -1,18 +1,18 @@
-@page "/doctors"
+﻿@page "/doctors"
 
 <div class="container mt-4">
 
-    <h1 class="fw-bold text-primary">Choose your doctor</h1>
-    <p class="text-muted">Choose from the list the practice you want to communicate with, or just start typing</p>
+    <h1 class="fw-bold text-primary">Zvoľte lekára</h1>
+    <p class="text-muted">Vyberte prosím lekára, ktorého chcete navštíviť</p>
 
     <div class="input-group mb-4">
-        <input type="text" class="form-control" placeholder="Search for a doctor or clinic" @bind="searchQuery" aria-label="Search">
+        <input type="text" class="form-control" placeholder="Hľadať lekára" @bind="searchQuery" aria-label="Search">
         <button class="btn btn-secondary" @onclick="Search">
-            search
+            hľadať
         </button>
     </div>
 
-    <h5 class="fw-bold text-primary">Most recently visited doctors:</h5>
+    <h5 class="fw-bold text-primary">Naposledy navštívení lekári: </h5>
 
     @foreach (var clinic in recentClinics)
     {
@@ -67,3 +67,4 @@
         public DateTime LastVisited { get; set; }
     }
 }
+

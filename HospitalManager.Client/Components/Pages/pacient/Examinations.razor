@@ -1,13 +1,15 @@
 ﻿@page "/examinations"
 @using HospitalManager.Client.Components.Layout.Patient
 
-<h1 class="text-primary fw-bold">My ongoing requests (pocet)</h1>
-<p class="text-muted">Here are your current requests in this practice.</p>
+<h1 class="text-primary fw-bold">Moje aktívne požiadavky (pocet)</h1>
+<p class="text-muted">
+    Tu nájdete prehľad Vašich doposiaľ zadaných požiadaviek v tejto ordinácii. Kliknutím na požiadavku zobrazíte jej detaily a prebiehajúcu komunikáciu.
+</p>
 
-<button type="button" class="btn btn-success m-3" @onClick="OnCreateNewRequestClick">Create new request</button>
+<button type="button" class="btn btn-success m-3" @onClick="OnCreateNewRequestClick">Vytvoriť novú požiadavku</button>
 
-<h4 class="text-primary fw-bold">Resolved requests</h4>
-<p>Here are your previous requests in this practice.</p>
+<h4 class="text-primary fw-bold">Vyriešené požiadavky</h4>
+<p>Tu nájdete prehľad minulých požiadaviek v tejto ordinácii. V detaile si zobrazíte podrobnosti.</p>
 
 @for (int i = 0; i < 3; i++)
 {
