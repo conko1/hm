@@ -14,10 +14,7 @@
 
     <ItemGroup>
       <Folder Include="Components\Pages\Patient\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\HospitalManager.IDP\HospitalManager.IDP.csproj" />
+      <Folder Include="Components\Service\" />
     </ItemGroup>
 
 </Project>
