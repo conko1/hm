@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace HospitalManager.IDP.Pages.User.Registration;
+namespace HospitalManager.IDP.Pages.Account.Registration;
 
 [AllowAnonymous]
 [SecurityHeaders]
@@ -53,7 +53,7 @@ public class IndexModel : PageModel
             BuildModel(Input.ReturnUrl);
             return Page(); 
         }
-
+        
         var userToCreate = new Entities.User
         {
             Username = Input.Username,
@@ -61,11 +61,11 @@ public class IndexModel : PageModel
             IsActive = true
         };
         
-        // userToCreate.Claims.Add(new Entities.UserClaim()
-        // {
-        //     Type = "Role",
-        //     Value = 
-        // });
+        userToCreate.Claims.Add(new Entities.UserClaim()
+        {
+            Type = "Role",
+            Value = Input.Role
+        });
         
         _localUserService.AddUser(userToCreate, Input.Password);
         await _localUserService.SaveChangesAsync();

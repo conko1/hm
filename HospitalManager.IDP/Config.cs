@@ -10,7 +10,7 @@ public static class Config
         { 
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResource("roles", "Your role", new [] {"role"}),
+            new IdentityResource("roles", "Your role(s)", new [] {"Role"}),
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -19,7 +19,7 @@ public static class Config
             new ApiResource(
                 "hospitalmanagerapi", 
                 "Hospital manage API",
-                new [] { "roles" }
+                new [] { "Role" }
             )
             {
                 Scopes = { "hospitalmanagerapi.fullaccess" }

@@ -1,7 +1,20 @@
-﻿@page "/"
+﻿@using System.Text
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+@using Microsoft.IdentityModel.Protocols.OpenIdConnect
+
 @inject IHttpClientFactory httpClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<Home> _logger
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+@page "/"
+
+@attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
@@ -11,26 +24,59 @@ Welcome to your new app.
 
 @code {
     protected override async Task OnInitializedAsync()
+    {
+        await LogIdentityInformation();
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
         {
-            var httpClient = httpClientFactory.CreateClient("APIClient");
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
-            try
-            {
-                var request = new HttpRequestMessage(HttpMethod.Get, "/api/");
-                var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
 
-                response.EnsureSuccessStatusCode();
-                var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
 
-                Console.WriteLine(responseString);
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Request error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+    private async Task LogIdentityInformation()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var context = HttpContextAccessor.HttpContext;
+        
+        var identityToken  = await context.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+        var accessToken = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+        var refreshToken = await context.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+        var userClaimsStringBuilder = new StringBuilder();
+        foreach (var claim in authState.User.Claims)
+        {
+            userClaimsStringBuilder.Append($"\nClaim type: {claim.Type} - Claim value: {claim.Value}");
+        }
+
+        _logger.LogInformation($"Identity token & user claims: \n{identityToken} \n{userClaimsStringBuilder}");
+        _logger.LogInformation($"Access token: \n{accessToken}");
+        _logger.LogInformation($"Refresh token: \n{refreshToken}");
+    }
+
+    private async Task Logout()
+    {
+        var context = HttpContextAccessor.HttpContext;
+        if (context != null)
+        {
+            await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await context.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+        }
+
+        NavigationManager.NavigateTo("/");
     }
 }

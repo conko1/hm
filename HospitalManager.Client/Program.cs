@@ -41,9 +41,16 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = "secret";
         options.ResponseType = "code";
         options.SaveTokens = true;
-        // options.GetClaimsFromUserInfoEndpoint = true;
+        options.GetClaimsFromUserInfoEndpoint = true;
         options.Scope.Add("roles");
         options.Scope.Add("hospitalmanagerapi.fullaccess");
+        options.ClaimActions.MapJsonKey("Role", "Role");
+        options.ClaimActions.DeleteClaim("idp");
+        options.TokenValidationParameters = new()
+        {
+            NameClaimType = "given_name",
+            RoleClaimType = "role"
+        };
         options.Events.OnRedirectToIdentityProvider  = ctx =>
         {
             foreach (var query in ctx.HttpContext.Request.Query)
@@ -57,16 +64,6 @@ builder.Services.AddAuthentication(options =>
             }
             return Task.CompletedTask;
         };
-        // options.Scope.Add("offline_access");
-        // // options.ClaimActions.Remove("aud");
-        // // options.ClaimActions.DeleteClaim("sid");
-        // // options.ClaimActions.DeleteClaim("idp");
-        // options.ClaimActions.MapJsonKey("role", "role");
-        // options.TokenValidationParameters = new()
-        // {
-        //     NameClaimType = "given_name",
-        //     RoleClaimType = "role"
-        // };
         
     });
 
