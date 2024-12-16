@@ -26,9 +26,4 @@ public class MedicineRepository : IMedicineRepository
             .FirstOrDefaultAsync();
         return medicine;
     }
-
-    public async Task SaveChanges()
-    {
-        await _context.SaveChangesAsync();
-    }
 }

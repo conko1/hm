@@ -6,5 +6,4 @@ public interface IMedicineRepository
 {
     Task<IEnumerable<Medicine>> GetMedicines();
     Task<Medicine> GetMedicineById(int id);
-    Task SaveChanges();
 }
