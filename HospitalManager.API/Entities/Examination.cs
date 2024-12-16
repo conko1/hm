@@ -12,6 +12,8 @@ public class Examination : BaseEntity
     [Required]
     public Patient Patient { get; set; }
     
+    public Recipe? Recipe { get; set; }
+    
     [Required]
     public DateTime ExaminationDate { get; set; }
     
