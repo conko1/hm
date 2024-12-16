@@ -7,9 +7,9 @@ namespace HospitalManager.API.Services;
 
 public interface IRecipeService
 {
-    Task<ServiceResponse<IEnumerable<Recipe>>> GetRecipes();
-    Task<ServiceResponse<Recipe>> GetRecipe(int id);
-    Task<ServiceResponse<Recipe>> UpdateRecipe(Recipe recipe, JsonPatchDocument<RecipeForUpdateDTO> patchDocument);
-    Task<ServiceResponse<Recipe>> AddRecipe(Recipe recipe);
+    Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes();
+    Task<ServiceResponse<RecipeDTO>> GetRecipe(int id);
+    Task<ServiceResponse<RecipeDTO>> UpdateRecipe(Recipe recipe, JsonPatchDocument<RecipeForUpdateDTO> patchDocument);
+    Task<ServiceResponse<RecipeDTO>> AddRecipe(RecipeForCreateDTO createRecipe);
     Task<ServiceResponse> DeleteRecipe(int id);
 }
