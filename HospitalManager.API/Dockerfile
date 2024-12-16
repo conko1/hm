@@ -4,7 +4,9 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-COPY . .
+
+COPY ./HospitalManager.API/ ./
+COPY ./HospitalManager.Shared/ ../HospitalManager.Shared/
 
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"

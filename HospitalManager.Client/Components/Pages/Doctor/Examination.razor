@@ -1,0 +1,151 @@
+﻿@page "/examination/{birthNumber}"
+
+<PageTitle>Examination</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Informácie o pacientovi</h4>
+            <ul class="list-unstyled">
+                <li>
+                    <strong>Alergie:</strong> @patient.Allergies
+                </li>
+                <li>
+                    <strong>Krvná skupina:</strong> @patient.BloodType
+                </li>
+                <li>
+                    <strong>Pravidelné užívané lieky:</strong> @patient.Medications
+                </li>
+                <li>
+                    <strong>Očkovania:</strong> @patient.Vaccinations
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="symptoms">Symptómy</label>
+                <textarea id="symptoms" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="diagnosis">Diagnóza</label>
+                <textarea id="diagnosis" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="treatment">Treatment</label>
+                <textarea id="treatment" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="notes">Liečba</label>
+                <textarea id="notes" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary mt-2" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas">
+                Uložiť
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editPatientOffcanvas">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Pridať liek a dávkovanie</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="form-group mb-3">
+            <label for="medicineSelect">Vyberte liek</label>
+            <select id="medicineSelect" class="form-select" @bind="selectedMedicineId">
+                <option value="" disabled selected>Vyberte liek...</option>
+                @foreach (var medicine in medicines)
+                {
+                <option value="@medicine.Id">@medicine.Name (@medicine.Dosage)</option>
+                }
+            </select>
+        </div>
+        <div class="form-group mb-3">
+            <label for="dosage">Dávkovanie</label>
+            <input type="text" id="dosage" class="form-control" @bind="newRecipe.Dosage" placeholder="Zadajte dávkovanie">
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-success" @onclick="CreateRecipe">Pridať</button>
+        </div>
+    </div>
+</div>
+
+@code {
+[Parameter] public string BirthNumber { get; set; }
+
+private Patient patient = new Patient
+{
+BirthNumber = "1234567890",
+Allergies = "Pollen, Dust",
+BloodType = "A+",
+Medications = "Aspirin",
+Vaccinations = "Flu, Covid-19"
+};
+
+private List<Medicine> medicines = new List<Medicine>
+{
+new Medicine { Id = 1, Name = "Paracetamol", Description = "Pain reliever", Dosage = "500mg" },
+new Medicine { Id = 2, Name = "Ibuprofen", Description = "Anti-inflammatory", Dosage = "200mg" }
+};
+
+private int? selectedMedicineId;
+private Recipe newRecipe = new Recipe();
+
+private void CreateRecipe()
+{
+if (selectedMedicineId.HasValue)
+{
+var selectedMedicine = medicines.FirstOrDefault(m => m.Id == selectedMedicineId.Value);
+newRecipe.Medicine = selectedMedicine?.Name;
+newRecipe.CreatedAt = DateTime.Now;
+
+// Handle saving recipe logic here (e.g., save to database)
+
+// Reset fields after saving
+selectedMedicineId = null;
+newRecipe = new Recipe();
+}
+}
+
+public class Patient
+{
+public string BirthNumber { get; set; }
+public string Allergies { get; set; }
+public string BloodType { get; set; }
+public string Medications { get; set; }
+public string Vaccinations { get; set; }
+}
+
+public class Medicine
+{
+public int Id { get; set; }
+public string Name { get; set; }
+public string Description { get; set; }
+public string Dosage { get; set; }
+}
+
+public class Recipe
+{
+public string Medicine { get; set; }
+public string Dosage { get; set; }
+public DateTime CreatedAt { get; set; }
+}
+}

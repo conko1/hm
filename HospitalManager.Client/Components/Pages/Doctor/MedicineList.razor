@@ -1,0 +1,67 @@
+﻿@page "/medicine"
+@attribute [StreamRendering]
+@using System.Text.Json
+@using HospitalManager.Shared.Models
+
+@inject IHttpClientFactory httpClientFactory
+
+<h1 class="text-center my-4">Zoznam Liekov</h1>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Názov</th>
+                <th>Popis</th>
+                <th>Množstvo</th>
+                <th>Cena</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var medicine in Medicines)
+            {
+            <tr>
+                <td>@medicine.Name</td>
+                <td>@medicine.Description</td>
+                <td>@medicine.Quantity</td>
+                <td>@medicine.Price.ToString("F2")</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<MedicineDTO> Medicines = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+            
+            var responseString = await response.Content.ReadAsStringAsync();
+            
+            Console.WriteLine(responseString);
+            
+            Medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
+            
+            Console.WriteLine($"Fetched {Medicines.Count} medicines.");
+        }
+        catch (HttpRequestException ex)
+        {
+            
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+}

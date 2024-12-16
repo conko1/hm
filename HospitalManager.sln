@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalManager.IDP", "Hosp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalManager.Client", "HospitalManager.Client\HospitalManager.Client.csproj", "{2EDE0F41-CB8E-405B-9D26-EFE7B9B7E84D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalManager.Shared", "HospitalManager.Shared\HospitalManager.Shared.csproj", "{94178C8C-2CC0-4DD1-81D8-9577D531D679}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2EDE0F41-CB8E-405B-9D26-EFE7B9B7E84D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EDE0F41-CB8E-405B-9D26-EFE7B9B7E84D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EDE0F41-CB8E-405B-9D26-EFE7B9B7E84D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
