@@ -8,8 +8,5 @@ namespace HospitalManager.API.Repositories
         Task<Insurance> GetById(int id);
         Task<IEnumerable<Insurance>> GetAll();
         Task Add(Insurance insurance);
-        Task Update(Insurance insurance);
-        Task Delete(Insurance insurance);
-
     }
 }

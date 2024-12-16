@@ -6,39 +6,39 @@ namespace HospitalManager.API.Repositories
 {
     public class PatientRepository : IPatientRepository
     {
-        private readonly ApiDbContext context;
+        private readonly ApiDbContext _context;
 
         public PatientRepository(ApiDbContext context)
         { 
-            this.context = context;
+            this._context = context;
         }
 
         public async Task Add(Patient patient)
         {
-            await this.context.Patients.AddAsync(patient);
-            await this.context.SaveChangesAsync();
+            await this._context.Patients.AddAsync(patient);
+            await this._context.SaveChangesAsync();
         }
 
         public async Task<Patient> GetById(int id)
         {
-            return await this.context.Patients.FindAsync(id);
+            return await this._context.Patients.FindAsync(id);
         }
 
         public async Task Update(Patient patient)
         {
-            this.context.Patients.Update(patient);
-            await this.context.SaveChangesAsync();
+            this._context.Patients.Update(patient);
+            await this._context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Patient>> GetAll()
         {
-            return await this.context.Patients.ToListAsync();
+            return await this._context.Patients.ToListAsync();
         }
 
         public async Task Delete(Patient patient)
         {
-            this.context.Patients.Remove(patient);
-            await this.context.SaveChangesAsync();
+            this._context.Patients.Remove(patient);
+            await this._context.SaveChangesAsync();
         }
     }
 }

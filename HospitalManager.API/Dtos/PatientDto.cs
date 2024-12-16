@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HospitalManager.API.Dtos
 {
-    public class PatientDto
+    public class PatientDTO
     {
         public int Id { get; set; }
         public int InsuranceId { get; set; }

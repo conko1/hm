@@ -6,39 +6,27 @@ namespace HospitalManager.API.Repositories
 {
     public class InsuranceRepository : IInsuranceRepository
     {
-        private readonly ApiDbContext context;
+        private readonly ApiDbContext _context;
 
         public InsuranceRepository(ApiDbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public async Task Add(Insurance insurance)
         {
-            await this.context.Insurances.AddAsync(insurance);
-            await this.context.SaveChangesAsync();
-        }
-
-        public async Task Delete(Insurance insurance)
-        {
-            this.context.Insurances.Remove(insurance);
-            await this.context.SaveChangesAsync();
+            await this._context.Insurances.AddAsync(insurance);
+            await this._context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Insurance>> GetAll()
         {
-            return await this.context.Insurances.ToListAsync();
+            return await this._context.Insurances.ToListAsync();
         }
 
         public async Task<Insurance> GetById(int id)
         {
-            return await this.context.Insurances.FindAsync(id);
-        }
-
-        public async Task Update(Insurance insurance)
-        {
-            this.context.Insurances.Update(insurance);
-            await this.context.SaveChangesAsync();
+            return await this._context.Insurances.FindAsync(id);
         }
     }
 }

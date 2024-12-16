@@ -7,8 +7,7 @@ namespace HospitalManager.API.Controllers
 {
 
     [ApiController]
-    [Authorize]
-    [Route("api/")]
+    [Route("api/patients")]
     public class PatientController : Controller
     {
         private readonly IPatientService patientService;
@@ -38,7 +37,7 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPatients(int id)
+        public async Task<IActionResult> GetAllPatients()
         {
             try
             {
@@ -74,7 +73,7 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePatient([FromBody] PatientDto patientDto)
+        public async Task<IActionResult> UpdatePatient([FromBody] PatientDTO patientDto)
         {
             try
             {
@@ -84,6 +83,20 @@ namespace HospitalManager.API.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $" Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPatient([FromBody] PatientDTO patientDto)
+        {
+            try
+            {
+                await this.patientService.Add(patientDto);
+                return Ok();
             }
             catch (Exception ex)
             {
