@@ -29,11 +29,22 @@ public class RecipeRepository : IRecipeRepository
         return recipes;
     }
 
-    public async Task<Recipe?> GetRecipeById(int id)
+    public async Task<Recipe?> GetRecipeById(int id, bool includeMedicine = false)
     {
-        var recipe = await _context.Recipes
-            .Where(r => r.Id == id)
-            .FirstOrDefaultAsync();
+        Recipe? recipe;
+        if (includeMedicine)
+        {
+            recipe = await _context.Recipes
+                .Where(r => r.Id == id)
+                .Include(r => r.Medicines)
+                .FirstOrDefaultAsync();
+        }
+        else
+        {
+            recipe = await _context.Recipes
+                .Where(r => r.Id == id)
+                .FirstOrDefaultAsync();
+        }
         return recipe;
     }
 

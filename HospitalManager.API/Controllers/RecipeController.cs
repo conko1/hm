@@ -16,9 +16,20 @@ public class RecipeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipes([FromQuery] bool includeMedicine = false)
+    public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipes()
     {
-        var result = await _recipeService.GetRecipes(includeMedicine);
+        var result = await _recipeService.GetRecipes(true);
+        return Ok(result.Data);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipe(int id)
+    {
+        var result = await _recipeService.GetRecipe(id, true);
+        if (result is { IsSuccess: false, StatusCode: 404 })
+        {
+            return NotFound(result.Data);
+        }
         return Ok(result.Data);
     }
 }

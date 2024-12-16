@@ -26,9 +26,17 @@ public class RecipeService : IRecipeService
         return ServiceResponse<IEnumerable<RecipeDTO>>.Success(recipesDto);
     }
 
-    public Task<ServiceResponse<RecipeDTO>> GetRecipe(int id)
+    public async Task<ServiceResponse<RecipeDTO>> GetRecipe(int id, bool includeMedicine = false)
     {
-        throw new NotImplementedException();
+        var recipes = await _recipeRepository.GetRecipeById(id, includeMedicine);
+        if (recipes == null)
+        {
+            return ServiceResponse<RecipeDTO>.Failure("Recipe not found", 404);
+        }
+        
+        var recipeDto = _mapper.Map<RecipeDTO>(recipes);
+        
+        return ServiceResponse<RecipeDTO>.Success(recipeDto);
     }
 
     public Task<ServiceResponse<RecipeDTO>> UpdateRecipe(Recipe recipe, JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
