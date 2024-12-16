@@ -6,7 +6,7 @@ namespace HospitalManager.API.Entities;
 [Table("Patient")]
 public class Patient : BaseEntity
 {
-    public Insurance? insurance { get; set; }
+    public Insurance? Insurance { get; set; }
     
     [Required]
     public Person Person { get; set; }
@@ -26,4 +26,9 @@ public class Patient : BaseEntity
     [MaxLength(2000)]
     public string? Vaccines { get; set; }
     
+    [Required]
+    public int DoctorId { get; set; }
+
+    [ForeignKey(nameof(DoctorId))] 
+    public Doctor? Doctor { get; set; }
 }
