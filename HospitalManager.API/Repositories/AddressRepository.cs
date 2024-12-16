@@ -1,34 +1,38 @@
-﻿using HospitalManager.API.Entities;
+﻿using HospitalManager.API.DbContexts;
+using HospitalManager.API.Entities;
 
 namespace HospitalManager.API.Repositories
 {
     public class AddressRepository : IAddressRepository
     {
-        private readonly IAddressRepository _addressRepository;
+        private readonly ApiDbContext _context;
 
-        public AddressRepository(IAddressRepository addressRepository)
+        public AddressRepository(ApiDbContext context)
         { 
-            this._addressRepository = addressRepository;
+            this._context = context;
         }
 
-        public Task Add(Address address)
+        public async Task Add(Address address)
         {
-            throw new NotImplementedException();
+            await this._context.Addresses.AddAsync(address);
+            await this._context.SaveChangesAsync();
         }
 
-        public Task Delete(Address address)
+        public async Task Delete(Address address)
         {
-            throw new NotImplementedException();
+            this._context.Addresses.Remove(address);
+            await this._context.SaveChangesAsync();
         }
 
-        public Task<Address> GetById(int id)
+        public async Task<Address> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await this._context.Addresses.FindAsync(id);
         }
 
-        public Task Update(Address address)
+        public async Task Update(Address address)
         {
-            throw new NotImplementedException();
+            this._context.Addresses.Update(address);
+            await this._context.SaveChangesAsync();
         }
     }
 }
