@@ -90,7 +90,7 @@ namespace HospitalManager.API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("/register")]
         public async Task<IActionResult> AddPatient([FromBody] PatientDTO patientDto)
         {
             try
