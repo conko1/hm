@@ -32,6 +32,10 @@ public static class HostingExtensions
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
         builder.Services.AddScoped<IPatientService, PatientService>();
 
+        builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+        builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+        
         builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
         builder.Services.AddScoped<IDoctorService, DoctorService>();
         
