@@ -24,4 +24,7 @@ public class Person
     public string Telephone { get; set; }
     
     public Address Address { get; set; }
+    
+    [Required]
+    public User User { get; set; }
 }
