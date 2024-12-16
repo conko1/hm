@@ -1,78 +1,44 @@
 ﻿@page "/medicine"
 @attribute [StreamRendering]
-
+@using HospitalManager.Shared.Models
+@inject HttpClient Http
 
 <h1 class="text-center my-4">Zoznam Liekov</h1>
-
 <div class="container">
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
-                <tr>
-                    <th>Názov</th>
-                    <th>Popis</th>
-                    <th>Množstvo</th>
-                    <th>Cena</th>
-                </tr>
+            <tr>
+                <th>Názov</th>
+                <th>Popis</th>
+                <th>Množstvo</th>
+                <th>Cena</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var medicine in PaginatedMedicines)
-                {
-                    <tr>
-                        <td>@medicine.Name</td>
-                        <td>@medicine.Manufacturer</td>
-                        <td></td>
-                        <td>@medicine.Price.ToString("F2")</td>
-                    </tr>
-                }
+            @foreach (var medicine in Medicines)
+            {
+            <tr>
+                <td>@medicine.Name</td>
+                <td>@medicine.Description</td>
+                <td>@medicine.Quantity</td>
+                <td>@medicine.Price.ToString("F2")</td>
+            </tr>
+            }
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
-    private List<Medicine> Medicines = new();
-    private List<Medicine> PaginatedMedicines = new();
-    private int CurrentPage = 1;
-    private int PageSize = 5;
-    private int TotalPages => (int)Math.Ceiling((double)Medicines.Count / PageSize);
-
-    protected override void OnInitialized()
+    private List<MedicineDTO> Medicines = new();
+    protected override async Task OnInitializedAsync()
     {
-
-        Medicines = Enumerable.Range(1, 50).Select(i => new Medicine
+        
+        var response = await Http.GetFromJsonAsync<List<MedicineDTO>>("http://localhost:8081/api/medicine");
+        if (response != null)
         {
-            Name = $"Liečivo {i}",
-            Manufacturer = $"Výrobca {i}",
-            Price = Math.Round(new Random().NextDouble() * 100, 2)
-        }).ToList();
-
-        UpdatePaginatedMedicines();
-    }
-
-    private void ChangePage(int pageNumber)
-    {
-        if (pageNumber < 1 || pageNumber > TotalPages)
-        {
-            return;
+            Medicines = response;
         }
-
-        CurrentPage = pageNumber;
-        UpdatePaginatedMedicines();
-    }
-
-    private void UpdatePaginatedMedicines()
-    {
-        PaginatedMedicines = Medicines
-            .Skip((CurrentPage - 1) * PageSize)
-            .Take(PageSize)
-            .ToList();
-    }
-
-    private class Medicine
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Manufacturer { get; set; } = string.Empty;
-        public double Price { get; set; } = 0.0;
     }
 }
