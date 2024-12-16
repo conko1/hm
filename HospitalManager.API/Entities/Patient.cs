@@ -6,7 +6,7 @@ namespace HospitalManager.API.Entities;
 [Table("Patient")]
 public class Patient : BaseEntity
 {
-    public Insurance insurance { get; set; }
+    public Insurance? insurance { get; set; }
     
     [Required]
     public Person Person { get; set; }
@@ -15,15 +15,15 @@ public class Patient : BaseEntity
     public string BirthNumber { get; set; }
     
     [MaxLength(2000)]
-    public string Allergies { get; set; }
+    public string? Allergies { get; set; }
     
     [MaxLength(2000)]
-    public string BloodGroup { get; set; }
+    public string? BloodGroup { get; set; }
     
     [MaxLength(2000)]
-    public string Medications { get; set; }
+    public string? Medications { get; set; }
     
     [MaxLength(2000)]
-    public string Vaccines { get; set; }
+    public string? Vaccines { get; set; }
     
 }
