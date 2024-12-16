@@ -16,4 +16,8 @@
       <Folder Include="Components\Pages\Patient\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HospitalManager.Shared\HospitalManager.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

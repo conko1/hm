@@ -1,4 +1,4 @@
-namespace HospitalManager.API.Dtos;
+namespace HospitalManager.Shared.Models;
 
 public class MedicineDTO
 {

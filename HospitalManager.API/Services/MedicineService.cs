@@ -1,5 +1,5 @@
 using AutoMapper;
-using HospitalManager.API.Dtos;
+using HospitalManager.Shared.Models;
 using HospitalManager.API.Repositories;
 
 namespace HospitalManager.API.Services;

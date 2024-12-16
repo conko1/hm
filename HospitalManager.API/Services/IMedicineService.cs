@@ -1,4 +1,4 @@
-using HospitalManager.API.Dtos;
+using HospitalManager.Shared.Models;
 
 namespace HospitalManager.API.Services;
 
