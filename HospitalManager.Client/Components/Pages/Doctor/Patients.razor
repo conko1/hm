@@ -22,7 +22,7 @@
             <th scope="col">Rodné číslo</th>
             <th scope="col">Tel. číslo</th>
             <th scope="col" style="width: 160px">Detaily pacienta</th>
-            <th scope="col" style="width: 160px">Prehliedka</th>
+            <th scope="col" style="width: 100px">Prehliadka</th>
         </tr>
         </thead>
         <tbody>
@@ -37,7 +37,7 @@
                 <NavLink href="@($"/patients/details/{patient.BirthNumber}")" class="btn btn-info">Detaily pacienta</NavLink>
             </td>
             <td>
-                <NavLink href="@($"/examination/{patient.BirthNumber}")" class="btn btn-info">Vytvoriť prehliadku</NavLink>
+                <NavLink href="@($"/examination/{patient.BirthNumber}")" class="btn btn-success">Vytvoriť</NavLink>
             </td>
         </tr>
         }
