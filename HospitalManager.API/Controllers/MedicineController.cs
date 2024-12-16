@@ -1,5 +1,6 @@
-using HospitalManager.API.Dtos;
+
 using HospitalManager.API.Services;
+using HospitalManager.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Controllers;
