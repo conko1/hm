@@ -4,9 +4,10 @@ namespace HospitalManager.API.Repositories
 {
     public interface IPatientRepository
     {
-        Patient GetById(int id);
-        void Add(Patient patient);
-        void Update(Patient patient);
-        void Delete(Patient patient);
+        Task<Patient> GetById(int id);
+        Task<IEnumerable<Patient>> GetAll();
+        Task Add(Patient patient);
+        Task Update(Patient patient);
+        Task Delete(Patient patient);
     }
 }
