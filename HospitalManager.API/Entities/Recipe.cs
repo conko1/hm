@@ -14,7 +14,10 @@ public class Recipe : BaseEntity
     [Required]
     public Examination Examination { get; set; }
     
+    [ForeignKey(nameof(Examination))]
+    public int ExaminationId { get; set; }
+    
     [Required]
-    [Column(TypeName = "NUMBER(1)")]
-    public bool Used { get; set; } = false;
+    [Range(0, 1)]
+    public int Used { get; set; }
 }

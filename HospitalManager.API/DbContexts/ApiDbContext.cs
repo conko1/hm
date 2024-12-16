@@ -20,6 +20,7 @@ public class ApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
         modelBuilder.Entity<Person>().HasData(
             new Person()
             {
@@ -62,7 +63,7 @@ public class ApiDbContext : DbContext
                 User = null,
             }
         );
-
+        
         modelBuilder.Entity<Doctor>().HasData(
             new Doctor()
             {
@@ -100,6 +101,27 @@ public class ApiDbContext : DbContext
                 UpdatedAt = DateTime.Now
             }
         );
+
+        modelBuilder.Entity<Examination>().HasData(
+            new Examination()
+            {
+                Id = 1,
+                DoctorId = 1,
+                PatientId = 2,
+                ExaminationDate = DateTime.Now.AddMonths(-1),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Examination()
+            {
+                Id = 2,
+                DoctorId = 2,
+                PatientId = 1,
+                ExaminationDate = DateTime.Now.AddMonths(2),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
         
         modelBuilder.Entity<Medicine>().HasData(
             new Medicine() {
@@ -123,8 +145,45 @@ public class ApiDbContext : DbContext
                 Price = 6.40m,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
+            },
+            new Medicine { 
+                Id = 3,
+                Name = "Ibuprofen",
+                Price = 6.25m,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             }
         );
+        
+        modelBuilder.Entity<Recipe>().HasData(
+            new Recipe
+            {
+                Id = 1,
+                Expiration = DateTime.Now.AddMonths(1),
+                Used = 0,
+                ExaminationId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Recipe { 
+                Id = 2,
+                Expiration = DateTime.Now.AddMonths(2),
+                Used = 1,
+                ExaminationId = 2,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+
+        modelBuilder.Entity<Recipe>()
+            .HasMany(r => r.Medicines)
+            .WithMany(m => m.Recipes)
+            .UsingEntity(j => j.HasData(
+                new { RecipesId = 1, MedicinesId = 1 },
+                new { RecipesId = 1, MedicinesId = 2 },
+                new { RecipesId = 2, MedicinesId = 2 },
+                new { RecipesId = 2, MedicinesId = 3 }
+            ));
         
         base.OnModelCreating(modelBuilder);
     }

@@ -9,8 +9,14 @@ public class Examination : BaseEntity
     [Required]
     public Doctor Doctor { get; set; }
     
+    [ForeignKey(nameof(Doctor))]
+    public int DoctorId { get; set; }
+    
     [Required]
     public Patient Patient { get; set; }
+    
+    [ForeignKey(nameof(Patient))]
+    public int PatientId { get; set; }
     
     [Required]
     public DateTime ExaminationDate { get; set; }
