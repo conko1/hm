@@ -3,6 +3,7 @@ using System;
 using HospitalManager.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216174242_AddedNullablePerson")]
+    partial class AddedNullablePerson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,6 +107,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Diagnosis")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -114,6 +118,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -124,10 +129,12 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Symptoms")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Treatment")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -212,9 +219,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Dosage")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Name")
@@ -225,9 +234,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Quantity")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("SideEffects")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -241,26 +252,26 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6859),
+                            CreatedAt = new DateTime(2024, 12, 16, 17, 42, 41, 952, DateTimeKind.Local).AddTicks(8763),
                             Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
                             Dosage = "100 ml",
                             Name = "0,9 % Chlorid sodný Baxter-Viaflo",
                             Price = 6.79m,
                             Quantity = "1000 ml",
                             SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6860)
+                            UpdatedAt = new DateTime(2024, 12, 16, 17, 42, 41, 952, DateTimeKind.Local).AddTicks(8764)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6864),
+                            CreatedAt = new DateTime(2024, 12, 16, 17, 42, 41, 952, DateTimeKind.Local).AddTicks(8768),
                             Description = "Liečba rôznych bakteriálnych infekcií",
                             Dosage = "800 mg",
                             Name = "Abaktal 400 mg",
                             Price = 6.40m,
                             Quantity = "10 tabliet",
                             SideEffects = "Hnačka, nevolnosť, vracanie",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6865)
+                            UpdatedAt = new DateTime(2024, 12, 16, 17, 42, 41, 952, DateTimeKind.Local).AddTicks(8769)
                         });
                 });
 
@@ -273,6 +284,7 @@ namespace HospitalManager.API.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Allergies")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -281,6 +293,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<string>("BloodGroup")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -291,6 +304,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Medications")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -298,10 +312,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Vaccines")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("insuranceCode")
+                    b.Property<int>("insuranceCode")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
@@ -403,6 +418,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NVARCHAR2(254)");
 
                     b.Property<string>("SubjectId")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -489,7 +505,9 @@ namespace HospitalManager.API.Migrations
 
                     b.HasOne("HospitalManager.API.Entities.Insurance", "insurance")
                         .WithMany()
-                        .HasForeignKey("insuranceCode");
+                        .HasForeignKey("insuranceCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
 
