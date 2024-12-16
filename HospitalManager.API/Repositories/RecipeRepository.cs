@@ -13,9 +13,19 @@ public class RecipeRepository : IRecipeRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Recipe>> GetAllRecipes()
+    public async Task<IEnumerable<Recipe>> GetAllRecipes(bool includeMedicine = false)
     {
-        var recipes = await _context.Recipes.ToListAsync();
+        List<Recipe> recipes;
+        if (includeMedicine)
+        {
+            recipes = await _context.Recipes
+                .Include(r => r.Medicines)
+                .ToListAsync();
+        }
+        else
+        {
+            recipes = await _context.Recipes.ToListAsync();
+        }
         return recipes;
     }
 

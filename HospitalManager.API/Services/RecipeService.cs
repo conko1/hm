@@ -4,6 +4,7 @@ using HospitalManager.API.Repositories;
 using HospitalManager.Shared.Models;
 using HospitalManager.Shared.Service;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Services;
 
@@ -18,12 +19,11 @@ public class RecipeService : IRecipeService
         _mapper = mapper;
     }
 
-    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes()
+    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(bool includeMedicine = false)
     {
-        // var recipes = await _recipeRepository.GetAllRecipes();
-        // var recipesDto = _mapper.Map<IEnumerable<RecipeDTO>>(recipes);
-        
-        throw new NotImplementedException();
+        var recipes = await _recipeRepository.GetAllRecipes(includeMedicine);
+        var recipesDto = _mapper.Map<IEnumerable<RecipeDTO>>(recipes);
+        return ServiceResponse<IEnumerable<RecipeDTO>>.Success(recipesDto);
     }
 
     public Task<ServiceResponse<RecipeDTO>> GetRecipe(int id)
