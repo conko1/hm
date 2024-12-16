@@ -1,7 +1,9 @@
 ﻿@page "/medicine"
 @attribute [StreamRendering]
+@using System.Text.Json
 @using HospitalManager.Shared.Models
-@inject HttpClient Http
+
+@inject IHttpClientFactory httpClientFactory
 
 <h1 class="text-center my-4">Zoznam Liekov</h1>
 <div class="container">
@@ -34,11 +36,32 @@
     private List<MedicineDTO> Medicines = new();
     protected override async Task OnInitializedAsync()
     {
-        
-        var response = await Http.GetFromJsonAsync<List<MedicineDTO>>("http://localhost:8081/api/medicine");
-        if (response != null)
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
         {
-            Medicines = response;
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+            
+            var responseString = await response.Content.ReadAsStringAsync();
+            
+            Console.WriteLine(responseString);
+            
+            Medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
+            
+            Console.WriteLine($"Fetched {Medicines.Count} medicines.");
+        }
+        catch (HttpRequestException ex)
+        {
+            
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }
