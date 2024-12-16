@@ -41,15 +41,10 @@
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
-
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-
             response.EnsureSuccessStatusCode();
-            
             var responseString = await response.Content.ReadAsStringAsync();
-            
             Console.WriteLine(responseString);
-            
             Medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
             
             Console.WriteLine($"Fetched {Medicines.Count} medicines.");

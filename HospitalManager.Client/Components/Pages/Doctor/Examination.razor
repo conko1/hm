@@ -1,5 +1,7 @@
 ﻿@page "/examination/{birthNumber}"
-
+@using HospitalManager.Shared.Models
+@inject IHttpClientFactory httpClientFactory
+@using System.Text.Json
 <PageTitle>Examination</PageTitle>
 
 <div class="container">
@@ -74,22 +76,49 @@
                 <option value="" disabled selected>Vyberte liek...</option>
                 @foreach (var medicine in medicines)
                 {
-                <option value="@medicine.Id">@medicine.Name (@medicine.Dosage)</option>
+                <option value="@medicine.Id">@medicine.Name</option>
                 }
             </select>
         </div>
         <div class="form-group mb-3">
             <label for="dosage">Dávkovanie</label>
-            <input type="text" id="dosage" class="form-control" @bind="newRecipe.Dosage" placeholder="Zadajte dávkovanie">
+            @* <input type="text" id="dosage" class="form-control" @bind="newRecipe.Dosage" placeholder="Zadajte dávkovanie"> *@
         </div>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-success" @onclick="CreateRecipe">Pridať</button>
+            @* <button class="btn btn-success" @onclick="CreateRecipe">Pridať</button> *@
         </div>
     </div>
 </div>
 
 @code {
 [Parameter] public string BirthNumber { get; set; }
+private List<MedicineDTO> medicines = new List<MedicineDTO>();
+
+private int? selectedMedicineId;
+protected override async Task OnInitializedAsync()
+{
+    var httpClient = httpClientFactory.CreateClient("APIClient");
+
+    try
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
+        var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        response.EnsureSuccessStatusCode();
+        var responseString = await response.Content.ReadAsStringAsync();
+        medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
+
+        Console.WriteLine($"Fetched {medicines.Count} medicines.");
+    }
+    catch (HttpRequestException ex)
+    {
+        Console.WriteLine($"Request error: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Unexpected error: {ex.Message}");
+    }
+}
+
 
 private Patient patient = new Patient
 {
@@ -100,31 +129,6 @@ Medications = "Aspirin",
 Vaccinations = "Flu, Covid-19"
 };
 
-private List<Medicine> medicines = new List<Medicine>
-{
-new Medicine { Id = 1, Name = "Paracetamol", Description = "Pain reliever", Dosage = "500mg" },
-new Medicine { Id = 2, Name = "Ibuprofen", Description = "Anti-inflammatory", Dosage = "200mg" }
-};
-
-private int? selectedMedicineId;
-private Recipe newRecipe = new Recipe();
-
-private void CreateRecipe()
-{
-if (selectedMedicineId.HasValue)
-{
-var selectedMedicine = medicines.FirstOrDefault(m => m.Id == selectedMedicineId.Value);
-newRecipe.Medicine = selectedMedicine?.Name;
-newRecipe.CreatedAt = DateTime.Now;
-
-// Handle saving recipe logic here (e.g., save to database)
-
-// Reset fields after saving
-selectedMedicineId = null;
-newRecipe = new Recipe();
-}
-}
-
 public class Patient
 {
 public string BirthNumber { get; set; }
@@ -134,18 +138,6 @@ public string Medications { get; set; }
 public string Vaccinations { get; set; }
 }
 
-public class Medicine
-{
-public int Id { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
-public string Dosage { get; set; }
-}
 
-public class Recipe
-{
-public string Medicine { get; set; }
-public string Dosage { get; set; }
-public DateTime CreatedAt { get; set; }
-}
+
 }
