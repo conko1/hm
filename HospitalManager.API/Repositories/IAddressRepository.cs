@@ -8,5 +8,6 @@ namespace HospitalManager.API.Repositories
         Task Add(Address address);
         Task Update(Address address);
         Task Delete(Address address);
+        Task<Address> GetByDetails(string city, string street, int streetNumber, int postalCode);
     }
 }

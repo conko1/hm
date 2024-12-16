@@ -44,7 +44,28 @@ public class ApiDbContext : DbContext
                 UpdatedAt = DateTime.Now
             }
         );
-        
+
+        modelBuilder.Entity<Insurance>().HasData(
+            new Insurance()
+            {
+                Code = 27,
+                FullName = "Union zdravotná poisťovňa, a.s.",
+                Abbreviation = "UNION"
+            },
+            new Insurance()
+            {
+                Code = 24,
+                FullName = "Dôvera zdravotná poisťovňa, a.s.",
+                Abbreviation = "Dôvera"
+            },
+            new Insurance()
+            {
+                Code = 25,
+                FullName = "Všeobecná zdravotná poisťovňa, a.s.",
+                Abbreviation = "VZP"
+            }
+        );
+
         base.OnModelCreating(modelBuilder);
     }
 }

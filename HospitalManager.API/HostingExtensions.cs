@@ -33,6 +33,11 @@ public static class HostingExtensions
 
         builder.Services.AddScoped<IPatientService, PatientService>();
 
+        builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+        builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+
+
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

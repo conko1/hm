@@ -1,5 +1,6 @@
 ﻿using HospitalManager.API.DbContexts;
 using HospitalManager.API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManager.API.Repositories
 {
@@ -22,6 +23,11 @@ namespace HospitalManager.API.Repositories
         {
             this._context.Addresses.Remove(address);
             await this._context.SaveChangesAsync();
+        }
+
+        public async Task<Address> GetByDetails(string city, string street, int streetNumber, int postalCode)
+        {
+            return await _context.Addresses.FirstOrDefaultAsync(a => a.City == city && a.Street == street && a.StreetNumber == streetNumber && a.PostalCode == postalCode);
         }
 
         public async Task<Address> GetById(int id)
