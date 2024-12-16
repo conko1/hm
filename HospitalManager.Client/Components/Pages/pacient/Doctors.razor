@@ -1,5 +1,9 @@
 ﻿@page "/doctors"
+@using HospitalManager.Shared.Models
+@using System.Text.Json
 @rendermode InteractiveServer
+
+@inject IHttpClientFactory httpClientFactory
 
 <div class="container mt-4">
     <h1 class="fw-bold text-primary">Zvoľte lekára</h1>
@@ -12,9 +16,9 @@
         </button>
     </div>
 
-    <h5 class="fw-bold text-primary">Naposledy navštívení lekári: </h5>
+    <h5 class="fw-bold text-primary">Zobrazení lekári: </h5>
 
-    @foreach (var doctor in recentDoctors)
+    @foreach (var doctor in filteredDoctors)
     {
         <div class="card mt-5" style="border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
             <div class="card-body">
@@ -34,7 +38,7 @@
                             <i class="bi bi-geo-alt text-primary"></i>
                             <span>@doctor.Phone</span>
                         </p>
-                        <p class="text-muted">Naposledny navštívené: @doctor.LastVisited.ToString("dd. MM. yyyy")</p>
+                        @* <p class="text-muted">Naposledny navštívené: @doctor.LastVisited.ToString("dd. MM. yyyy")</p> *@
                     </div>
                 </div>
                 <div class="text-end">
@@ -52,35 +56,148 @@
 </div>
 
 @code {
+    [Inject] private NavigationManager NavigationManager { get; set; }
     private string searchQuery;
     private string message;
 
-    private List<Doctor> recentDoctors = new List<Doctor>
-    {
-        new Doctor { Department = "Eye clinic", FirstName = "MUDR. mario vydra", Specialization = "chirurg", Phone = "023566", LastVisited = new DateTime(2024, 12, 13) }
-    };
+    private List<Doctor> doctors = new List<Doctor>();
+    private List<Doctor> filteredDoctors = new List<Doctor>();
+    // {
+    //     new Doctor { Department = "Eye clinic", FirstName = "MUDR. mario vydra", Specialization = "chirurg", Phone = "023566", LastVisited = new DateTime(2024, 12, 13) }
+    // };
+
 
     private void Search()
     {
-        Console.WriteLine("search");
-        searchQuery = "search";
+
+        filteredDoctors = doctors.Where(p => p.FirstName == searchQuery).ToList();
+
+
+        StateHasChanged();
     }
 
     private void SelectDoctor()
     {
         message = "funguje";
         Console.WriteLine("funguje");
+        NavigationManager.NavigateTo($"/examinations");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/doctor/");
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(responseString);
+
+            doctors = JsonSerializer.Deserialize<List<Doctor>>(responseString);
+            filteredDoctors = doctors;
+
+            Console.WriteLine($"Fetched {doctors.Count} medicines.");
+        }
+        catch (HttpRequestException ex)
+        {
+
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+
+        doctors.Add(new Doctor() 
+        { 
+            BirthNumber = "12",
+            FirstName = "Ján", 
+            LastName = "Malchovský", 
+            Specialization = "chirurg", 
+            Department = "Chirurgia", 
+            Phone = "+42190854563", 
+            Mail = "jan.malchovsky@gmail.com"
+        }
+        );
+
+        doctors.Add(new Doctor()
+            {
+                BirthNumber = "13",
+                FirstName = "Michal",
+                LastName = "Pekný",
+                Specialization = "Kadiológ",
+                Department = "Chirurgia",
+                Phone = "+42190854563",
+                Mail = "michal.pekny@gmail.com"
+            }
+        );
+
+        doctors.Add(new Doctor()
+            {
+                BirthNumber = "14",
+                FirstName = "Peter",
+                LastName = "dobry",
+                Specialization = "psychológ, psychiater",
+                Department = "Psychiatria",
+                Phone = "+42190854563",
+                Mail = "pere.dobry@gmail.com"
+            }
+        );
+
+        doctors.Add(new Doctor()
+            {
+                BirthNumber = "15",
+                FirstName = "Michal",
+                LastName = "Pekný",
+                Specialization = "Kadiológ",
+                Department = "Chirurgia",
+                Phone = "+42190854563",
+                Mail = "michal.pekny@gmail.com"
+            }
+        );
+
+        doctors.Add(new Doctor()
+            {
+                BirthNumber = "16",
+                FirstName = "Mário",
+                LastName = "Milý",
+                Specialization = "Gynekológ",
+                Department = "Ginekológia",
+                Phone = "+42190854563",
+                Mail = "mario.mily@gmail.com"
+            }
+        );
+
+        doctors.Add(new Doctor()
+            {
+                BirthNumber = "17",
+                FirstName = "Martin",
+                LastName = "Dobrý",
+                Specialization = "Chirurg",
+                Department = "Neurochirurgia",
+                Phone = "+42190854563",
+                Mail = "martin.dobry@gmail.com"
+            }
+        );
+        filteredDoctors = doctors;
     }
 
     public class Doctor
     {
+        public int Id { get; set; }
+        public string BirthNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Specialization { get; set; }
         public string Department { get; set; }
         public string Phone { get; set; }
         public string Mail { get; set; }
-        public DateTime LastVisited { get; set; }
     }
 }
 
