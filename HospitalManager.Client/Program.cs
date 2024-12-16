@@ -72,6 +72,7 @@ builder.Services.AddAuthorization(options =>
     // Add policies
 });
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -89,7 +90,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

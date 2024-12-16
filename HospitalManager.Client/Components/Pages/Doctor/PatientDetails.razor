@@ -1,7 +1,6 @@
-﻿@page "/patientDetails/{birthNumber}"
+﻿@page "/patients/details/{birthNumber}"
 
 <PageTitle>Patient Details</PageTitle>
-
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-4">
@@ -29,11 +28,11 @@
             <ul class="list-unstyled">
                 <li><strong>Telefón:</strong> +421 912 345 678</li>
                 <li><strong>Email:</strong> jan.novak@email.com</li>
-                <li><strong>Kontakt v prípade núdze:</strong> 0911 234 567</li>
+                <li><strong>Kontakt v prípade núzdze:</strong> 0911 234 567</li>
             </ul>
         </div>
     </div>
-    
+
     <div class="mt-4">
         <h4>Recipe</h4>
         <table class="table table-bordered">
@@ -42,6 +41,7 @@
                 <th style="width: 200px;">Medicine</th>
                 <th style="width: 200px;">Dosage</th>
                 <th style="width: 200px;">Doctor</th>
+                <th style="width: 200px;">Vytvorený</th>
             </tr>
             </thead>
             <tbody>
@@ -49,17 +49,18 @@
                 <td>Paracetamol</td>
                 <td>500 mg</td>
                 <td>2x denne</td>
+                <td>28.2.2222</td>
             </tr>
             <tr>
                 <td>Aspirin</td>
                 <td>100 mg</td>
                 <td>1x denne</td>
+                <td>28.2.2222</td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    
     <div class="mt-4">
         <h4>Examination</h4>
         <table class="table table-bordered">
@@ -68,6 +69,7 @@
                 <th style="width: 200px;">Názov vyšetrenia</th>
                 <th style="width: 200px;">Date</th>
                 <th style="width: 200px;">Diagnosis</th>
+                <th style="width: 200px;">Vytvorený</th>
             </tr>
             </thead>
             <tbody>
@@ -75,14 +77,69 @@
                 <td>Krvné testy</td>
                 <td>15. november 2024</td>
                 <td>Všetky hodnoty v norme</td>
+                <td>28.2.2222</td>
             </tr>
             <tr>
                 <td>RTG hrudníka</td>
                 <td>20. november 2024</td>
                 <td>Bez nálezu</td>
+                <td>28.2.2222</td>
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+<div class="d-flex justify-content-end">
+<button class="btn btn-warning mt-2" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas">
+    Editovať údaje
+</button>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editPatientOffcanvas" aria-labelledby="editPatientOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="editPatientOffcanvasLabel">Editovať údaje pacienta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form>
+            <div class="mb-3">
+                <label for="patientName" class="form-label">Meno</label>
+                <input type="text" class="form-control" id="patientName">
+            </div>
+            <div class="mb-3">
+                <label for="birthDate" class="form-label">Dátum narodenia</label>
+                <input type="date" class="form-control" id="birthDate" value="1980-01-01">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">PSČ</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Mesto</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Štát</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Ulica</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Číslo domu</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Telefón</label>
+                <input type="text" class="form-control" id="phone">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email">
+            </div>
+            <button type="submit" class="btn btn-success">Uložiť zmeny</button>
+        </form>
     </div>
 </div>
 

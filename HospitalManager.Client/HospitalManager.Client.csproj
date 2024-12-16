@@ -14,7 +14,6 @@
 
     <ItemGroup>
       <Folder Include="Components\Pages\Patient\" />
-      <Folder Include="Components\Service\" />
     </ItemGroup>
 
 </Project>
