@@ -26,7 +26,13 @@ public static class HostingExtensions
         builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 
         builder.Services.AddScoped<IMedicineService, MedicineService>();
-        
+
+        builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
+
+        builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
+        builder.Services.AddScoped<IPatientService, PatientService>();
+
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
