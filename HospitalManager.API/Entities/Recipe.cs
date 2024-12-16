@@ -9,13 +9,10 @@ public class Recipe : BaseEntity
     public IEnumerable<Medicine> Medicines { get; set; } = new List<Medicine>();
     
     [Required]
-    public Doctor Doctor { get; set; }  
-    
-    [Required]
-    public Patient Patient { get; set; }
-    
-    [Required]
     public DateTime Expiration { get; set; }
+    
+    [Required]
+    public Examination Examination { get; set; }
     
     [Required]
     [Column(TypeName = "NUMBER(1)")]
