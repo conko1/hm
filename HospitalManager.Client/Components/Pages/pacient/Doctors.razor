@@ -1,7 +1,7 @@
 ﻿@page "/doctors"
+@rendermode InteractiveServer
 
 <div class="container mt-4">
-
     <h1 class="fw-bold text-primary">Zvoľte lekára</h1>
     <p class="text-muted">Vyberte prosím lekára, ktorého chcete navštíviť</p>
 
@@ -14,56 +14,72 @@
 
     <h5 class="fw-bold text-primary">Naposledy navštívení lekári: </h5>
 
-    @foreach (var clinic in recentClinics)
+    @foreach (var doctor in recentDoctors)
     {
-        <div class="card mt-5" style="border-radius: 8px;">
+        <div class="card mt-5" style="border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-person-circle text-primary fs-3 me-3"></i>
                     <div>
-                        <h5 class="card-title fw-bold mb-1">@clinic.Name</h5>
+                        <h5 class="card-title fw-bold mb-1">@doctor.Department</h5>
                         <p class="mb-1">
                             <i class="bi bi-person text-primary"></i>
-                            <span>@clinic.Doctor</span>
+                            <span>@doctor.FirstName</span>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-person text-primary"></i>
+                            <span>@doctor.Specialization</span>
                         </p>
                         <p class="mb-1">
                             <i class="bi bi-geo-alt text-primary"></i>
-                            <span>@clinic.Address</span>
+                            <span>@doctor.Phone</span>
                         </p>
-                        <p class="text-muted">Created: @clinic.LastVisited.ToString("dd. MM. yyyy")</p>
+                        <p class="text-muted">Naposledny navštívené: @doctor.LastVisited.ToString("dd. MM. yyyy")</p>
                     </div>
                 </div>
                 <div class="text-end">
-                    <button class="btn btn-link text-primary" @onclick="() => SelectClinic(clinic)">Select</button>
+                    <button class="btn btn-link text-primary" @onclick="SelectDoctor">Select</button>
                 </div>
             </div>
         </div>
     }
+
+
+    <div> 
+        <p>sprava @message
+            sprava @searchQuery</p>
+    </div>
 </div>
 
 @code {
     private string searchQuery;
+    private string message;
 
-    private List<Department> recentClinics = new List<Department>
+    private List<Doctor> recentDoctors = new List<Doctor>
     {
-        new Department { Name = "Eye clinic", Doctor = "MUDR. mario vydra", Address = "Bratislava", LastVisited = new DateTime(2024, 12, 13) }
+        new Doctor { Department = "Eye clinic", FirstName = "MUDR. mario vydra", Specialization = "chirurg", Phone = "023566", LastVisited = new DateTime(2024, 12, 13) }
     };
 
     private void Search()
     {
-
+        Console.WriteLine("search");
+        searchQuery = "search";
     }
 
-    private void SelectClinic(Department department)
+    private void SelectDoctor()
     {
-        //prepnut na examination
+        message = "funguje";
+        Console.WriteLine("funguje");
     }
 
-    public class Department
+    public class Doctor
     {
-        public string Name { get; set; }
-        public string Doctor { get; set; }
-        public string Address { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Specialization { get; set; }
+        public string Department { get; set; }
+        public string Phone { get; set; }
+        public string Mail { get; set; }
         public DateTime LastVisited { get; set; }
     }
 }
