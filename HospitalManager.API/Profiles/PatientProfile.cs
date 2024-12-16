@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using HospitalManager.API.Dtos;
 using HospitalManager.API.Entities;
+using HospitalManager.Shared.Models;
 
 namespace HospitalManager.API.Profiles
 {

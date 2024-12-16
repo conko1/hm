@@ -1,7 +1,6 @@
-﻿
-using HospitalManager.API.Dtos;
-using HospitalManager.API.Entities;
+﻿using HospitalManager.API.Entities;
 using HospitalManager.API.Repositories;
+using HospitalManager.Shared.Models;
 
 namespace HospitalManager.API.Services
 {

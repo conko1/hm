@@ -1,6 +1,4 @@
-﻿using HospitalManager.API.Entities;
-
-namespace HospitalManager.API.Dtos
+﻿namespace HospitalManager.Shared.Models
 {
     public class PersonDTO
     {

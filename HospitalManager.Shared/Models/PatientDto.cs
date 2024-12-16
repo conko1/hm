@@ -1,8 +1,4 @@
-﻿using HospitalManager.API.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace HospitalManager.API.Dtos
+﻿namespace HospitalManager.Shared.Models
 {
     public class PatientDTO
     {

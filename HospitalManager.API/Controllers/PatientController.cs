@@ -1,6 +1,5 @@
-﻿using HospitalManager.API.Dtos;
-using HospitalManager.API.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using HospitalManager.API.Services;
+using HospitalManager.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Controllers
@@ -8,7 +7,7 @@ namespace HospitalManager.API.Controllers
 
     [ApiController]
     [Route("api/patients")]
-    public class PatientController : Controller
+    public class PatientController : ControllerBase
     {
         private readonly IPatientService patientService;
 
