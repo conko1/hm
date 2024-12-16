@@ -1,61 +1,40 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
+using HospitalManager.API;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers()
-    .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
+Log.Information("Starting up");
 
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddSwaggerGen();
-
-// var oracleDbConnectionString = builder.Configuration.GetValue<string>("ORACLE_DB_CONNECTION_STRING");
-// builder.Services.AddDbContext<AppDbContext>(options => options.UseOracle(oracleDbConnectionString));
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = "http://hm_idp:5001/";
-        options.Audience = "hospitalmanagerapi";
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new()
-        {
-            NameClaimType = "given_name",
-            RoleClaimType = "role",
-            ValidTypes = new [] {"at+jwt"}
-        };
-    });
-
-builder.Services.AddAuthorization(options =>
+try
 {
-    // Add policies
-});
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+    var builder = WebApplication.CreateBuilder(args);
+    
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console(
+            outputTemplate:
+            "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+        .Enrich.FromLogContext()
+        .ReadFrom.Configuration(ctx.Configuration));
+    
+    var app = builder
+        .ConfigureServices()
+        .ConfigurePipeline();
+    
+    app.Run();
+}
+catch (HostAbortedException)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.CloseAndFlush();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Unhandled exception");
+}
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
 }
 
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
