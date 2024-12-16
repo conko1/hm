@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20241216130144_Initial migration")]
+    [Migration("20241216144233_Initial migration")]
     partial class Initialmigration
     {
         /// <inheritdoc />
@@ -125,6 +125,9 @@ namespace HospitalManager.API.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Symptoms")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -143,6 +146,8 @@ namespace HospitalManager.API.Migrations
                     b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
+
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("Examination");
                 });
@@ -232,9 +237,6 @@ namespace HospitalManager.API.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("SideEffects")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
@@ -244,9 +246,33 @@ namespace HospitalManager.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipeId");
-
                     b.ToTable("Medicine");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(13),
+                            Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
+                            Dosage = "100 ml",
+                            Name = "0,9 % Chlorid sodný Baxter-Viaflo",
+                            Price = 6.79m,
+                            Quantity = "1000 ml",
+                            SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
+                            UpdatedAt = new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(14)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(19),
+                            Description = "Liečba rôznych bakteriálnych infekcií",
+                            Dosage = "800 mg",
+                            Name = "Abaktal 400 mg",
+                            Price = 6.40m,
+                            Quantity = "10 tabliet",
+                            SideEffects = "Hnačka, nevolnosť, vracanie",
+                            UpdatedAt = new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(20)
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Patient", b =>
@@ -406,6 +432,21 @@ namespace HospitalManager.API.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("MedicineRecipe", b =>
+                {
+                    b.Property<int>("MedicinesId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("RecipesId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("MedicinesId", "RecipesId");
+
+                    b.HasIndex("RecipesId");
+
+                    b.ToTable("MedicineRecipe");
+                });
+
             modelBuilder.Entity("HospitalManager.API.Entities.Doctor", b =>
                 {
                     b.HasOne("HospitalManager.API.Entities.Person", "Person")
@@ -431,9 +472,17 @@ namespace HospitalManager.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HospitalManager.API.Entities.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Invitation", b =>
@@ -445,13 +494,6 @@ namespace HospitalManager.API.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HospitalManager.API.Entities.Medicine", b =>
-                {
-                    b.HasOne("HospitalManager.API.Entities.Recipe", null)
-                        .WithMany("Medicines")
-                        .HasForeignKey("RecipeId");
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Patient", b =>
@@ -515,14 +557,24 @@ namespace HospitalManager.API.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("MedicineRecipe", b =>
+                {
+                    b.HasOne("HospitalManager.API.Entities.Medicine", null)
+                        .WithMany()
+                        .HasForeignKey("MedicinesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HospitalManager.API.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HospitalManager.API.Entities.Doctor", b =>
                 {
                     b.Navigation("Patients");
-                });
-
-            modelBuilder.Entity("HospitalManager.API.Entities.Recipe", b =>
-                {
-                    b.Navigation("Medicines");
                 });
 #pragma warning restore 612, 618
         }
