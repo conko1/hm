@@ -9,13 +9,15 @@ namespace HospitalManager.API.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IInsuranceRepository _insuranceRepository;
+        private readonly IPersonRepository _personRepository;
         private readonly IMapper _mapper;
 
-        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository)
+        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository, IPersonRepository personRepository)
         { 
             this._patientRepository = patientRepository;
             this._mapper = mapper;
             this._insuranceRepository = insuranceRepository;
+            this._personRepository = personRepository;
         }
         public async Task Add(PatientDTO patientDto)
         {
@@ -24,15 +26,20 @@ namespace HospitalManager.API.Services
             {
                 throw new ArgumentException($"Patient with ID {patientDto.Id} already exists.");
             }
-            else {
+            else 
+            {
+                Person newPerson = new Person();
+                newPerson.BirthNumber = patientDto.BirthNumber;
+                await this._personRepository.Add(newPerson);
                 Patient newPatient = new Patient();
-                newPatient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+                //newPatient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+                newPatient.Person = newPerson;
                 newPatient.Allergies = patientDto.Allergies;
                 newPatient.BloodGroup = patientDto.BloodGroup;
                 newPatient.Medications = patientDto.Medications;
                 newPatient.Vaccines = patientDto.Vaccines;
 
-                this._patientRepository.Add(newPatient);
+                await this._patientRepository.Add(newPatient);
             }  
         }
 
