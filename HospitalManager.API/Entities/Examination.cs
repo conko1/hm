@@ -18,14 +18,14 @@ public class Examination : BaseEntity
     public DateTime ExaminationDate { get; set; }
     
     [MaxLength(2000)]
-    public string Symptoms { get; set; }
+    public string? Symptoms { get; set; }
     
     [MaxLength(2000)]
-    public string Diagnosis { get; set; }
+    public string? Diagnosis { get; set; }
     
     [MaxLength(2000)]
-    public string Treatment { get; set; }
+    public string? Treatment { get; set; }
     
     [MaxLength(2000)]
-    public string Notes { get; set; }
+    public string? Notes { get; set; }
 }
