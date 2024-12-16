@@ -37,6 +37,15 @@ public class DoctorRepository : IDoctorRepository
         return doctor;
     }
     
+    public async Task<Doctor?> GetDoctorWithPerson(int id)
+    {
+        var doctor = await _context.Doctors
+            .Include(d => d.Person)
+            .Where(d => d.Id == id)
+            .FirstOrDefaultAsync();
+        return doctor;
+    }
+    
     public async Task CreateDoctor(Doctor doctor)
     {
         await _context.Doctors.AddAsync(doctor);
@@ -46,6 +55,12 @@ public class DoctorRepository : IDoctorRepository
     {
         var doctor = await _context.Doctors.Where(d => d.Id == id).FirstOrDefaultAsync();
         _context.Doctors.Remove(doctor);
+    }
+
+    public async Task<bool> DoctorExists(int id)
+    {
+        var doctor = await GetDoctorById(id);
+        return doctor != null;
     }
     
     public async Task SaveChanges()

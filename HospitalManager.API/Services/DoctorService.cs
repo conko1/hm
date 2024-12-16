@@ -1,4 +1,5 @@
 using AutoMapper;
+using HospitalManager.API.Entities;
 using HospitalManager.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using HospitalManager.Shared.Models;
@@ -26,14 +27,25 @@ public class DoctorService : IDoctorService
         return ServiceResponse<IEnumerable<DoctorDTO>>.Success(doctorsDto);
     }
 
-    public async Task<ServiceResponse<DoctorDTO>> GetDoctor(int id)
+    public async Task<ServiceResponse<DoctorDTO>> GetDoctor(int id, bool expandPerson)
     {
-        var doctor = await _doctorRepository.GetDoctorById(id);
-        if (doctor == null)
+        
+        if (!await _doctorRepository.DoctorExists(id))
         {
             return ServiceResponse<DoctorDTO>.Failure("Doctor not found", 404);
         }
-;
+        
+        Doctor? doctor = null;
+        if (expandPerson)
+        {
+            doctor = await _doctorRepository.GetDoctorWithPerson(id);
+            
+        }
+        else
+        {
+            doctor = await _doctorRepository.GetDoctorById(id);
+        }
+        
         var doctorDto = _mapper.Map<DoctorDTO>(doctor);
         
         return ServiceResponse<DoctorDTO>.Success(doctorDto);
