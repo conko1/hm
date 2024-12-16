@@ -26,7 +26,7 @@ namespace HospitalManager.API.Services
             }
             else {
                 Patient newPatient = new Patient();
-                newPatient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+                newPatient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
                 newPatient.Allergies = patientDto.Allergies;
                 newPatient.BloodGroup = patientDto.BloodGroup;
                 newPatient.Medications = patientDto.Medications;
@@ -76,7 +76,7 @@ namespace HospitalManager.API.Services
             {
                 throw new KeyNotFoundException($"Patient with ID {patientDto.Id} not found.");
             }
-            patient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+            patient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
             patient.Allergies = patientDto.Allergies;
             patient.BloodGroup = patientDto.BloodGroup;
             patient.Medications = patientDto.Medications;

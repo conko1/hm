@@ -12,7 +12,8 @@ public static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllers()
-            .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
+            .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null)
+            .AddNewtonsoftJson();
 
         builder.Services.AddHttpContextAccessor();
 
@@ -24,15 +25,16 @@ public static class HostingExtensions
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
-
         builder.Services.AddScoped<IMedicineService, MedicineService>();
 
         builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-
         builder.Services.AddScoped<IPatientService, PatientService>();
 
+        builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+        builder.Services.AddScoped<IDoctorService, DoctorService>();
+        
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
