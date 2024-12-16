@@ -18,6 +18,7 @@ services:
       - app-network
     volumes:
       - ./HospitalManager.API:/app
+      - ./HospitalManager.Shared:/app/../HospitalManager.Shared
       - /app/bin
       - /app/obj
 
@@ -75,6 +76,7 @@ services:
       - hm_api
     volumes:
       - ./HospitalManager.Client:/app
+      - ./HospitalManager.Shared:/app/../HospitalManager.Shared
       - /app/bin
       - /app/obj
     
