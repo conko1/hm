@@ -1,4 +1,6 @@
 using HospitalManager.API.DbContexts;
+using HospitalManager.API.Repositories;
+using HospitalManager.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -21,6 +23,10 @@ public static class HostingExtensions
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
+
+        builder.Services.AddScoped<IMedicineService, MedicineService>();
+        
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
