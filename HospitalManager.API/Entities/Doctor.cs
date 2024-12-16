@@ -12,8 +12,5 @@ public class Doctor : BaseEntity
     [ForeignKey(nameof(Person))]
     public string BirthNumber { get; set; }
     
-    [Required]
-    public User User { get; set; }
-    
     public IEnumerable<Patient> Patients { get; set; } = new List<Patient>();
 }

@@ -13,4 +13,7 @@ public class Invitation  : BaseEntity
     [Required]
     [MaxLength(2048)]
     public string JwtToken { get; set; }
+    
+    [Required]
+    public User User { get; set; }
 }

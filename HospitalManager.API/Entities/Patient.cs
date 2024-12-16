@@ -9,10 +9,10 @@ public class Patient : BaseEntity
     public Insurance insurance { get; set; }
     
     [Required]
-    public User User { get; set; }
-    
-    [Required]
     public Person Person { get; set; }
+    
+    [ForeignKey(nameof(Person))]
+    public string BirthNumber { get; set; }
     
     [MaxLength(2000)]
     public string Allergies { get; set; }
