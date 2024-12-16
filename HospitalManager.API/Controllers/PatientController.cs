@@ -89,12 +89,12 @@ namespace HospitalManager.API.Controllers
             }
         }
 
-        [HttpPost("/register")]
-        public async Task<IActionResult> AddPatient([FromBody] PatientDTO patientDto)
+        [HttpPost("register")]
+        public async Task<IActionResult> AddPatient([FromBody] RegisterPatientDTO registerPatientDTO)
         {
             try
             {
-                await this.patientService.Add(patientDto);
+                await this.patientService.Add(registerPatientDTO);
                 return Ok();
             }
             catch (Exception ex)

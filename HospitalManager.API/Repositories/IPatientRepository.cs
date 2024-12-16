@@ -9,5 +9,7 @@ namespace HospitalManager.API.Repositories
         Task Add(Patient patient);
         Task Update(Patient patient);
         Task Delete(Patient patient);
+
+        Task<Patient> GetByBirthNumber(string birthNumber);
     }
 }

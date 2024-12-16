@@ -8,7 +8,7 @@ namespace HospitalManager.API.Services
     {
         Task<PatientDTO> GetById(int id);
         Task<IEnumerable<PatientDTO>> GetAll();
-        Task Add(PatientDTO patientDto);
+        Task Add(RegisterPatientDTO patientDto);
         Task Update(PatientDTO patientDto);
         Task Delete(int id);
     }
