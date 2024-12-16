@@ -9,31 +9,75 @@ namespace HospitalManager.API.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IInsuranceRepository _insuranceRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IMapper _mapper;
 
-        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository)
+        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository, IPersonRepository personRepository, IAddressRepository addressRepository)
         { 
             this._patientRepository = patientRepository;
             this._mapper = mapper;
             this._insuranceRepository = insuranceRepository;
+            this._personRepository = personRepository;
+            this._addressRepository = addressRepository;
         }
-        public async Task Add(PatientDTO patientDto)
+        public async Task Add(RegisterPatientDTO registerPatientDTO)
         {
-            var patient = await this._patientRepository.GetById(patientDto.Id);
+            var patient = await this._patientRepository.GetByBirthNumber(registerPatientDTO.BirthNumber);
             if (patient != null)
             {
-                throw new ArgumentException($"Patient with ID {patientDto.Id} already exists.");
+                throw new ArgumentException($"Patient with birth number {registerPatientDTO.BirthNumber} already exists.");
             }
-            else {
-                Patient newPatient = new Patient();
-                newPatient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
-                newPatient.Allergies = patientDto.Allergies;
-                newPatient.BloodGroup = patientDto.BloodGroup;
-                newPatient.Medications = patientDto.Medications;
-                newPatient.Vaccines = patientDto.Vaccines;
+            else
+            {
+                var existingAddress = await this._addressRepository.GetByDetails(registerPatientDTO.City, registerPatientDTO.Street, registerPatientDTO.StreetNumber, registerPatientDTO.PostalCode);
+                Address newAddress;
 
-                this._patientRepository.Add(newPatient);
-            }  
+                if (existingAddress != null)
+                {
+                    newAddress = existingAddress;
+                }
+                else
+                {
+                    newAddress = new Address
+                    {
+                        City = registerPatientDTO.City,
+                        Street = registerPatientDTO.Street,
+                        StreetNumber = registerPatientDTO.StreetNumber,
+                        PostalCode = registerPatientDTO.PostalCode,
+                        Region = registerPatientDTO.Region,
+                        District = registerPatientDTO.District,
+                    };
+                    await this._addressRepository.Add(newAddress);
+                }
+
+                var person = await this._personRepository.GetById(registerPatientDTO.BirthNumber);
+                if (person == null)
+                {
+                    person = new Person
+                    {
+                        BirthNumber = registerPatientDTO.BirthNumber,
+                        FirstName = registerPatientDTO.FirstName,
+                        LastName = registerPatientDTO.LastName,
+                        Telephone = registerPatientDTO.Telephone,
+                        Email = registerPatientDTO.Email,
+                        Address = newAddress
+                    };
+                    await this._personRepository.Add(person);
+                }
+
+                Patient newPatient = new Patient
+                {
+                    Person = person,
+                    Insurance = await _insuranceRepository.GetById(registerPatientDTO.InsuranceId),
+                    Allergies = registerPatientDTO.Allergies,
+                    BloodGroup = registerPatientDTO.BloodGroup,
+                    Medications = registerPatientDTO.Medications,
+                    Vaccines = registerPatientDTO.Vaccines
+                };
+                await this._patientRepository.Add(newPatient);
+            }
+
         }
 
         public async Task Delete(int id)
@@ -76,7 +120,7 @@ namespace HospitalManager.API.Services
             {
                 throw new KeyNotFoundException($"Patient with ID {patientDto.Id} not found.");
             }
-            patient.insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+            patient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
             patient.Allergies = patientDto.Allergies;
             patient.BloodGroup = patientDto.BloodGroup;
             patient.Medications = patientDto.Medications;

@@ -40,5 +40,11 @@ namespace HospitalManager.API.Repositories
             this._context.Patients.Remove(patient);
             await this._context.SaveChangesAsync();
         }
+
+        public async Task<Patient> GetByBirthNumber(string birthNumber)
+        {
+            var person = await _context.Patients.FirstOrDefaultAsync(p => p.BirthNumber == birthNumber);
+            return person;
+        }
     }
 }
