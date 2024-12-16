@@ -3,6 +3,7 @@ using System;
 using HospitalManager.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216174519_AddSubjectIdNullableUser")]
+    partial class AddSubjectIdNullableUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,6 +107,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Diagnosis")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -114,6 +118,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -124,10 +129,12 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Symptoms")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Treatment")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -212,9 +219,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Dosage")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Name")
@@ -225,9 +234,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Quantity")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("SideEffects")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -241,26 +252,26 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 55, 59, 435, DateTimeKind.Local).AddTicks(6066),
+                            CreatedAt = new DateTime(2024, 12, 16, 17, 45, 18, 344, DateTimeKind.Local).AddTicks(5488),
                             Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
                             Dosage = "100 ml",
                             Name = "0,9 % Chlorid sodný Baxter-Viaflo",
                             Price = 6.79m,
                             Quantity = "1000 ml",
                             SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 55, 59, 435, DateTimeKind.Local).AddTicks(6068)
+                            UpdatedAt = new DateTime(2024, 12, 16, 17, 45, 18, 344, DateTimeKind.Local).AddTicks(5489)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 55, 59, 435, DateTimeKind.Local).AddTicks(6071),
+                            CreatedAt = new DateTime(2024, 12, 16, 17, 45, 18, 344, DateTimeKind.Local).AddTicks(5493),
                             Description = "Liečba rôznych bakteriálnych infekcií",
                             Dosage = "800 mg",
                             Name = "Abaktal 400 mg",
                             Price = 6.40m,
                             Quantity = "10 tabliet",
                             SideEffects = "Hnačka, nevolnosť, vracanie",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 55, 59, 435, DateTimeKind.Local).AddTicks(6072)
+                            UpdatedAt = new DateTime(2024, 12, 16, 17, 45, 18, 344, DateTimeKind.Local).AddTicks(5493)
                         });
                 });
 
@@ -273,6 +284,7 @@ namespace HospitalManager.API.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Allergies")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -281,6 +293,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<string>("BloodGroup")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -291,6 +304,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Medications")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -298,10 +312,11 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Vaccines")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("insuranceCode")
+                    b.Property<int>("insuranceCode")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
@@ -324,6 +339,7 @@ namespace HospitalManager.API.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(254)
                         .HasColumnType("NVARCHAR2(254)");
 
@@ -338,7 +354,7 @@ namespace HospitalManager.API.Migrations
                     b.Property<string>("Telephone")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("BirthNumber");
@@ -488,7 +504,9 @@ namespace HospitalManager.API.Migrations
 
                     b.HasOne("HospitalManager.API.Entities.Insurance", "insurance")
                         .WithMany()
-                        .HasForeignKey("insuranceCode");
+                        .HasForeignKey("insuranceCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
 
@@ -503,7 +521,9 @@ namespace HospitalManager.API.Migrations
 
                     b.HasOne("HospitalManager.API.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Address");
 

@@ -22,6 +22,11 @@
     <ItemGroup>
       <Folder Include="DbContexts\" />
       <Folder Include="Migrations\" />
+      <Folder Include="Profiles\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HospitalManager.Shared\HospitalManager.Shared.csproj" />
     </ItemGroup>
 
 </Project>
