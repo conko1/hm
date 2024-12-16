@@ -8,6 +8,11 @@ using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+builder.Services.AddRazorPages()
+    .AddNewtonsoftJson();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -81,6 +86,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 

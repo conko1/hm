@@ -1,0 +1,90 @@
+﻿@page "/profile"
+
+<div class="container mt-5">
+    <!-- Nadpis -->
+    <h2 class="mb-4 text-center">Profil</h2>
+
+    <!-- Formulár zarovnaný na stred -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="meno" class="form-label">Meno</label>
+                        <input type="text" id="meno" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="priezvisko" class="form-label">Priezvisko</label>
+                        <input type="text" id="priezvisko" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="rodneCislo" class="form-label">Rodné číslo</label>
+                        <input type="text" id="rodneCislo" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="adresa" class="form-label">Ulica a číslo domu</label>
+                        <input type="text" id="adresa" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="mesto" class="form-label">Mesto</label>
+                        <input type="text" id="mesto" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="psc" class="form-label">PSČ</label>
+                        <input type="text" id="psc" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="telefon" class="form-label">Tel. číslo</label>
+                        <input type="text" id="telefon" class="form-control" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="mt-5 text-center">
+        <h3>Zmeny</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mx-auto w-50">
+                <thead class="table-dark">
+                <tr>
+                    <th>Deň</th>
+                    <th>Čas</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Pondelok</td>
+                    <td>8:00 - 16:00</td>
+                </tr>
+                <tr>
+                    <td>Utorok</td>
+                    <td>9:00 - 17:00</td>
+                </tr>
+                <tr>
+                    <td>Streda</td>
+                    <td>8:00 - 16:00</td>
+                </tr>
+                <tr>
+                    <td>Štvrtok</td>
+                    <td>9:00 - 17:00</td>
+                </tr>
+                <tr>
+                    <td>Piatok</td>
+                    <td>8:00 - 14:00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
