@@ -1,4 +1,6 @@
+using HospitalManager.API.DbContexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace HospitalManager.API;
@@ -14,8 +16,8 @@ public static class HostingExtensions
 
         builder.Services.AddSwaggerGen();
 
-        // var oracleDbConnectionString = builder.Configuration.GetValue<string>("ORACLE_DB_CONNECTION_STRING");
-        // builder.Services.AddDbContext<AppDbContext>(options => options.UseOracle(oracleDbConnectionString));
+        var oracleDbConnectionString = builder.Configuration.GetValue<string>("ORACLE_DB_CONNECTION_STRING");
+        builder.Services.AddDbContext<ApiDbContext>(options => options.UseOracle(oracleDbConnectionString));
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
