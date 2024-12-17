@@ -1,30 +1,120 @@
 ﻿@page "/recipes"
+@attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
+@using HospitalManager.Shared.Models
+@using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
+@using System.Text.Json.Serialization
+@rendermode InteractiveServer
+
+@inject IHttpClientFactory httpClientFactory
+
+<h1>vsetky recepty</h1>
+
+<h1 class="text-primary fw-bold">Aktuálne recepty (@recipes.Where(p => p.Expiration > DateTime.Now).ToList().Count)</h1>
+
+@foreach (var recipe in recipes.Where(p => p.Expiration > DateTime.Now))
+{
+    <RecipeBar Id="@recipe.Id" Used="@recipe.Used" Expiration="recipe.Expiration" MedicineIds="@recipe.Medicines" MedicineNames="@medicines"></RecipeBar>
+}
+
+<h4 class="text-primary fw-bold">Recepty v minulosti (@recipes.Where(p => p.Expiration < DateTime.Now).ToList().Count)</h4>
+
+@foreach (var recipe in recipes.Where(p => p.Expiration < DateTime.Now))
+{
+    <RecipeBar Id="@recipe.Id" Used="@recipe.Used" Expiration="recipe.Expiration"></RecipeBar>
+}
 
 
 
 
-<h1 class="text-primary fw-bold">Aktuálne recepty</h1>
-@* nepouzite a neexpirovane *@
-<RecipeBar MedicineName="xanax"></RecipeBar>
-<RecipeBar MedicineName="coaxil"></RecipeBar>
-<RecipeBar MedicineName="lexaurin"></RecipeBar>
-
-
-<h4 class="text-primary fw-bold">Recepty v minulosti</h4>
-@* pouzite a (expirovane alebo neexpirovane) *@
-<RecipeBar MedicineName="stoptusin"></RecipeBar>
-<RecipeBar MedicineName="nurofen"></RecipeBar>
-<RecipeBar MedicineName="aspirin"></RecipeBar>
-<RecipeBar MedicineName="ibalgin"></RecipeBar>
-<RecipeBar MedicineName="paralen"></RecipeBar>
-<RecipeBar MedicineName="aspirin"></RecipeBar>
 
 @code {
+    private List<Recipe> recipes = new List<Recipe>();
+    private List<Medicine> medicines = new List<Medicine>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/recipe/");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+
+            recipes = JsonSerializer.Deserialize<List<Recipe>>(responseString);
+            
 
 
+            var requestM = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
+            var responseM = await httpClient.SendAsync(requestM, HttpCompletionOption.ResponseHeadersRead);
+            responseM.EnsureSuccessStatusCode();
+            var responseStringM = await responseM.Content.ReadAsStringAsync();
+            Console.WriteLine(responseStringM);
 
+            medicines = JsonSerializer.Deserialize<List<Medicine>>(responseStringM);
 
+            // foreach (var medicine in medicines)
+            // {
+            //     Console.WriteLine("medicine id: " + medicine.Id);
+            //     Console.WriteLine("medicine name: " + medicine.Name);
+            //     Console.WriteLine("description: " + medicine.Description);
+            // }
+        }
+        catch (HttpRequestException ex)
+        {
 
-    
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    public class Medicine
+    {
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
+
+        [JsonPropertyName("dosage")]
+        public string Dosage { get; set; }
+
+        [JsonPropertyName("quantity")]
+        public string Quantity { get; set; }
+
+        [JsonPropertyName("sideEffects")]
+        public string SideEffect { get; set; }
+
+        [JsonPropertyName("price")]
+        public double Price { get; set; }
+    }
+
+    public class Recipe
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("medicines")]
+        public IEnumerable<int> Medicines { get; set; } = new List<int>();
+        
+        [JsonPropertyName("expiration")]
+        public DateTime Expiration { get; set; }
+
+        [JsonPropertyName("examinationId")]
+        public int ExaminationId { get; set; }
+
+        [JsonPropertyName("used")]
+        public int Used { get; set; }
+    }
 }

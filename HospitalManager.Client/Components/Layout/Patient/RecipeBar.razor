@@ -1,26 +1,54 @@
-﻿
+﻿@using System.Text
+@using static HospitalManager.Client.Components.Pages.pacient.Reciepes
+
 
 <div class="card m-3" style="width: 100%; border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
     <div class="card-body">
         <div class="d-flex justify-content-between">
-            <h5 class="card-title" style="font-weight: bold; color: #343a40;">@MedicineName</h5>
-            <span class="badge bg-secondary" style="align-self: center;">@(Used ? "used" : "nedd to use")</span>
+            <h5 class="card-title" style="font-weight: bold; color: #343a40;">@RecipeName</h5>
+            <span class="badge bg-secondary" style="align-self: center;">@(Used == 1 ? "used" : "nedd to use")</span>
         </div>
 
-        <p class="card-text text-muted" style="margin-bottom: 8px;">Last updated: @Edited</p>
-        <p class="card-text">Creted: @Created</p>
+        @* <p class="card-text text-muted" style="margin-bottom: 8px;">Last updated: @Edited</p> *@
+        <p class="card-text">Expiruje: @Expiration</p>
 
         <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-link text-primary">Detail</a>
+           @*  <a href="#" class="btn btn-link text-primary">Detail</a> *@
+            <button class="btn btn-link text-primary" @onclick="OnClickDetail">Detail</button>
         </div>
     </div>
 </div>
 
 @code {
+    [Inject] private NavigationManager NavigationManager { get; set; }
+    private string RecipeName;
+
+    private void OnClickDetail()
+    {
+        NavigationManager.NavigateTo($"/recipes/detail");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var sb = new StringBuilder();
+        foreach (int medicineId in MedicineIds) 
+        {
+            sb.Append($"{MedicineNames.Where(p => p.Id == medicineId).Select(s => s.Name).FirstOrDefault()};   ");
+        }
+
+        RecipeName = sb.ToString();
+
+        // Console.WriteLine(MedicineNames[0].Name);
+        // RecipeName = MedicineNames[0].Name;
+    }
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public string MedicineName { get; set; }
     [Parameter]
     public string DoctorName { get; set; } = "Vydra";
     [Parameter]
-    public string MedicineName { get; set; } = "xanax";
+    public List<Medicine> MedicineNames { get; set; }
     [Parameter]
     public string Dosage { get; set; } = "2times a day";
     [Parameter]
@@ -32,6 +60,10 @@
     [Parameter]
     public DateTime Edited { get; set; }
     [Parameter]
-    public bool Used { get; set; } = true;
+    public int Used { get; set; }
+    [Parameter]
+    public IEnumerable<int> MedicineIds { get; set; }
 
+    [Parameter]
+    public DateTime Expiration { get; set; }
 }

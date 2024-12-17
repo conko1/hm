@@ -1,5 +1,7 @@
 ﻿@page "/profil"
+@attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
+@using Microsoft.AspNetCore.Authorization
 
 <div class="container row">
 

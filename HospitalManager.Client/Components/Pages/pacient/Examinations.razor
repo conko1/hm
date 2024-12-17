@@ -1,5 +1,7 @@
 ﻿@page "/examinations"
+@attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
+@using Microsoft.AspNetCore.Authorization
 
 <h1 class="text-primary fw-bold">Moje aktívne požiadavky (pocet)</h1>
 <p class="text-muted">

@@ -1,0 +1,28 @@
+﻿@page "/recipes/detail"
+@attribute [Authorize(Roles = "Pacient")]
+@using HospitalManager.Client.Components.Layout.Patient
+@using HospitalManager.Shared.Models
+@using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
+@using System.Text.Json.Serialization
+@rendermode InteractiveServer
+
+@inject IHttpClientFactory httpClientFactory
+
+<h3>RecipeDetail</h3>
+<h1>halooo</h1>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Abaktal 400 mg</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Cena: $6.40</h6>
+        <p class="card-text"><strong>Popis:</strong> Liečba rôznych bakteriálnych infekcií</p>
+        <p class="card-text"><strong>Dávkovanie:</strong> 800 mg</p>
+        <p class="card-text"><strong>Počet tabliet:</strong> 10 tabliet</p>
+        <p class="card-text"><strong>Nežiaduce účinky:</strong> Hnačka, nevolnosť, vracanie</p>
+    </div>
+</div>
+
+
+@code {
+
+}
