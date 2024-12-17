@@ -12,7 +12,7 @@
 
         public string Telephone { get; set; }
 
-        public int AddressId { get; set; }
+        public AddressDTO? Address { get; set; }
 
         public int UserId { get; set; }
     }
