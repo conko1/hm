@@ -6,10 +6,10 @@ namespace HospitalManager.API.Services
 {
     public interface IPatientService
     {
-        Task<PatientDTO> GetById(int id);
-        Task<IEnumerable<PatientDTO>> GetAll();
+        Task<PatientDTO> GetById(int id, bool expandPerson);
+        Task<IEnumerable<PatientDTO>> GetAll(bool expandPerson);
         Task Add(RegisterPatientDTO patientDto);
-        Task Update(PatientDTO patientDto);
+        Task<PatientDTO> Update(int id, PatientForUpdateDTO patientDto);
         Task Delete(int id);
     }
 }

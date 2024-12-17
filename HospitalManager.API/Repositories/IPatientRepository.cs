@@ -11,5 +11,11 @@ namespace HospitalManager.API.Repositories
         Task Delete(Patient patient);
 
         Task<Patient> GetByBirthNumber(string birthNumber);
+
+        Task<bool> PatientExists(int id);
+
+        Task<Patient?> GetPatientWithPerson(int id);
+
+        Task<IEnumerable<Patient>> GetAllWithPerson();
     }
 }

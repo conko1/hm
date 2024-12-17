@@ -2,6 +2,7 @@
 using HospitalManager.API.Entities;
 using HospitalManager.API.Repositories;
 using HospitalManager.Shared.Models;
+using HospitalManager.Shared.Service;
 
 namespace HospitalManager.API.Services
 {
@@ -30,7 +31,7 @@ namespace HospitalManager.API.Services
             }
             else
             {
-                var existingAddress = await this._addressRepository.GetByDetails(registerPatientDTO.City, registerPatientDTO.Street, registerPatientDTO.StreetNumber, registerPatientDTO.PostalCode);
+                var existingAddress = await this._addressRepository.GetByDetails(registerPatientDTO.City, registerPatientDTO.Street, registerPatientDTO.StreetNumber, registerPatientDTO.PostalCode, registerPatientDTO.Region, registerPatientDTO.District);
                 Address newAddress;
 
                 if (existingAddress != null)
@@ -90,35 +91,48 @@ namespace HospitalManager.API.Services
             await _patientRepository.Delete(patient);
         }
 
-        public async Task<IEnumerable<PatientDTO>> GetAll()
+        public async Task<IEnumerable<PatientDTO>> GetAll(bool expandPerson)
         {
             var patients = await this._patientRepository.GetAll();
             if (patients == null || !patients.Any()) 
             {
                 throw new InvalidOperationException("No record of Patients found.");         
             }
-            var patientsDTOs = _mapper.Map<IEnumerable<PatientDTO>>(patients);
-            return patientsDTOs;
+
+            if (expandPerson)
+            {
+                patients = await this._patientRepository.GetAllWithPerson();
+            }
+            var patientsDTO = _mapper.Map<IEnumerable<PatientDTO>>(patients);
+            return patientsDTO;
         }
 
-        public async Task<PatientDTO> GetById(int id)
+        public async Task<PatientDTO> GetById(int id, bool expandPerson)
+        {
+            if (!await this._patientRepository.PatientExists(id))
+            {
+                throw new KeyNotFoundException($"Patient with ID {id} not found.");
+
+            }
+            Patient? patient = null;
+            if (expandPerson)
+            {
+                patient = await this._patientRepository.GetPatientWithPerson(id);
+            }
+            else {
+                patient = await this._patientRepository.GetById(id);
+            }
+
+            var patientDTO = _mapper.Map<PatientDTO>(patient);
+            return patientDTO;
+        }
+
+        public async Task<PatientDTO> Update(int id, PatientForUpdateDTO patientDto)
         {
             var patient = await this._patientRepository.GetById(id);
             if (patient == null)
             {
                 throw new KeyNotFoundException($"Patient with ID {id} not found.");
-
-            }
-            var patientDTO = _mapper.Map<PatientDTO>(patient);
-            return patientDTO;
-        }
-
-        public async Task Update(PatientDTO patientDto)
-        {
-            var patient = await this._patientRepository.GetById(patientDto.Id);
-            if (patient == null)
-            {
-                throw new KeyNotFoundException($"Patient with ID {patientDto.Id} not found.");
             }
             patient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
             patient.Allergies = patientDto.Allergies;
@@ -127,6 +141,9 @@ namespace HospitalManager.API.Services
             patient.Vaccines = patientDto.Vaccines;
 
             await this._patientRepository.Update(patient);
+
+            var patientDTO = _mapper.Map<PatientDTO>(patient); 
+            return patientDTO;
         }
     }
 }
