@@ -5,8 +5,7 @@
 
 @inject IHttpClientFactory httpClientFactory
 
-<h3>ExaminationDetailfdf</h3>
-<h3>halooooooooooooooo</h3>
+<h3 class="fw-bold text-primary">Detail vyšetrenia</h3>
 
 <div class="card m-2" style="width: 100%; border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
     <div class="card-body">
@@ -22,9 +21,12 @@
     </div>
 </div>
 
+<button type="button" class="btn btn-primary w-25 m-4" @onclick="OnCllickOK">OK</button>
+
 @code {
     [Parameter]
     public string Id { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
 
     public DateTime ExaminationDate { get; set; } = DateTime.MinValue;
     public string DoctorName { get; set; } = "Loading";
@@ -100,5 +102,10 @@
         {
             Console.WriteLine($"Unexpected error: {ex.Message}");
         }
+    }
+
+    private void OnCllickOK()
+    {
+        NavigationManager.NavigateTo($"/examinations");
     }
 }

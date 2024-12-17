@@ -1,4 +1,5 @@
 ﻿@page "/examinations"
+@page "/examinations={id}"
 @attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
 @using Microsoft.AspNetCore.Authorization
@@ -15,13 +16,14 @@
         Vyberte lekára, ktorý vás vyšetroval.
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        @foreach (var doctorId in examinations.Select(s => s.DoctorId).Distinct().ToList())
+        <li class="dropdown-item" @onclick="() => OnClickSelectDoctor(-1)">žiadny</li>
+        @foreach (var doctorId in AllExaminations.Select(s => s.DoctorId).Distinct().ToList())
         {
             Console.WriteLine("doctor id" + doctorId);
             var doctor = doctors.FirstOrDefault(c => c.Id == doctorId);
             if (doctor != null)
             {
-                <li><a class="dropdown-item" href="#">@doctor.BirthNumber @* @doctor.Person.FirstName @doctor.Person.LastName *@</a></li>
+                <li class="dropdown-item" @onclick="() => OnClickSelectDoctor(doctorId)">@doctor.BirthNumber @* @doctor.Person.FirstName @doctor.Person.LastName *@</li>
             }
             else
             {
@@ -29,8 +31,7 @@
             }
             @* <li><a class="dropdown-item" href="#">@doctors.Where(c => c.Id == doctorId).Select(s => s.Person.BirthNumber).FirstOrDefault()</a></li> *@
         }
-@*         <li><a class="dropdown-item" href="#">Možnosť 2</a></li>
-        <li><a class="dropdown-item" href="#">Možnosť 3</a></li> *@
+        
     </ul>
 </div>
 
@@ -44,6 +45,11 @@
 
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private List<Examination> AllExaminations = new();
     private List<Examination> examinations = new();
     private List<Doctors.Doctor> doctors = new();
 
@@ -54,13 +60,14 @@
 
         try
         {
+
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/examination");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
 
-            examinations = JsonSerializer.Deserialize<List<Examination>>(responseString);
+            AllExaminations = JsonSerializer.Deserialize<List<Examination>>(responseString);
 
 
             var requestD = new HttpRequestMessage(HttpMethod.Get, "/api/doctor");
@@ -71,7 +78,15 @@
 
             doctors = JsonSerializer.Deserialize<List<Doctors.Doctor>>(responseStringD);
 
-            
+
+            if (Id is not null) //Id je int
+            {
+                examinations = AllExaminations.Where(c => c.DoctorId == int.Parse(Id)).ToList();
+            }
+            else
+            {
+                examinations = AllExaminations;
+            }
         }
         catch (HttpRequestException ex)
         {
@@ -84,6 +99,13 @@
         }
     }
 
+    private void OnClickSelectDoctor(int doctorId)
+    {
+        if (doctorId < 0)
+            NavigationManager.NavigateTo($"/examinations");
+        else
+            NavigationManager.NavigateTo($"/examinations={doctorId}");
+    }
 
     public class Examination
     {
