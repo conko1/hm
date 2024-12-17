@@ -20,13 +20,17 @@ public class ApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Person>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
         modelBuilder.Entity<Person>().HasData(
             new Person()
             {
                 BirthNumber = "012345/1234",
-                FirstName = "Peter",
-                LastName = "Petrovič",
-                Email = "peter@gmail.com",
+                FirstName = "Doktor",
+                LastName = "Test",
+                Email = "doktorTest@gmail.com",
                 Telephone = "+421123456785",
                 Address = null,
                 User = null,
@@ -34,30 +38,10 @@ public class ApiDbContext : DbContext
             new Person()
             {
                 BirthNumber = "012345/1235",
-                FirstName = "Daniel",
-                LastName = "Danielovič",
-                Email = "daniel@gmail.com",
+                FirstName = "Pacient",
+                LastName = "test",
+                Email = "pacientTest@gmail.com",
                 Telephone = "+421987654321",
-                Address = null,
-                User = null,
-            },
-            new Person()
-            {
-                BirthNumber = "012345/1236",
-                FirstName = "Martina",
-                LastName = "Martinová",
-                Email = "martina@gmail.com",
-                Telephone = "+421976431285",
-                Address = null,
-                User = null,
-            },
-            new Person()
-            {
-                BirthNumber = "012345/1237",
-                FirstName = "Frederika",
-                LastName = "Frederiková",
-                Email = "frederika@gmail.com",
-                Telephone = "+421842862357",
                 Address = null,
                 User = null,
             }
@@ -71,14 +55,6 @@ public class ApiDbContext : DbContext
                 Specialization = "Všeobecný lekár",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            },
-            new Doctor()
-            {
-                Id = 2,
-                BirthNumber = "012345/1236",
-                Specialization = "Detský lekár",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             }
         );
         
@@ -90,14 +66,6 @@ public class ApiDbContext : DbContext
                 BirthNumber = "012345/1235",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            },
-            new Patient()
-            {
-                Id = 2,
-                DoctorId = 2,
-                BirthNumber = "012345/1237",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             }
         );
 
@@ -106,7 +74,7 @@ public class ApiDbContext : DbContext
             {
                 Id = 1,
                 DoctorId = 1,
-                PatientId = 2,
+                PatientId = 1,
                 ExaminationDate = DateTime.Now.AddMonths(-1),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -114,7 +82,7 @@ public class ApiDbContext : DbContext
             new Examination()
             {
                 Id = 2,
-                DoctorId = 2,
+                DoctorId = 1,
                 PatientId = 1,
                 ExaminationDate = DateTime.Now.AddMonths(2),
                 CreatedAt = DateTime.Now,

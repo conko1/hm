@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20241216174759_ExaminationAttributesNullableAdd")]
-    partial class ExaminationAttributesNullableAdd
+    [Migration("20241217204548_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,10 @@ namespace HospitalManager.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<string>("Specialization")
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -93,6 +97,16 @@ namespace HospitalManager.API.Migrations
                     b.HasIndex("BirthNumber");
 
                     b.ToTable("Doctor");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthNumber = "012345/1234",
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5269),
+                            Specialization = "Všeobecný lekár",
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5270)
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Examination", b =>
@@ -123,9 +137,6 @@ namespace HospitalManager.API.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("Symptoms")
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
@@ -143,9 +154,27 @@ namespace HospitalManager.API.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("RecipeId");
-
                     b.ToTable("Examination");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5349),
+                            DoctorId = 1,
+                            ExaminationDate = new DateTime(2024, 11, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5342),
+                            PatientId = 1,
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5350)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5354),
+                            DoctorId = 1,
+                            ExaminationDate = new DateTime(2025, 2, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5352),
+                            PatientId = 1,
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5355)
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Insurance", b =>
@@ -169,6 +198,26 @@ namespace HospitalManager.API.Migrations
                     b.HasKey("Code");
 
                     b.ToTable("Insurance");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = 27,
+                            Abbreviation = "UNION",
+                            FullName = "Union zdravotná poisťovňa, a.s."
+                        },
+                        new
+                        {
+                            Code = 24,
+                            Abbreviation = "Dôvera",
+                            FullName = "Dôvera zdravotná poisťovňa, a.s."
+                        },
+                        new
+                        {
+                            Code = 25,
+                            Abbreviation = "VZP",
+                            FullName = "Všeobecná zdravotná poisťovňa, a.s."
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Invitation", b =>
@@ -244,26 +293,34 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6859),
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5393),
                             Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
                             Dosage = "100 ml",
                             Name = "0,9 % Chlorid sodný Baxter-Viaflo",
                             Price = 6.79m,
                             Quantity = "1000 ml",
                             SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6860)
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5394)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6864),
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5590),
                             Description = "Liečba rôznych bakteriálnych infekcií",
                             Dosage = "800 mg",
                             Name = "Abaktal 400 mg",
                             Price = 6.40m,
                             Quantity = "10 tabliet",
                             SideEffects = "Hnačka, nevolnosť, vracanie",
-                            UpdatedAt = new DateTime(2024, 12, 16, 17, 47, 58, 524, DateTimeKind.Local).AddTicks(6865)
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5591)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5594),
+                            Name = "Ibuprofen",
+                            Price = 6.25m,
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5595)
                         });
                 });
 
@@ -290,7 +347,10 @@ namespace HospitalManager.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<int?>("DoctorId")
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("InsuranceCode")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Medications")
@@ -304,18 +364,25 @@ namespace HospitalManager.API.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("insuranceCode")
-                        .HasColumnType("NUMBER(10)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BirthNumber");
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("insuranceCode");
+                    b.HasIndex("InsuranceCode");
 
                     b.ToTable("Patient");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthNumber = "012345/1235",
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5307),
+                            DoctorId = 1,
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5308)
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Person", b =>
@@ -342,16 +409,37 @@ namespace HospitalManager.API.Migrations
                     b.Property<string>("Telephone")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("BirthNumber");
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Person");
+
+                    b.HasData(
+                        new
+                        {
+                            BirthNumber = "012345/1234",
+                            Email = "doktorTest@gmail.com",
+                            FirstName = "Doktor",
+                            LastName = "Test",
+                            Telephone = "+421123456785"
+                        },
+                        new
+                        {
+                            BirthNumber = "012345/1235",
+                            Email = "pacientTest@gmail.com",
+                            FirstName = "Pacient",
+                            LastName = "test",
+                            Telephone = "+421987654321"
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Recipe", b =>
@@ -365,28 +453,43 @@ namespace HospitalManager.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<int>("DoctorId")
+                    b.Property<int>("ExaminationId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<bool>("Used")
-                        .HasColumnType("NUMBER(1)");
+                    b.Property<int>("Used")
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
+                    b.HasIndex("ExaminationId");
 
                     b.ToTable("Recipe");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5698),
+                            ExaminationId = 1,
+                            Expiration = new DateTime(2025, 1, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5695),
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5699),
+                            Used = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5702),
+                            ExaminationId = 2,
+                            Expiration = new DateTime(2025, 2, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5701),
+                            UpdatedAt = new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5703),
+                            Used = 1
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.User", b =>
@@ -429,6 +532,28 @@ namespace HospitalManager.API.Migrations
                     b.HasIndex("RecipesId");
 
                     b.ToTable("MedicineRecipe");
+
+                    b.HasData(
+                        new
+                        {
+                            MedicinesId = 1,
+                            RecipesId = 1
+                        },
+                        new
+                        {
+                            MedicinesId = 2,
+                            RecipesId = 1
+                        },
+                        new
+                        {
+                            MedicinesId = 2,
+                            RecipesId = 2
+                        },
+                        new
+                        {
+                            MedicinesId = 3,
+                            RecipesId = 2
+                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Doctor", b =>
@@ -456,15 +581,9 @@ namespace HospitalManager.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HospitalManager.API.Entities.Recipe", "Recipe")
-                        .WithMany()
-                        .HasForeignKey("RecipeId");
-
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Invitation", b =>
@@ -486,17 +605,21 @@ namespace HospitalManager.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HospitalManager.API.Entities.Doctor", null)
+                    b.HasOne("HospitalManager.API.Entities.Doctor", "Doctor")
                         .WithMany("Patients")
-                        .HasForeignKey("DoctorId");
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("HospitalManager.API.Entities.Insurance", "insurance")
+                    b.HasOne("HospitalManager.API.Entities.Insurance", "Insurance")
                         .WithMany()
-                        .HasForeignKey("insuranceCode");
+                        .HasForeignKey("InsuranceCode");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Insurance");
 
                     b.Navigation("Person");
-
-                    b.Navigation("insurance");
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Person", b =>
@@ -507,9 +630,7 @@ namespace HospitalManager.API.Migrations
 
                     b.HasOne("HospitalManager.API.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Address");
 
@@ -518,21 +639,13 @@ namespace HospitalManager.API.Migrations
 
             modelBuilder.Entity("HospitalManager.API.Entities.Recipe", b =>
                 {
-                    b.HasOne("HospitalManager.API.Entities.Doctor", "Doctor")
+                    b.HasOne("HospitalManager.API.Entities.Examination", "Examination")
                         .WithMany()
-                        .HasForeignKey("DoctorId")
+                        .HasForeignKey("ExaminationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HospitalManager.API.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
+                    b.Navigation("Examination");
                 });
 
             modelBuilder.Entity("MedicineRecipe", b =>
