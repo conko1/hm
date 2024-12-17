@@ -42,6 +42,9 @@ public static class HostingExtensions
 
         builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
         builder.Services.AddScoped<IRecipeService, RecipeService>();
+
+        builder.Services.AddScoped<IExaminationRepository, ExaminationRepository>();
+        builder.Services.AddScoped<IExaminationService, ExaminationService>();
         
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

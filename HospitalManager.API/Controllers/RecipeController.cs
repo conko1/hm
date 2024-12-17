@@ -1,4 +1,3 @@
-using HospitalManager.API.Entities;
 using HospitalManager.API.Services;
 using HospitalManager.Shared.Models;
 using Microsoft.AspNetCore.JsonPatch;

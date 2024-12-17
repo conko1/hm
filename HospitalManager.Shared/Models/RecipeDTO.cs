@@ -7,4 +7,5 @@ public class RecipeDTO
     public DateTime Expiration { get; set; }
     public int ExaminationId { get; set; }
     public int Used { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
