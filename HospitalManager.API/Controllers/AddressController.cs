@@ -4,26 +4,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Controllers
 {
-
     [ApiController]
-    [Route("api/patients")]
-    public class PatientController : ControllerBase
+    [Route("api/address")]
+    public class AddressController : ControllerBase
     {
-        private readonly IPatientService patientService;
+        private readonly IAddressService _addressService;
 
-        public PatientController(IPatientService patientService)
+        public AddressController(IAddressService addressService)
         {
-            this.patientService = patientService;
+            this._addressService = addressService;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPatient(int id, [FromQuery] bool expandPerson = false)
+        public async Task<IActionResult> GetAddress(int id)
         {
             try
             {
-                var patient = await this.patientService.GetById(id, expandPerson);
-                return Ok(patient);
+                var address = await this._addressService.GetById(id);
+                return Ok(address);
             }
             catch (KeyNotFoundException ex)
             {
@@ -36,12 +35,12 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPatients([FromQuery] bool expandPerson = false)
+        public async Task<IActionResult> GetAllAddresses()
         {
             try
             {
-                var patients = await this.patientService.GetAll(expandPerson);
-                return Ok(patients);
+                var addresses = await this._addressService.GetAll();
+                return Ok(addresses);
             }
             catch (InvalidOperationException ex)
             {
@@ -54,11 +53,11 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePatient(int id)
+        public async Task<IActionResult> DeleteAddress(int id)
         {
             try
             {
-                await this.patientService.Delete(id);
+                await this._addressService.Delete(id);
                 return Ok();
             }
             catch (KeyNotFoundException ex)
@@ -72,12 +71,12 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdatePatient(int id, [FromBody] PatientForUpdateDTO patientDto)
+        public async Task<IActionResult> UpdateAddress(int id, [FromBody] AddressDTO addressDTO)
         {
             try
             {
-                var updatedPatient = await this.patientService.Update(id, patientDto);
-                return Ok(updatedPatient);
+                var updatedAddress = await this._addressService.Update(id, addressDTO);
+                return Ok(updatedAddress);
             }
             catch (KeyNotFoundException ex)
             {
@@ -89,12 +88,12 @@ namespace HospitalManager.API.Controllers
             }
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> AddPatient([FromBody] RegisterPatientDTO registerPatientDTO)
+        [HttpPost]
+        public async Task<IActionResult> AddAddress([FromBody] AddressDTO addressDTO)
         {
             try
             {
-                await this.patientService.Add(registerPatientDTO);
+                await this._addressService.Add(addressDTO);
                 return Ok();
             }
             catch (Exception ex)
@@ -102,6 +101,5 @@ namespace HospitalManager.API.Controllers
                 return StatusCode(500, $" Internal server error: {ex.Message}");
             }
         }
-
     }
 }

@@ -46,5 +46,25 @@ namespace HospitalManager.API.Repositories
             var person = await _context.Patients.FirstOrDefaultAsync(p => p.BirthNumber == birthNumber);
             return person;
         }
+
+        public async Task<bool> PatientExists(int id)
+        {
+            var patient = await GetById(id);
+            return patient != null;
+        }
+
+        public async Task<Patient?> GetPatientWithPerson(int id)
+        {
+            var patient = await _context.Patients
+                .Include(p => p.Person)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
+            return patient;
+        }
+
+        public async Task<IEnumerable<Patient>> GetAllWithPerson()
+        {
+            return await this._context.Patients.Include(p => p.Person).ToListAsync();
+        }
     }
 }

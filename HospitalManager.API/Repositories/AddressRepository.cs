@@ -25,9 +25,14 @@ namespace HospitalManager.API.Repositories
             await this._context.SaveChangesAsync();
         }
 
-        public async Task<Address> GetByDetails(string city, string street, int streetNumber, int postalCode)
+        public async Task<IEnumerable<Address>> GetAll()
         {
-            return await _context.Addresses.FirstOrDefaultAsync(a => a.City == city && a.Street == street && a.StreetNumber == streetNumber && a.PostalCode == postalCode);
+            return await this._context.Addresses.ToListAsync();
+        }
+
+        public async Task<Address> GetByDetails(string city, string street, int streetNumber, int postalCode, string region, string district)
+        {
+            return await _context.Addresses.FirstOrDefaultAsync(a => a.City == city && a.Street == street && a.StreetNumber == streetNumber && a.PostalCode == postalCode && a.Region == region && a.District == district);
         }
 
         public async Task<Address> GetById(int id)
