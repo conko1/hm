@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HospitalManager.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,10 +54,10 @@ namespace HospitalManager.API.Migrations
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Dosage = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Quantity = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    SideEffects = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Dosage = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Quantity = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    SideEffects = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
@@ -73,7 +73,7 @@ namespace HospitalManager.API.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    SubjectId = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    SubjectId = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Email = table.Column<string>(type: "NVARCHAR2(254)", maxLength: 254, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
@@ -111,12 +111,12 @@ namespace HospitalManager.API.Migrations
                 columns: table => new
                 {
                     BirthNumber = table.Column<string>(type: "NVARCHAR2(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: true),
+                    LastName = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "NVARCHAR2(254)", maxLength: 254, nullable: false),
-                    Telephone = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    AddressId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Telephone = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    AddressId = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -125,14 +125,12 @@ namespace HospitalManager.API.Migrations
                         name: "FK_Person_Address_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Person_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -142,6 +140,7 @@ namespace HospitalManager.API.Migrations
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     BirthNumber = table.Column<string>(type: "NVARCHAR2(450)", nullable: false),
+                    Specialization = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
                 },
@@ -162,13 +161,13 @@ namespace HospitalManager.API.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    insuranceCode = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    InsuranceCode = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     BirthNumber = table.Column<string>(type: "NVARCHAR2(450)", nullable: false),
-                    Allergies = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    BloodGroup = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    Medications = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    Vaccines = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    DoctorId = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    Allergies = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    BloodGroup = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    Medications = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    Vaccines = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    DoctorId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
                 },
@@ -179,48 +178,18 @@ namespace HospitalManager.API.Migrations
                         name: "FK_Patient_Doctor_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "Doctor",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Patient_Insurance_insuranceCode",
-                        column: x => x.insuranceCode,
-                        principalTable: "Insurance",
-                        principalColumn: "Code",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Patient_Insurance_InsuranceCode",
+                        column: x => x.InsuranceCode,
+                        principalTable: "Insurance",
+                        principalColumn: "Code");
                     table.ForeignKey(
                         name: "FK_Patient_Person_BirthNumber",
                         column: x => x.BirthNumber,
                         principalTable: "Person",
                         principalColumn: "BirthNumber",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Recipe",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    DoctorId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    PatientId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Expiration = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    Used = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Recipe_Doctor_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Doctor",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Recipe_Patient_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patient",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -232,12 +201,11 @@ namespace HospitalManager.API.Migrations
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     DoctorId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     PatientId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    RecipeId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     ExaminationDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    Symptoms = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    Diagnosis = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    Treatment = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
-                    Notes = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: false),
+                    Symptoms = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    Diagnosis = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    Treatment = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
+                    Notes = table.Column<string>(type: "NVARCHAR2(2000)", maxLength: 2000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
                 },
@@ -256,10 +224,27 @@ namespace HospitalManager.API.Migrations
                         principalTable: "Patient",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recipe",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Expiration = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    ExaminationId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    Used = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Examination_Recipe_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "Recipe",
+                        name: "FK_Recipe_Examination_ExaminationId",
+                        column: x => x.ExaminationId,
+                        principalTable: "Examination",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -289,12 +274,71 @@ namespace HospitalManager.API.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Insurance",
+                columns: new[] { "Code", "Abbreviation", "FullName" },
+                values: new object[,]
+                {
+                    { 24, "Dôvera", "Dôvera zdravotná poisťovňa, a.s." },
+                    { 25, "VZP", "Všeobecná zdravotná poisťovňa, a.s." },
+                    { 27, "UNION", "Union zdravotná poisťovňa, a.s." }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Medicine",
                 columns: new[] { "Id", "CreatedAt", "Description", "Dosage", "Name", "Price", "Quantity", "SideEffects", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(13), "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii", "100 ml", "0,9 % Chlorid sodný Baxter-Viaflo", 6.79m, "1000 ml", "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi", new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(14) },
-                    { 2, new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(19), "Liečba rôznych bakteriálnych infekcií", "800 mg", "Abaktal 400 mg", 6.40m, "10 tabliet", "Hnačka, nevolnosť, vracanie", new DateTime(2024, 12, 16, 14, 42, 32, 550, DateTimeKind.Local).AddTicks(20) }
+                    { 1, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5393), "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii", "100 ml", "0,9 % Chlorid sodný Baxter-Viaflo", 6.79m, "1000 ml", "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi", new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5394) },
+                    { 2, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5590), "Liečba rôznych bakteriálnych infekcií", "800 mg", "Abaktal 400 mg", 6.40m, "10 tabliet", "Hnačka, nevolnosť, vracanie", new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5591) },
+                    { 3, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5594), null, null, "Ibuprofen", 6.25m, null, null, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5595) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Person",
+                columns: new[] { "BirthNumber", "AddressId", "Email", "FirstName", "LastName", "Telephone", "UserId" },
+                values: new object[,]
+                {
+                    { "012345/1234", null, "doktorTest@gmail.com", "Doktor", "Test", "+421123456785", null },
+                    { "012345/1235", null, "pacientTest@gmail.com", "Pacient", "test", "+421987654321", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Doctor",
+                columns: new[] { "Id", "BirthNumber", "CreatedAt", "Specialization", "UpdatedAt" },
+                values: new object[] { 1, "012345/1234", new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5269), "Všeobecný lekár", new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5270) });
+
+            migrationBuilder.InsertData(
+                table: "Patient",
+                columns: new[] { "Id", "Allergies", "BirthNumber", "BloodGroup", "CreatedAt", "DoctorId", "InsuranceCode", "Medications", "UpdatedAt", "Vaccines" },
+                values: new object[] { 1, null, "012345/1235", null, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5307), 1, null, null, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5308), null });
+
+            migrationBuilder.InsertData(
+                table: "Examination",
+                columns: new[] { "Id", "CreatedAt", "Diagnosis", "DoctorId", "ExaminationDate", "Notes", "PatientId", "Symptoms", "Treatment", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5349), null, 1, new DateTime(2024, 11, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5342), null, 1, null, null, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5350) },
+                    { 2, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5354), null, 1, new DateTime(2025, 2, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5352), null, 1, null, null, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5355) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Recipe",
+                columns: new[] { "Id", "CreatedAt", "ExaminationId", "Expiration", "UpdatedAt", "Used" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5698), 1, new DateTime(2025, 1, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5695), new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5699), 0 },
+                    { 2, new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5702), 2, new DateTime(2025, 2, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5701), new DateTime(2024, 12, 17, 20, 45, 47, 777, DateTimeKind.Local).AddTicks(5703), 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MedicineRecipe",
+                columns: new[] { "MedicinesId", "RecipesId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 },
+                    { 2, 2 },
+                    { 3, 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -311,11 +355,6 @@ namespace HospitalManager.API.Migrations
                 name: "IX_Examination_PatientId",
                 table: "Examination",
                 column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Examination_RecipeId",
-                table: "Examination",
-                column: "RecipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invitation_UserId",
@@ -338,9 +377,9 @@ namespace HospitalManager.API.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patient_insuranceCode",
+                name: "IX_Patient_InsuranceCode",
                 table: "Patient",
-                column: "insuranceCode");
+                column: "InsuranceCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Person_AddressId",
@@ -348,27 +387,25 @@ namespace HospitalManager.API.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Person_Email",
+                table: "Person",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Person_UserId",
                 table: "Person",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipe_DoctorId",
+                name: "IX_Recipe_ExaminationId",
                 table: "Recipe",
-                column: "DoctorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipe_PatientId",
-                table: "Recipe",
-                column: "PatientId");
+                column: "ExaminationId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Examination");
-
             migrationBuilder.DropTable(
                 name: "Invitation");
 
@@ -380,6 +417,9 @@ namespace HospitalManager.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Recipe");
+
+            migrationBuilder.DropTable(
+                name: "Examination");
 
             migrationBuilder.DropTable(
                 name: "Patient");
