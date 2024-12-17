@@ -27,6 +27,14 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<User> GetUserBySubId(string id)
+    {
+        var user = await _context.Users
+            .Where(u => u.SubjectId == id)
+            .FirstOrDefaultAsync();
+        return user;
+    }
+
     public async Task CreateUser(User user)
     {
         await _context.Users.AddAsync(user);

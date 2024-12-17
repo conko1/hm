@@ -18,7 +18,7 @@ public class Person
     
     [MaxLength(254)]
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address.")]
-    public string? Email { get; set; }
+    public string Email { get; set; }
     
     [RegularExpression(@"^\+421[0-9]{9}$", ErrorMessage = "Telephone must be in specified format '+421910595144'.")]
     public string? Telephone { get; set; }

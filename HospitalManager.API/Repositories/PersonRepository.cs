@@ -26,6 +26,12 @@ namespace HospitalManager.API.Repositories
             await this._context.SaveChangesAsync();
         }
 
+        public async Task<Person> GetByEmail(string email)
+        {
+            var person = await _context.Persons.FirstOrDefaultAsync(p => p.Email == email);
+            return person;
+        }
+
         public async Task<IEnumerable<Person>> GetAll()
         {
             return await this._context.Persons.ToListAsync();
