@@ -1,6 +1,7 @@
 ﻿@page "/patients/details/{Id:int}"
 @using System.Net.Http
 @using System.Text.Json
+@inject IHttpClientFactory httpClientFactory
 @using HospitalManager.Shared.Models
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Doktor")]
@@ -14,54 +15,55 @@
             <div class="col-md-4">
                 <h4>Osobné údaje</h4>
                 <ul class="list-unstyled">
-                    @* <li><strong>Meno:</strong> @patient.Person.FirstName</li> *@
-                    @* <li><strong>Priezvisko:</strong> @patient.Person.LastName</li> *@
-                    @* <li><strong>Rodné číslo:</strong> @patient.Person.BirthNumber</li> *@
-                    <li><strong>Skupina krvi:</strong> @patient.BloodGroup</li>
-                    <li><strong>Alergie:</strong> @patient.Allergies</li>
+                    <li><strong>Meno:</strong> @patient?.Person?.FirstName</li>
+                    <li><strong>Priezvisko:</strong> @patient?.Person?.LastName</li>
+                    <li><strong>Rodné číslo:</strong> @patient?.Person?.BirthNumber</li>
+                    <li><strong>Email:</strong> @patient?.Person?.Email</li>
+                    <li><strong>Tel. číslo:</strong> @patient?.Person?.Telephone</li>
                 </ul>
             </div>
 
             <div class="col-md-4">
                 <h4>Kontakt</h4>
                 <ul class="list-unstyled">
-                    @* <li><strong>Telefón:</strong> @patient.Person.Telephone</li> *@
-                    @* <li><strong>Email:</strong> @patient.Person.Email</li> *@
+                    <li><strong>Telefón:</strong> @patient?.Person?.Telephone</li>
+                    <li><strong>Email:</strong> @patient?.Person?.Email</li>
                 </ul>
             </div>
 
             <div class="col-md-4">
                 <h4>Ostatné informácie</h4>
                 <ul class="list-unstyled">
-                    <li><strong>Lieky:</strong> @patient.Medications</li>
-                    <li><strong>Očkovania:</strong> @patient.Vaccines</li>
+                    <li><strong>Lieky:</strong> @patient?.Medications</li>
+                    <li><strong>Očkovania:</strong> @patient?.Vaccines</li>
+                    <li><strong>Skupina krvi:</strong> @patient?.BloodGroup</li>
+                    <li><strong>Alergie:</strong> @patient?.Allergies</li>
                 </ul>
             </div>
         </div>
     </div>
 }
-else
-{
-    <p>Načítavam údaje o pacientovi...</p>
-}
 
 @code {
     [Parameter] public int Id { get; set; }
-    private PatientDTO patient;
-    
-    [Inject] private IHttpClientFactory HttpClientFactory { get; set; }
+
+    private PatientDTO? patient;
 
     protected override async Task OnInitializedAsync()
     {
-        var httpClient = HttpClientFactory.CreateClient();
+        var httpClient = httpClientFactory.CreateClient("APIClient");
         try
         {
-            var response = await httpClient.GetAsync($"http://localhost:8081/api/patients/{Id}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Odpoveď API: {responseContent}");
-            patient = JsonSerializer.Deserialize<PatientDTO>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Odpoveď API: {responseString}");
+            
+            patient = JsonSerializer.Deserialize<PatientDTO>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (HttpRequestException ex)
         {
