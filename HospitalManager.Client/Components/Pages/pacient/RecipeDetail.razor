@@ -1,28 +1,116 @@
-﻿@page "/recipes/detail"
+﻿@page "/recipes/detail{Id}"
 @attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
 @using HospitalManager.Shared.Models
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
 @using System.Text.Json.Serialization
+@using static HospitalManager.Client.Components.Pages.pacient.Reciepes
 @rendermode InteractiveServer
 
 @inject IHttpClientFactory httpClientFactory
 
-<h3>RecipeDetail</h3>
-<h1>halooo</h1>
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Abaktal 400 mg</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Cena: $6.40</h6>
-        <p class="card-text"><strong>Popis:</strong> Liečba rôznych bakteriálnych infekcií</p>
-        <p class="card-text"><strong>Dávkovanie:</strong> 800 mg</p>
-        <p class="card-text"><strong>Počet tabliet:</strong> 10 tabliet</p>
-        <p class="card-text"><strong>Nežiaduce účinky:</strong> Hnačka, nevolnosť, vracanie</p>
+<h3 class ="text-primary fw-bold">Detail receptu</h3>
+
+<div class="row">
+@foreach (var medicineId in recipes.Medicines)
+{
+    <div class="card m-2" style="width: 18rem; border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
+        <div class="card-body">
+            <h5 class="card-title fw-bold">@medicines.Where(p => p.Id == medicineId).Select(s => s.Name).FirstOrDefault()</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@medicines.Where(p => p.Id == medicineId).Select(s => s.Price).FirstOrDefault()</h6>
+            <p class="card-text"><strong>Popis:</strong>@medicines.Where(p => p.Id == medicineId).Select(s => s.Description).FirstOrDefault()</p>
+            <p class="card-text"><strong>Dávkovanie:</strong>@medicines.Where(p => p.Id == medicineId).Select(s => s.Dosage).FirstOrDefault()</p>
+            <p class="card-text"><strong>Počet tabliet:</strong>@medicines.Where(p => p.Id == medicineId).Select(s => s.Quantity).FirstOrDefault()</p>
+            <p class="card-text"><strong>Nežiaduce účinky:</strong>@medicines.Where(p => p.Id == medicineId).Select(s => s.SideEffect).FirstOrDefault()</p>
+        </div>
     </div>
+}
 </div>
 
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
 
+    private Recipe recipes = new Recipe();
+    private List<Medicine> medicines = new List<Medicine>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/recipe/{Id}");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+
+            recipes = JsonSerializer.Deserialize<Recipe>(responseString);
+
+
+
+            var requestM = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
+            var responseM = await httpClient.SendAsync(requestM, HttpCompletionOption.ResponseHeadersRead);
+            responseM.EnsureSuccessStatusCode();
+            var responseStringM = await responseM.Content.ReadAsStringAsync();
+            Console.WriteLine(responseStringM);
+
+            medicines = JsonSerializer.Deserialize<List<Medicine>>(responseStringM);
+        }
+        catch (HttpRequestException ex)
+        {
+
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    // public class Medicine
+    // {
+
+    //     [JsonPropertyName("id")]
+    //     public int Id { get; set; }
+
+    //     [JsonPropertyName("name")]
+    //     public string Name { get; set; }
+
+    //     [JsonPropertyName("description")]
+    //     public string Description { get; set; }
+
+    //     [JsonPropertyName("dosage")]
+    //     public string Dosage { get; set; }
+
+    //     [JsonPropertyName("quantity")]
+    //     public string Quantity { get; set; }
+
+    //     [JsonPropertyName("sideEffects")]
+    //     public string SideEffect { get; set; }
+
+    //     [JsonPropertyName("price")]
+    //     public double Price { get; set; }
+    // }
+
+    // public class Recipe
+    // {
+    //     [JsonPropertyName("id")]
+    //     public int Id { get; set; }
+
+    //     [JsonPropertyName("medicines")]
+    //     public IEnumerable<int> Medicines { get; set; } = new List<int>();
+
+    //     [JsonPropertyName("expiration")]
+    //     public DateTime Expiration { get; set; }
+
+    //     [JsonPropertyName("examinationId")]
+    //     public int ExaminationId { get; set; }
+
+    //     [JsonPropertyName("used")]
+    //     public int Used { get; set; }
+    // }
 }

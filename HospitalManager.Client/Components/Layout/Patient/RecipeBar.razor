@@ -14,7 +14,7 @@
 
         <div class="d-flex justify-content-between">
            @*  <a href="#" class="btn btn-link text-primary">Detail</a> *@
-            <button class="btn btn-link text-primary" @onclick="OnClickDetail">Detail</button>
+            <button class="btn btn-link text-primary" @onclick="(() => OnClickDetail(Id))">Detail</button>
         </div>
     </div>
 </div>
@@ -23,9 +23,9 @@
     [Inject] private NavigationManager NavigationManager { get; set; }
     private string RecipeName;
 
-    private void OnClickDetail()
+    private void OnClickDetail(int id)
     {
-        NavigationManager.NavigateTo($"/recipes/detail");
+        NavigationManager.NavigateTo($"/recipes/detail{id}");
     }
 
     protected override async Task OnInitializedAsync()

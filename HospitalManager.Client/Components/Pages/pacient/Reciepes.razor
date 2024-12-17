@@ -9,8 +9,6 @@
 
 @inject IHttpClientFactory httpClientFactory
 
-<h1>vsetky recepty</h1>
-
 <h1 class="text-primary fw-bold">Aktuálne recepty (@recipes.Where(p => p.Expiration > DateTime.Now).ToList().Count)</h1>
 
 @foreach (var recipe in recipes.Where(p => p.Expiration > DateTime.Now))
@@ -56,13 +54,6 @@
             Console.WriteLine(responseStringM);
 
             medicines = JsonSerializer.Deserialize<List<Medicine>>(responseStringM);
-
-            // foreach (var medicine in medicines)
-            // {
-            //     Console.WriteLine("medicine id: " + medicine.Id);
-            //     Console.WriteLine("medicine name: " + medicine.Name);
-            //     Console.WriteLine("description: " + medicine.Description);
-            // }
         }
         catch (HttpRequestException ex)
         {
