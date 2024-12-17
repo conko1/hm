@@ -37,16 +37,16 @@
             @foreach (var patient in patients)
             {
                 <tr>
-                    <td>@patient.FirstName</td>
-                    <td>@patient.LastName</td>
-                    <td>@patient.BirthNumber</td>
-                    <td>@patient.Telephone</td>
-                    <td>@patient.Email</td>
+                    <td>@patient?.Person?.FirstName</td>
+                    <td>@patient?.Person?.LastName</td>
+                    <td>@patient?.BirthNumber</td>
+                    <td>@patient?.Person?.Telephone</td>
+                    <td>@patient?.Person?.Email</td>
                     <td>
-                        <NavLink href="@($"/patients/details/{patient.UserId}")" class="btn btn-info">Detaily pacienta</NavLink>
+                        <NavLink href="@($"/patients/details/{patient?.Id}")" class="btn btn-info">Detaily pacienta</NavLink>
                     </td>
                     <td>
-                        <NavLink href="@($"/examination/{patient.UserId}")" class="btn btn-success">Vytvoriť</NavLink>
+                        <NavLink href="@($"/examination/{patient?.Id}")" class="btn btn-success">Vytvoriť</NavLink>
                     </td>
                 </tr>
             }
@@ -67,51 +67,82 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form>
+        <EditForm Model="newPatient" OnValidSubmit="AddPatient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
             <div class="mb-3">
                 <label for="name" class="form-label">Meno</label>
-                <input type="text" class="form-control" id="name">
+                <InputText id="name" class="form-control" @bind-Value="newPatient.FirstName" />
             </div>
             <div class="mb-3">
                 <label for="surname" class="form-label">Priezvisko</label>
-                <input type="text" class="form-control" id="surname">
+                <InputText id="surname" class="form-control" @bind-Value="newPatient.LastName" />
             </div>
             <div class="mb-3">
-                <label for="birthDate" class="form-label">Dátum narodenia</label>
-                <input type="date" class="form-control" id="birthDate">
+                <label for="birthNumber" class="form-label">Rodné číslo</label>
+                <InputText id="birthNumber" class="form-control" @bind-Value="newPatient.BirthNumber" />
             </div>
             <div class="mb-3">
                 <label for="telephone" class="form-label">Telefón</label>
-                <input type="text" class="form-control" id="telephone">
+                <InputText id="telephone" class="form-control" @bind-Value="newPatient.Telephone" />
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email">
+                <InputText id="email" type="email" class="form-control" @bind-Value="newPatient.Email" />
             </div>
             <button type="submit" class="btn btn-primary">Uložiť</button>
-        </form>
+        </EditForm>
     </div>
 </div>
 
 @code {
-    private List<PersonDTO> patients = new List<PersonDTO>();
+    private List<PatientDTO> patients = new List<PatientDTO>();
+    private PersonDTO newPatient = new PersonDTO();
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadPatients();
+    }
+    private async Task LoadPatients()
     {
         var httpClient = httpClientFactory.CreateClient("APIClient");
 
         try
         {
-// Načítanie pacientov
+            // Načítanie pacientov
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/patients");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
-            patients = JsonSerializer.Deserialize<List<PersonDTO>>(responseString, new JsonSerializerOptions
+            patients = JsonSerializer.Deserialize<List<PatientDTO>>(responseString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+    private async Task AddPatient()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+            var jsonContent = JsonSerializer.Serialize(newPatient);
+            var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync("/api/patients/register", content);
+            response.EnsureSuccessStatusCode();
+            
+            newPatient = new PersonDTO();
+            await LoadPatients();
         }
         catch (HttpRequestException ex)
         {
