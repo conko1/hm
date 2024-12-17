@@ -29,7 +29,7 @@ public class DoctorController : ControllerBase
         var result = await _doctorService.GetDoctor(id);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
-            return NotFound(result.Data);
+            return NotFound(result.Errors);
         }
         return Ok(result.Data);
     }
@@ -41,12 +41,12 @@ public class DoctorController : ControllerBase
         var result = await _doctorService.UpdateDoctor(id, patchDoctor);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
-            return NotFound(result.Data);
+            return NotFound(result.Errors);
         }
 
         if (result is { IsSuccess: false, StatusCode: 400 })
         {
-            return BadRequest(result.Data);
+            return BadRequest(result.Errors);
         }
         
         return Ok(result.Data);

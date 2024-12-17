@@ -30,7 +30,7 @@ public class RecipeController : ControllerBase
         var result = await _recipeService.GetRecipe(id, true);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
-            return NotFound(result.Data);
+            return NotFound(result.Errors);
         }
         return Ok(result.Data);
     }
@@ -42,12 +42,12 @@ public class RecipeController : ControllerBase
         var result = await _recipeService.UpdateRecipe(id, patchRecipe);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
-            return NotFound(result.Data);
+            return NotFound(result.Errors);
         }
 
         if (result is { IsSuccess: false, StatusCode: 400 })
         {
-            return BadRequest(result.Data);
+            return BadRequest(result.Errors);
         }
         
         return Ok(result.Data);

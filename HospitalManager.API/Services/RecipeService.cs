@@ -47,7 +47,7 @@ public class RecipeService : IRecipeService
 
     public async Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
     {
-        var recipeEntity = await _recipeRepository.GetRecipeById(id);
+        var recipeEntity = await _recipeRepository.GetRecipeById(id, true);
         if (recipeEntity == null)
         {
             return ServiceResponse<RecipeDTO>.Failure("Recipe not found", 404);
@@ -58,17 +58,21 @@ public class RecipeService : IRecipeService
         var modelState = new ModelStateDictionary();
         
         patchDocument.ApplyTo(recipeToUpdate, modelState);
-
-        List<Medicine>? medicines;
-        if (recipeToUpdate.Medicines != null)
-        {
-            recipeEntity.Medicines = await _medicineRepository.GetMedicinesIds(recipeToUpdate.Medicines);
-        }
         
         if (!modelState.IsValid)
         {
             var errors = modelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             return ServiceResponse<RecipeDTO>.Failure(errors, 400);
+        }
+        
+        if (recipeToUpdate.Medicines != null)
+        {
+            var medicinesToApply = await _medicineRepository.GetMedicinesIds(recipeToUpdate.Medicines);
+            if (medicinesToApply.ToList().Count() != recipeToUpdate.Medicines.ToList().Count())
+            {
+                return ServiceResponse<RecipeDTO>.Failure(["Provided medicine does not exists!"], 400);
+            }
+            recipeEntity.Medicines = medicinesToApply;
         }
         
         _mapper.Map(recipeToUpdate, recipeEntity);
@@ -81,7 +85,15 @@ public class RecipeService : IRecipeService
     {
         var recipeEntity = _mapper.Map<Recipe>(createRecipe);
         
-        Console.WriteLine(recipeEntity.Id);
+        if (createRecipe.Medicines != null)
+        {
+            var medicinesToApply = await _medicineRepository.GetMedicinesIds(createRecipe.Medicines);
+            if (medicinesToApply.ToList().Count() != createRecipe.Medicines.ToList().Count())
+            {
+                return ServiceResponse<RecipeDTO>.Failure(["Provided medicine does not exists!"], 400);
+            }
+            recipeEntity.Medicines = medicinesToApply;
+        }
         
         await _recipeRepository.AddRecipe(recipeEntity);
         await _recipeRepository.SaveChanges();
