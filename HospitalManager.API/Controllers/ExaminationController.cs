@@ -58,4 +58,16 @@ public class ExaminationController : ControllerBase
         var result = await _examinationService.AddExamination(examination);
         return CreatedAtAction(nameof(GetExamination), new { id = result.Data.Id }, result.Data);
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<RecipeDTO>> DeleteExamination(int id)
+    {
+        var result = await _examinationService.DeleteExamination(id);
+        if (result is { IsSuccessful: false, StatusCode: 404 })
+        {
+            return NotFound(result);
+        }
+        
+        return NoContent();
+    }
 }

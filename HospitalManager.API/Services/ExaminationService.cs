@@ -14,12 +14,18 @@ public class ExaminationService : IExaminationService
 {
     private readonly IExaminationRepository _examinationRepository;
     private readonly IPatientRepository _patientRepository;
+    private readonly IDoctorRepository _doctorRepository;
     private readonly IMapper _mapper;
 
-    public ExaminationService(IExaminationRepository examinationRepository, IPatientRepository patientRepository, IMapper mapper)
+    public ExaminationService(
+        IExaminationRepository examinationRepository,
+        IPatientRepository patientRepository,
+        IDoctorRepository doctorRepository,
+        IMapper mapper)
     {
         _examinationRepository = examinationRepository;
         _patientRepository = patientRepository;
+        _doctorRepository = doctorRepository;
         _mapper = mapper;
     }
     
@@ -84,6 +90,8 @@ public class ExaminationService : IExaminationService
             }
         }
 
+        Doctor doctor = await _doctorRepository.GetDoctorById(1);
+        examinationEntity.Doctor = doctor;
         examinationEntity.Patient = patient;
         
         await _examinationRepository.AddExamination(examinationEntity);
@@ -95,6 +103,14 @@ public class ExaminationService : IExaminationService
 
     public async Task<ServiceResponse> DeleteExamination(int id)
     {
-        throw new NotImplementedException();
+        var examination = await _examinationRepository.GetExaminationById(id);
+        if (examination == null)
+        {
+            return ServiceResponse.Failure("Examination not found", 404);
+        }
+
+        await _examinationRepository.DeleteExamination(examination);
+        await _examinationRepository.SaveChanges();
+        return ServiceResponse.Success();
     }
 }
