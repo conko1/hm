@@ -1,6 +1,7 @@
 ﻿using HospitalManager.API.DbContexts;
 using HospitalManager.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HospitalManager.API.Repositories
 {
@@ -30,9 +31,10 @@ namespace HospitalManager.API.Repositories
             return await this._context.Persons.ToListAsync();
         }
 
-        public async Task<Person> GetById(string birthNumber)
+        public async Task<Person> GetByBirthNumber(string birthNumber)
         {
-            return await this._context.Persons.FindAsync(birthNumber);
+            var person = await _context.Persons.FirstOrDefaultAsync(p => p.BirthNumber == birthNumber);
+            return person;
         }
 
         public async Task Update(Person person)

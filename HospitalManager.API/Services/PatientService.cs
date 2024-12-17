@@ -12,15 +12,17 @@ namespace HospitalManager.API.Services
         private readonly IInsuranceRepository _insuranceRepository;
         private readonly IPersonRepository _personRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository, IPersonRepository personRepository, IAddressRepository addressRepository)
+        public PatientService(IPatientRepository patientRepository, IMapper mapper, IInsuranceRepository insuranceRepository, IPersonRepository personRepository, IAddressRepository addressRepository, IDoctorRepository doctorRepository)
         { 
             this._patientRepository = patientRepository;
             this._mapper = mapper;
             this._insuranceRepository = insuranceRepository;
             this._personRepository = personRepository;
             this._addressRepository = addressRepository;
+            this._doctorRepository = doctorRepository;
         }
         public async Task Add(RegisterPatientDTO registerPatientDTO)
         {
@@ -31,28 +33,7 @@ namespace HospitalManager.API.Services
             }
             else
             {
-                var existingAddress = await this._addressRepository.GetByDetails(registerPatientDTO.City, registerPatientDTO.Street, registerPatientDTO.StreetNumber, registerPatientDTO.PostalCode, registerPatientDTO.Region, registerPatientDTO.District);
-                Address newAddress;
-
-                if (existingAddress != null)
-                {
-                    newAddress = existingAddress;
-                }
-                else
-                {
-                    newAddress = new Address
-                    {
-                        City = registerPatientDTO.City,
-                        Street = registerPatientDTO.Street,
-                        StreetNumber = registerPatientDTO.StreetNumber,
-                        PostalCode = registerPatientDTO.PostalCode,
-                        Region = registerPatientDTO.Region,
-                        District = registerPatientDTO.District,
-                    };
-                    await this._addressRepository.Add(newAddress);
-                }
-
-                var person = await this._personRepository.GetById(registerPatientDTO.BirthNumber);
+                var person = await this._personRepository.GetByBirthNumber(registerPatientDTO.BirthNumber);
                 if (person == null)
                 {
                     person = new Person
@@ -62,7 +43,6 @@ namespace HospitalManager.API.Services
                         LastName = registerPatientDTO.LastName,
                         Telephone = registerPatientDTO.Telephone,
                         Email = registerPatientDTO.Email,
-                        Address = newAddress
                     };
                     await this._personRepository.Add(person);
                 }
@@ -70,11 +50,8 @@ namespace HospitalManager.API.Services
                 Patient newPatient = new Patient
                 {
                     Person = person,
-                    Insurance = await _insuranceRepository.GetById(registerPatientDTO.InsuranceId),
-                    Allergies = registerPatientDTO.Allergies,
-                    BloodGroup = registerPatientDTO.BloodGroup,
-                    Medications = registerPatientDTO.Medications,
-                    Vaccines = registerPatientDTO.Vaccines
+                    BirthNumber = registerPatientDTO.BirthNumber,
+                    DoctorId = 1
                 };
                 await this._patientRepository.Add(newPatient);
             }
