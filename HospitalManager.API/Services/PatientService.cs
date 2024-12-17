@@ -119,7 +119,13 @@ namespace HospitalManager.API.Services
             person.Email = patientDto.Email;
             person.Telephone = patientDto.Telephone;
 
-            patient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+            var insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
+            if (insurance == null)
+            {
+                throw new KeyNotFoundException($"Insurance with ID {patientDto.InsuranceId} not found.");
+            }
+
+            patient.Insurance = insurance;
             patient.Allergies = patientDto.Allergies;
             patient.BloodGroup = patientDto.BloodGroup;
             patient.Medications = patientDto.Medications;

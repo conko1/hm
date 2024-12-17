@@ -8,8 +8,11 @@ namespace HospitalManager.API.Profiles
     {
         public PatientProfile()
         {
-            CreateMap<PatientDTO, Patient>();
-            CreateMap<Patient, PatientDTO>();
+            CreateMap<Patient, PatientDTO>()
+                .ForMember(dest => dest.InsuranceId, opt => opt.MapFrom(src => src.Insurance != null ? src.Insurance.Code : 0));
+
+            CreateMap<PatientDTO, Patient>()
+                .ForMember(dest => dest.Insurance, opt => opt.Ignore());
         }
     }
 }

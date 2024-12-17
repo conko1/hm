@@ -26,7 +26,7 @@ namespace HospitalManager.API.Repositories
 
         public async Task<Insurance> GetById(int id)
         {
-            return await this._context.Insurances.Where(d => d.Code == id).FirstOrDefaultAsync();
+            return await this._context.Insurances.FirstOrDefaultAsync(i => i.Code == id);
         }
     }
 }
