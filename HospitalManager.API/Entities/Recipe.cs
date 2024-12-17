@@ -9,15 +9,15 @@ public class Recipe : BaseEntity
     public IEnumerable<Medicine> Medicines { get; set; } = new List<Medicine>();
     
     [Required]
-    public Doctor Doctor { get; set; }  
-    
-    [Required]
-    public Patient Patient { get; set; }
-    
-    [Required]
     public DateTime Expiration { get; set; }
     
     [Required]
-    [Column(TypeName = "NUMBER(1)")]
-    public bool Used { get; set; } = false;
+    public Examination Examination { get; set; }
+    
+    [ForeignKey(nameof(Examination))]
+    public int ExaminationId { get; set; }
+    
+    [Required]
+    [Range(0, 1)]
+    public int Used { get; set; }
 }
