@@ -3,6 +3,7 @@ using HospitalManager.API.Entities;
 using HospitalManager.API.Repositories;
 using HospitalManager.Shared.Models;
 using HospitalManager.Shared.Service;
+using System;
 
 namespace HospitalManager.API.Services
 {
@@ -106,20 +107,28 @@ namespace HospitalManager.API.Services
 
         public async Task<PatientDTO> Update(int id, PatientForUpdateDTO patientDto)
         {
-            var patient = await this._patientRepository.GetById(id);
+            var patient = await this._patientRepository.GetPatientWithPerson(id);
             if (patient == null)
             {
                 throw new KeyNotFoundException($"Patient with ID {id} not found.");
             }
+
+            var person = patient.Person;
+            person.FirstName = patientDto.FirstName;
+            person.LastName = patientDto.LastName;
+            person.Email = patientDto.Email;
+            person.Telephone = patientDto.Telephone;
+
             patient.Insurance = await this._insuranceRepository.GetById(patientDto.InsuranceId);
             patient.Allergies = patientDto.Allergies;
             patient.BloodGroup = patientDto.BloodGroup;
             patient.Medications = patientDto.Medications;
             patient.Vaccines = patientDto.Vaccines;
 
+            await this._personRepository.Update(person);
             await this._patientRepository.Update(patient);
 
-            var patientDTO = _mapper.Map<PatientDTO>(patient); 
+            var patientDTO = _mapper.Map<PatientDTO>(patient);
             return patientDTO;
         }
     }
