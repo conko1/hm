@@ -68,15 +68,15 @@ public class LocalUserService : ILocalUserService
         return await _context.UserClaims.Where(u => u.User.Subject == subject).ToListAsync();
     }
 
-    public async Task<User?> GetUserByUsernameAsync(string username)
+    public async Task<User?> GetUserByUsernameAsync(string email)
     {
-        if (string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentNullException(nameof(username));
+            throw new ArgumentNullException(nameof(email));
         }
 
         return await _context.Users
-             .FirstOrDefaultAsync(u => u.Username == username);
+             .FirstOrDefaultAsync(u => u.Email == email);
     }
     
     public async Task<User?> GetUserBySubjectAsync(string subject)
@@ -96,9 +96,9 @@ public class LocalUserService : ILocalUserService
             throw new ArgumentNullException(nameof(userToAdd));
         }
 
-        if (_context.Users.Any(u => u.Username == userToAdd.Username))
+        if (_context.Users.Any(u => u.Email == userToAdd.Email))
         {
-            throw new Exception("Unable to create user with specified username");
+            throw new Exception("Unable to create user with specified email");
         }
         
         userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);

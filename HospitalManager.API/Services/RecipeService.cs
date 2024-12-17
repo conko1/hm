@@ -11,15 +11,18 @@ namespace HospitalManager.API.Services;
 
 public class RecipeService : IRecipeService
 {
+    private readonly IAuthenticationService _authenticationService;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IMedicineRepository _medicineRepository;
     private readonly IMapper _mapper;
 
     public RecipeService(
+        IAuthenticationService authenticationService,
         IRecipeRepository recipeRepository,
         IMedicineRepository medicineRepository,
         IMapper mapper)
     {
+        _authenticationService = authenticationService;
         _recipeRepository = recipeRepository;
         _medicineRepository = medicineRepository;
         _mapper = mapper;
@@ -45,7 +48,8 @@ public class RecipeService : IRecipeService
         return ServiceResponse<RecipeDTO>.Success(recipeDto);
     }
 
-    public async Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
+    public async Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, 
+        JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
     {
         var recipeEntity = await _recipeRepository.GetRecipeById(id, true);
         if (recipeEntity == null)

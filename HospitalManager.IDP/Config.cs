@@ -11,6 +11,7 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResource("roles", "Your role(s)", new [] {"Role"}),
+            new IdentityResource("email", "Your email", new [] {"Email"}),
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -19,7 +20,7 @@ public static class Config
             new ApiResource(
                 "hospitalmanagerapi", 
                 "Hospital manage API",
-                new [] { "Role" }
+                new [] { "Role", "Email" }
             )
             {
                 Scopes = { "hospitalmanagerapi.fullaccess" }
@@ -51,6 +52,7 @@ public static class Config
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "roles",
+                    "email",
                     "hospitalmanagerapi.fullaccess",
                 },
                 ClientSecrets =
