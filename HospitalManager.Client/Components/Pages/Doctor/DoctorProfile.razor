@@ -1,121 +1,119 @@
 ﻿@page "/profile"
-
+@attribute [Authorize(Roles = "Doktor")]
 @inject IHttpClientFactory httpClientFactory
 @using System.Text.Json
 @using HospitalManager.Shared.Models
+@using Microsoft.AspNetCore.Authorization
 
 <div class="container mt-5">
-    <!-- Nadpis -->
     <h2 class="mb-4 text-center">Profil</h2>
-
     @if (doctor != null)
     {
-    <!-- Formulár zarovnaný na stred -->
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="meno" class="form-label">Meno</label>
-                        <input type="text" id="meno" class="form-control" value="@doctor.Person.FirstName" readonly />
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="meno" class="form-label">Meno</label>
+                            <input type="text" id="meno" class="form-control" value="@doctor.Person.FirstName" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="priezvisko" class="form-label">Priezvisko</label>
+                            <input type="text" id="priezvisko" class="form-control" value="@doctor.Person.LastName" readonly />
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="priezvisko" class="form-label">Priezvisko</label>
-                        <input type="text" id="priezvisko" class="form-control" value="@doctor.Person.LastName" readonly />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="rodneCislo" class="form-label">Rodné číslo</label>
+                            <input type="text" id="rodneCislo" class="form-control" value="@doctor.BirthNumber" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" value="@doctor.Person.Email" readonly />
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="rodneCislo" class="form-label">Rodné číslo</label>
-                        <input type="text" id="rodneCislo" class="form-control" value="@doctor.BirthNumber" readonly />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telefon" class="form-label">Tel. číslo</label>
+                            <input type="text" id="telefon" class="form-control" value="@doctor.Person.Telephone" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="specializacia" class="form-label">Špecializácia</label>
+                            <input type="text" id="specializacia" class="form-control" value="@doctor.Specialization" readonly />
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" class="form-control" value="@doctor.Person.Email" readonly />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="telefon" class="form-label">Tel. číslo</label>
-                        <input type="text" id="telefon" class="form-control" value="@doctor.Person.Telephone" readonly />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="specializacia" class="form-label">Špecializácia</label>
-                        <input type="text" id="specializacia" class="form-control" value="@doctor.Specialization" readonly />
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div class="mt-5 text-center">
-        <h3>Zmeny</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped mx-auto w-50">
-                <thead class="table-dark">
-                <tr>
-                    <th>Deň</th>
-                    <th>Čas</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Pondelok</td>
-                    <td>8:00 - 16:00</td>
-                </tr>
-                <tr>
-                    <td>Utorok</td>
-                    <td>9:00 - 17:00</td>
-                </tr>
-                <tr>
-                    <td>Streda</td>
-                    <td>8:00 - 16:00</td>
-                </tr>
-                <tr>
-                    <td>Štvrtok</td>
-                    <td>9:00 - 17:00</td>
-                </tr>
-                <tr>
-                    <td>Piatok</td>
-                    <td>8:00 - 14:00</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="mt-5 text-center">
+            <h3>Zmeny</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mx-auto w-50">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Deň</th>
+                        <th>Čas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Pondelok</td>
+                        <td>8:00 - 16:00</td>
+                    </tr>
+                    <tr>
+                        <td>Utorok</td>
+                        <td>9:00 - 17:00</td>
+                    </tr>
+                    <tr>
+                        <td>Streda</td>
+                        <td>8:00 - 16:00</td>
+                    </tr>
+                    <tr>
+                        <td>Štvrtok</td>
+                        <td>9:00 - 17:00</td>
+                    </tr>
+                    <tr>
+                        <td>Piatok</td>
+                        <td>8:00 - 14:00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
     }
     else
     {
-    <p class="text-center">Načítavam údaje o doktorovi...</p>
+        <p class="text-center">Načítavam údaje o doktorovi...</p>
     }
 </div>
 
 @code {
-private DoctorDTO? doctor;
+    private DoctorDTO? doctor;
 
-protected override async Task OnInitializedAsync()
-{
-var httpClient = httpClientFactory.CreateClient("APIClient");
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
 
-try
-{
-var request = new HttpRequestMessage(HttpMethod.Get, "/api/doctor/1/?expandPerson=true");
-var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-response.EnsureSuccessStatusCode();
-var responseString = await response.Content.ReadAsStringAsync();
-doctor = JsonSerializer.Deserialize<DoctorDTO>(responseString, new JsonSerializerOptions
-{
-PropertyNameCaseInsensitive = true
-});
-}
-catch (HttpRequestException ex)
-{
-Console.WriteLine($"Request error: {ex.Message}");
-}
-catch (Exception ex)
-{
-Console.WriteLine($"Unexpected error: {ex.Message}");
-}
-}
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/doctor/1/?expandPerson=true");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            doctor = JsonSerializer.Deserialize<DoctorDTO>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
 
 }

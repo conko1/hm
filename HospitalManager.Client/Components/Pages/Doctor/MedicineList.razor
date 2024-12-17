@@ -1,9 +1,11 @@
 ﻿@page "/medicine"
+@attribute [Authorize(Roles = "Doktor")]
 @attribute [StreamRendering]
 @using System.Text.Json
 @using HospitalManager.Shared.Models
 @using System.Xml;
 @using System.Xml.Linq
+@using Microsoft.AspNetCore.Authorization
 
 @inject IHttpClientFactory httpClientFactory
 
