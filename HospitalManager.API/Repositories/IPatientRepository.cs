@@ -9,5 +9,13 @@ namespace HospitalManager.API.Repositories
         Task Add(Patient patient);
         Task Update(Patient patient);
         Task Delete(Patient patient);
+
+        Task<Patient> GetByBirthNumber(string birthNumber);
+
+        Task<bool> PatientExists(int id);
+
+        Task<Patient?> GetPatientWithPerson(int id);
+
+        Task<IEnumerable<Patient>> GetAllWithPerson();
     }
 }

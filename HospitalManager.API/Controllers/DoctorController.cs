@@ -24,9 +24,9 @@ public class DoctorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<DoctorDTO>> GetDoctor(int id)
+    public async Task<ActionResult<DoctorDTO>> GetDoctor(int id, [FromQuery] bool expandPerson = false)
     {
-        var result = await _doctorService.GetDoctor(id);
+        var result = await _doctorService.GetDoctor(id, expandPerson);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
             return NotFound(result.Errors);

@@ -1,34 +1,49 @@
-﻿using HospitalManager.API.Entities;
+﻿using HospitalManager.API.DbContexts;
+using HospitalManager.API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManager.API.Repositories
 {
     public class AddressRepository : IAddressRepository
     {
-        private readonly IAddressRepository _addressRepository;
+        private readonly ApiDbContext _context;
 
-        public AddressRepository(IAddressRepository addressRepository)
+        public AddressRepository(ApiDbContext context)
         { 
-            this._addressRepository = addressRepository;
+            this._context = context;
         }
 
-        public Task Add(Address address)
+        public async Task Add(Address address)
         {
-            throw new NotImplementedException();
+            await this._context.Addresses.AddAsync(address);
+            await this._context.SaveChangesAsync();
         }
 
-        public Task Delete(Address address)
+        public async Task Delete(Address address)
         {
-            throw new NotImplementedException();
+            this._context.Addresses.Remove(address);
+            await this._context.SaveChangesAsync();
         }
 
-        public Task<Address> GetById(int id)
+        public async Task<IEnumerable<Address>> GetAll()
         {
-            throw new NotImplementedException();
+            return await this._context.Addresses.ToListAsync();
         }
 
-        public Task Update(Address address)
+        public async Task<Address> GetByDetails(string city, string street, int streetNumber, int postalCode, string region, string district)
         {
-            throw new NotImplementedException();
+            return await _context.Addresses.FirstOrDefaultAsync(a => a.City == city && a.Street == street && a.StreetNumber == streetNumber && a.PostalCode == postalCode && a.Region == region && a.District == district);
+        }
+
+        public async Task<Address> GetById(int id)
+        {
+            return await this._context.Addresses.FindAsync(id);
+        }
+
+        public async Task Update(Address address)
+        {
+            this._context.Addresses.Update(address);
+            await this._context.SaveChangesAsync();
         }
     }
 }

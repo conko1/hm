@@ -20,7 +20,6 @@ public class ApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
         modelBuilder.Entity<Person>().HasData(
             new Person()
             {
@@ -63,7 +62,7 @@ public class ApiDbContext : DbContext
                 User = null,
             }
         );
-        
+
         modelBuilder.Entity<Doctor>().HasData(
             new Doctor()
             {
@@ -184,6 +183,27 @@ public class ApiDbContext : DbContext
                 new { RecipesId = 2, MedicinesId = 2 },
                 new { RecipesId = 2, MedicinesId = 3 }
             ));
+
+        modelBuilder.Entity<Insurance>().HasData(
+            new Insurance()
+            {
+                Code = 27,
+                FullName = "Union zdravotná poisťovňa, a.s.",
+                Abbreviation = "UNION"
+            },
+            new Insurance()
+            {
+                Code = 24,
+                FullName = "Dôvera zdravotná poisťovňa, a.s.",
+                Abbreviation = "Dôvera"
+            },
+            new Insurance()
+            {
+                Code = 25,
+                FullName = "Všeobecná zdravotná poisťovňa, a.s.",
+                Abbreviation = "VZP"
+            }
+        );
         
         base.OnModelCreating(modelBuilder);
     }
