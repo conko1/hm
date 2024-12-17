@@ -1,4 +1,5 @@
 using HospitalManager.API.DbContexts;
+using HospitalManager.API.Middlewares;
 using HospitalManager.API.Repositories;
 using HospitalManager.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,6 +25,10 @@ public static class HostingExtensions
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        
         builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
         builder.Services.AddScoped<IMedicineService, MedicineService>();
 
@@ -81,11 +86,13 @@ public static class HostingExtensions
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
-
+        
         app.UseAuthentication();
-
+        
+        app.UseMiddleware<AuthServiceMiddleware>();
+        
         app.UseAuthorization();
-
+        
         app.MapControllers();
         
         return app;

@@ -48,5 +48,10 @@ namespace HospitalManager.API.Repositories
             this._context.Persons.Update(person);
             await this._context.SaveChangesAsync();
         }
+
+        public async Task SaveChanges()
+        {
+            await this._context.SaveChangesAsync();
+        }
     }
 }

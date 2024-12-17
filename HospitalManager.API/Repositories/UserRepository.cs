@@ -19,15 +19,24 @@ public class UserRepository : IUserRepository
         return users;
     }
 
-    public async Task<User> GetUserById(int id)
+    public async Task<User?> GetUserById(int id)
     {
         var user = await _context.Users
             .Where(u => u.Id == id)
             .FirstOrDefaultAsync();
         return user;
     }
+    
 
-    public async Task<User> GetUserBySubId(string id)
+    public async Task<User?> GetUserByEmail(string email)
+    {
+        var user = await _context.Users
+            .Where(u => u.Email == email)
+            .FirstOrDefaultAsync();
+        return user;
+    }
+
+    public async Task<User?> GetUserBySubId(string id)
     {
         var user = await _context.Users
             .Where(u => u.SubjectId == id)
@@ -35,7 +44,7 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task CreateUser(User user)
+    public async Task AddUser(User user)
     {
         await _context.Users.AddAsync(user);
     }

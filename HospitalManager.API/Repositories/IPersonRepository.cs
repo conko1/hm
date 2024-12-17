@@ -10,5 +10,6 @@ namespace HospitalManager.API.Repositories
         Task Add(Person person);
         Task Update(Person person);
         Task Delete(Person person);
+        Task SaveChanges();
     }
 }

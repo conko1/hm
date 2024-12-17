@@ -5,9 +5,8 @@ namespace HospitalManager.API.Services;
 
 public interface IAuthenticationService
 {
-    ClaimsPrincipal GetUser();
-    string GetUserId();
-    string GetUserName();
-    string GetUserEmail();
-    Task<User> GetDatabaseUserAsync();
+    ClaimsPrincipal? GetUser();
+    Task CheckIfUserSubRegistered();
+    (String Email, String Role, String Subject) GetUserClaims();
+    Task<User?> GetDatabaseUser();
 }

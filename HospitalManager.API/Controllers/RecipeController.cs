@@ -1,10 +1,12 @@
 using HospitalManager.API.Services;
 using HospitalManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/recipe")]
 public class RecipeController : ControllerBase
@@ -19,6 +21,7 @@ public class RecipeController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipes()
     {
+        Console.WriteLine("GetRecipes");
         var result = await _recipeService.GetRecipes(true);
         return Ok(result.Data);
     }
