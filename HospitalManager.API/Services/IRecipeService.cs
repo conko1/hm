@@ -9,7 +9,7 @@ public interface IRecipeService
 {
     Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(bool includeMedicine = false);
     Task<ServiceResponse<RecipeDTO>> GetRecipe(int id, bool includeMedicine = false);
-    Task<ServiceResponse<RecipeDTO>> UpdateRecipe(Recipe recipe, JsonPatchDocument<RecipeForUpdateDTO> patchDocument);
+    Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, JsonPatchDocument<RecipeForUpdateDTO> patchDocument);
     Task<ServiceResponse<RecipeDTO>> AddRecipe(RecipeForCreateDTO createRecipe);
     Task<ServiceResponse> DeleteRecipe(int id);
 }

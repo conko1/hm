@@ -10,13 +10,10 @@ namespace HospitalManager.API.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IPatientService patientService;
-
         public PatientController(IPatientService patientService)
         {
             this.patientService = patientService;
         }
-
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPatient(int id, [FromQuery] bool expandPerson = false)
         {

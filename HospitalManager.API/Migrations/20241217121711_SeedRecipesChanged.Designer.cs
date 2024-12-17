@@ -3,6 +3,7 @@ using System;
 using HospitalManager.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241217121711_SeedRecipesChanged")]
+    partial class SeedRecipesChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,17 +103,17 @@ namespace HospitalManager.API.Migrations
                         {
                             Id = 1,
                             BirthNumber = "012345/1234",
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6221),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8048),
                             Specialization = "Všeobecný lekár",
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6222)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8049)
                         },
                         new
                         {
                             Id = 2,
                             BirthNumber = "012345/1236",
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6225),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8052),
                             Specialization = "Detský lekár",
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6226)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8052)
                         });
                 });
 
@@ -165,20 +168,20 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6295),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8151),
                             DoctorId = 1,
-                            ExaminationDate = new DateTime(2024, 11, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6287),
+                            ExaminationDate = new DateTime(2024, 11, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8139),
                             PatientId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6295)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8152)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6299),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8156),
                             DoctorId = 2,
-                            ExaminationDate = new DateTime(2025, 2, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6297),
+                            ExaminationDate = new DateTime(2025, 2, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8154),
                             PatientId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6299)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8157)
                         });
                 });
 
@@ -278,34 +281,34 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6330),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8250),
                             Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
                             Dosage = "100 ml",
                             Name = "0,9 % Chlorid sodný Baxter-Viaflo",
                             Price = 6.79m,
                             Quantity = "1000 ml",
                             SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6331)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8251)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6333),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8254),
                             Description = "Liečba rôznych bakteriálnych infekcií",
                             Dosage = "800 mg",
                             Name = "Abaktal 400 mg",
                             Price = 6.40m,
                             Quantity = "10 tabliet",
                             SideEffects = "Hnačka, nevolnosť, vracanie",
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6334)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8255)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6336),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8257),
                             Name = "Ibuprofen",
                             Price = 6.25m,
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6337)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8258)
                         });
                 });
 
@@ -364,17 +367,17 @@ namespace HospitalManager.API.Migrations
                         {
                             Id = 1,
                             BirthNumber = "012345/1235",
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6255),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8102),
                             DoctorId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6255)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8103)
                         },
                         new
                         {
                             Id = 2,
                             BirthNumber = "012345/1237",
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6257),
+                            CreatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8105),
                             DoctorId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6258)
+                            UpdatedAt = new DateTime(2024, 12, 17, 12, 17, 10, 985, DateTimeKind.Local).AddTicks(8106)
                         });
                 });
 
@@ -475,26 +478,6 @@ namespace HospitalManager.API.Migrations
                     b.HasIndex("ExaminationId");
 
                     b.ToTable("Recipe");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6368),
-                            ExaminationId = 1,
-                            Expiration = new DateTime(2025, 1, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6366),
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6368),
-                            Used = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6371),
-                            ExaminationId = 2,
-                            Expiration = new DateTime(2025, 2, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6370),
-                            UpdatedAt = new DateTime(2024, 12, 17, 12, 18, 46, 861, DateTimeKind.Local).AddTicks(6372),
-                            Used = 1
-                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.User", b =>
@@ -537,28 +520,6 @@ namespace HospitalManager.API.Migrations
                     b.HasIndex("RecipesId");
 
                     b.ToTable("MedicineRecipe");
-
-                    b.HasData(
-                        new
-                        {
-                            MedicinesId = 1,
-                            RecipesId = 1
-                        },
-                        new
-                        {
-                            MedicinesId = 2,
-                            RecipesId = 1
-                        },
-                        new
-                        {
-                            MedicinesId = 2,
-                            RecipesId = 2
-                        },
-                        new
-                        {
-                            MedicinesId = 3,
-                            RecipesId = 2
-                        });
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Doctor", b =>

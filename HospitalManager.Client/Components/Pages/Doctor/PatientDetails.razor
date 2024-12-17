@@ -1,148 +1,79 @@
-﻿@page "/patients/details/{birthNumber}"
+﻿@page "/patients/details/{Id:int}"
+@using System.Net.Http
+@using System.Text.Json
+@inject IHttpClientFactory httpClientFactory
+@using HospitalManager.Shared.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Doktor")]
 
 <PageTitle>Patient Details</PageTitle>
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <h4>Osobné údaje</h4>
-            <ul class="list-unstyled">
-                <li><strong>Meno:</strong> Ján Novák</li>
-                <li><strong>Dátum narodenia:</strong> 1. január 1980</li>
-                <li><strong>Pohlavie:</strong> Muž</li>
-                <li><strong>Poistné číslo:</strong> 123456789</li>
-            </ul>
+
+@if (patient != null)
+{
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Osobné údaje</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Meno:</strong> @patient?.Person?.FirstName</li>
+                    <li><strong>Priezvisko:</strong> @patient?.Person?.LastName</li>
+                    <li><strong>Rodné číslo:</strong> @patient?.Person?.BirthNumber</li>
+                    <li><strong>Email:</strong> @patient?.Person?.Email</li>
+                    <li><strong>Tel. číslo:</strong> @patient?.Person?.Telephone</li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h4>Kontakt</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Telefón:</strong> @patient?.Person?.Telephone</li>
+                    <li><strong>Email:</strong> @patient?.Person?.Email</li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h4>Ostatné informácie</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Lieky:</strong> @patient?.Medications</li>
+                    <li><strong>Očkovania:</strong> @patient?.Vaccines</li>
+                    <li><strong>Skupina krvi:</strong> @patient?.BloodGroup</li>
+                    <li><strong>Alergie:</strong> @patient?.Allergies</li>
+                </ul>
+            </div>
         </div>
-
-        <div class="col-md-4">
-            <h4>Adresa</h4>
-            <ul class="list-unstyled">
-                <li><strong>Ulica:</strong> Hlavná 12</li>
-                <li><strong>Mesto:</strong> Bratislava</li>
-                <li><strong>PSČ:</strong> 811 01</li>
-                <li><strong>Štát:</strong> Slovenská republika</li>
-            </ul>
-        </div>
-
-        <div class="col-md-4">
-            <h4>Kontakt</h4>
-            <ul class="list-unstyled">
-                <li><strong>Telefón:</strong> +421 912 345 678</li>
-                <li><strong>Email:</strong> jan.novak@email.com</li>
-                <li><strong>Kontakt v prípade núzdze:</strong> 0911 234 567</li>
-            </ul>
-        </div>
     </div>
-
-    <div class="mt-4">
-        <h4>Recipe</h4>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th style="width: 200px;">Medicine</th>
-                <th style="width: 200px;">Dosage</th>
-                <th style="width: 200px;">Doctor</th>
-                <th style="width: 200px;">Vytvorený</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Paracetamol</td>
-                <td>500 mg</td>
-                <td>2x denne</td>
-                <td>28.2.2222</td>
-            </tr>
-            <tr>
-                <td>Aspirin</td>
-                <td>100 mg</td>
-                <td>1x denne</td>
-                <td>28.2.2222</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="mt-4">
-        <h4>Examination</h4>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th style="width: 200px;">Názov vyšetrenia</th>
-                <th style="width: 200px;">Date</th>
-                <th style="width: 200px;">Diagnosis</th>
-                <th style="width: 200px;">Vytvorený</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Krvné testy</td>
-                <td>15. november 2024</td>
-                <td>Všetky hodnoty v norme</td>
-                <td>28.2.2222</td>
-            </tr>
-            <tr>
-                <td>RTG hrudníka</td>
-                <td>20. november 2024</td>
-                <td>Bez nálezu</td>
-                <td>28.2.2222</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="d-flex justify-content-end">
-<button class="btn btn-warning mt-2" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas">
-    Editovať údaje
-</button>
-</div>
-
-<div class="offcanvas offcanvas-end" tabindex="-1" id="editPatientOffcanvas" aria-labelledby="editPatientOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 id="editPatientOffcanvasLabel">Editovať údaje pacienta</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <form>
-            <div class="mb-3">
-                <label for="patientName" class="form-label">Meno</label>
-                <input type="text" class="form-control" id="patientName">
-            </div>
-            <div class="mb-3">
-                <label for="birthDate" class="form-label">Dátum narodenia</label>
-                <input type="date" class="form-control" id="birthDate" value="1980-01-01">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">PSČ</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Mesto</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Štát</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Ulica</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Číslo domu</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Telefón</label>
-                <input type="text" class="form-control" id="phone">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email">
-            </div>
-            <button type="submit" class="btn btn-success">Uložiť zmeny</button>
-        </form>
-    </div>
-</div>
+}
 
 @code {
-[Parameter] public string BirthNumber { get; set; }
+    [Parameter] public int Id { get; set; }
+
+    private PatientDTO? patient;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Odpoveď API: {responseString}");
+            
+            patient = JsonSerializer.Deserialize<PatientDTO>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Chyba pri načítaní údajov: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Neočakávaná chyba: {ex.Message}");
+        }
+    }
+    
+    
 }

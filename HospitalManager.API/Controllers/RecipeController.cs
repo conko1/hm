@@ -1,5 +1,7 @@
+using HospitalManager.API.Entities;
 using HospitalManager.API.Services;
 using HospitalManager.Shared.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManager.API.Controllers;
@@ -28,8 +30,45 @@ public class RecipeController : ControllerBase
         var result = await _recipeService.GetRecipe(id, true);
         if (result is { IsSuccess: false, StatusCode: 404 })
         {
-            return NotFound(result.Data);
+            return NotFound(result.Errors);
         }
         return Ok(result.Data);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<RecipeDTO>> UpdateRecipe(int id,
+        [FromBody] JsonPatchDocument<RecipeForUpdateDTO> patchRecipe)
+    {
+        var result = await _recipeService.UpdateRecipe(id, patchRecipe);
+        if (result is { IsSuccess: false, StatusCode: 404 })
+        {
+            return NotFound(result.Errors);
+        }
+
+        if (result is { IsSuccess: false, StatusCode: 400 })
+        {
+            return BadRequest(result.Errors);
+        }
+        
+        return Ok(result.Data);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<RecipeDTO>> CreateRecipe([FromBody] RecipeForCreateDTO recipe)
+    {
+        var result = await _recipeService.AddRecipe(recipe);
+        return CreatedAtAction(nameof(GetRecipe), new { id = result.Data.Id }, result.Data);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<RecipeDTO>> DeleteRecipe(int id)
+    {
+        var result = await _recipeService.DeleteRecipe(id);
+        if (result is { IsSuccessful: false, StatusCode: 404 })
+        {
+            return NotFound(result);
+        }
+        
+        return NoContent();
     }
 }
