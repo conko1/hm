@@ -32,30 +32,30 @@
         </tr>
         </thead>
         <tbody>
-        @if (patients != null)
+        @if (patients != null && patients.Any())
         {
-            @foreach (var patient in patients)
-            {
-                <tr>
-                    <td>@patient?.Person?.FirstName</td>
-                    <td>@patient?.Person?.LastName</td>
-                    <td>@patient?.BirthNumber</td>
-                    <td>@patient?.Person?.Telephone</td>
-                    <td>@patient?.Person?.Email</td>
-                    <td>
-                        <NavLink href="@($"/patients/details/{patient?.Id}")" class="btn btn-info">Detaily pacienta</NavLink>
-                    </td>
-                    <td>
-                        <NavLink href="@($"/examination/{patient?.Id}")" class="btn btn-success">Vytvoriť</NavLink>
-                    </td>
-                </tr>
-            }
+        @foreach (var patient in patients)
+        {
+        <tr>
+            <td>@patient?.Person?.FirstName</td>
+            <td>@patient?.Person?.LastName</td>
+            <td>@patient?.BirthNumber</td>
+            <td>@patient?.Person?.Telephone</td>
+            <td>@patient?.Person?.Email</td>
+            <td>
+                <NavLink href="@($"/patients/details/{patient?.Id}")" class="btn btn-info">Detaily pacienta</NavLink>
+            </td>
+            <td>
+                <NavLink href="@($"/examination/{patient?.Id}")" class="btn btn-success">Vytvoriť</NavLink>
+            </td>
+        </tr>
+        }
         }
         else
         {
-            <tr>
-                <td colspan="7" class="text-center">Načítavam dáta...</td>
-            </tr>
+        <tr>
+            <td colspan="7" class="text-center">Načítavam dáta...</td>
+        </tr>
         }
         </tbody>
     </table>
@@ -67,16 +67,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <EditForm Model="newPatient" OnValidSubmit="AddPatient">
+        <EditForm Model="newPatient" FormName="patientForm">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="mb-3">
                 <label for="name" class="form-label">Meno</label>
-                <InputText id="name" class="form-control" @bind-Value="newPatient.FirstName" />
+                <InputText id="name" class="form-control" @bind-Value="newPatient.Person.FirstName" />
             </div>
             <div class="mb-3">
                 <label for="surname" class="form-label">Priezvisko</label>
-                <InputText id="surname" class="form-control" @bind-Value="newPatient.LastName" />
+                <InputText id="surname" class="form-control" @bind-Value="newPatient.Person.LastName" />
             </div>
             <div class="mb-3">
                 <label for="birthNumber" class="form-label">Rodné číslo</label>
@@ -84,33 +84,45 @@
             </div>
             <div class="mb-3">
                 <label for="telephone" class="form-label">Telefón</label>
-                <InputText id="telephone" class="form-control" @bind-Value="newPatient.Telephone" />
+                <InputText id="telephone" class="form-control" @bind-Value="newPatient.Person.Telephone" />
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <InputText id="email" type="email" class="form-control" @bind-Value="newPatient.Email" />
+                <InputText id="email" type="email" class="form-control" @bind-Value="newPatient.Person.Email" />
             </div>
-            <button type="submit" class="btn btn-primary">Uložiť</button>
+            <button class="btn btn-primary" @onclick="async () => await AddPatient()">Uložiť</button>
         </EditForm>
     </div>
 </div>
 
 @code {
     private List<PatientDTO> patients = new List<PatientDTO>();
-    private PersonDTO newPatient = new PersonDTO();
+    private PatientDTO newPatient = new PatientDTO
+    {
+        Person = new PersonDTO()
+    };
 
     protected override async Task OnInitializedAsync()
     {
+        if (newPatient == null)
+        {
+            newPatient = new PatientDTO();
+        }
+        if (newPatient.Person == null)
+        {
+            newPatient.Person = new PersonDTO();
+        }
+
         await LoadPatients();
     }
     private async Task LoadPatients()
     {
         var httpClient = httpClientFactory.CreateClient("APIClient");
-
         try
         {
+            
             // Načítanie pacientov
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/patients");
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/patients/?expandPerson=True");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
@@ -131,17 +143,34 @@
     }
     private async Task AddPatient()
     {
+        if (newPatient.Person == null)
+        {
+            newPatient.Person = new PersonDTO();
+        }
+        Console.WriteLine($"FirstName: {newPatient.Person?.FirstName}");
+        Console.WriteLine($"BirthNumber: {newPatient.BirthNumber}");
         var httpClient = httpClientFactory.CreateClient("APIClient");
-
         try
         {
-            var jsonContent = JsonSerializer.Serialize(newPatient);
+            var patientToSend = new
+            {
+                BirthNumber = newPatient.BirthNumber,
+                FirstName = newPatient.Person.FirstName,
+                LastName = newPatient.Person.LastName,
+                Email = newPatient.Person.Email,
+                Telephone = newPatient.Person.Telephone
+            };
+
+            var jsonContent = JsonSerializer.Serialize(patientToSend);
             var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync("/api/patients/register", content);
+            Console.WriteLine("Odosielaný JSON:");
+            Console.WriteLine(jsonContent);
             response.EnsureSuccessStatusCode();
             
-            newPatient = new PersonDTO();
+            Console.WriteLine("Požiadavka bola úspešne odoslaná.");
+            newPatient = new PatientDTO();
             await LoadPatients();
         }
         catch (HttpRequestException ex)
