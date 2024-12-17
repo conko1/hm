@@ -110,10 +110,10 @@ public class Index : PageModel
         if (ModelState.IsValid)
         {
             // validate username/password against in-memory store
-            if (await _localUserService.ValidateCredentialsAsync(Input.Username, Input.Password))
+            if (await _localUserService.ValidateCredentialsAsync(Input.Email, Input.Password))
             {
-                var user = await _localUserService.GetUserByUsernameAsync(Input.Username);
-                await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.Subject, user.Username, clientId: context?.Client.ClientId));
+                var user = await _localUserService.GetUserByUsernameAsync(Input.Email);
+                await _events.RaiseAsync(new UserLoginSuccessEvent(user.Email, user.Subject, user.Email, clientId: context?.Client.ClientId));
                 Telemetry.Metrics.UserLogin(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider);
 
                 // only set explicit expiration here if user chooses "remember me". 
@@ -128,7 +128,7 @@ public class Index : PageModel
                 // issue authentication cookie with subject ID and username
                 var isuser = new IdentityServerUser(user.Subject)
                 {
-                    DisplayName = user.Username
+                    DisplayName = user.Email
                 };
 
                 await HttpContext.SignInAsync(isuser, props);
@@ -166,7 +166,7 @@ public class Index : PageModel
             }
 
             const string error = "invalid credentials";
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, error, clientId:context?.Client.ClientId));
+            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Email, error, clientId:context?.Client.ClientId));
             Telemetry.Metrics.UserLoginFailure(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider, error);
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
@@ -194,7 +194,7 @@ public class Index : PageModel
                 EnableLocalLogin = local,
             };
 
-            Input.Username = context.LoginHint;
+            Input.Email = context.LoginHint;
 
             if (!local)
             {

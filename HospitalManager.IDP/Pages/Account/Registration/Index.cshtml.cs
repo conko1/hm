@@ -56,7 +56,7 @@ public class IndexModel : PageModel
         
         var userToCreate = new Entities.User
         {
-            Username = Input.Username,
+            Email = Input.Email,
             Subject = Guid.NewGuid().ToString(),
             IsActive = true
         };
@@ -72,7 +72,7 @@ public class IndexModel : PageModel
 
         var isUser = new IdentityServerUser(userToCreate.Subject)
         {
-            DisplayName = Input.Username,
+            DisplayName = Input.Email,
         };
         await HttpContext.SignInAsync(isUser);
 
