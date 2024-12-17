@@ -44,6 +44,26 @@ public class ApiDbContext : DbContext
                 Telephone = "+421987654321",
                 Address = null,
                 User = null,
+            },
+            new Person()
+            {
+                BirthNumber = "012345/1265",
+                FirstName = "Peter",
+                LastName = "Petrový",
+                Email = "peter@gmail.com",
+                Telephone = "+421987654321",
+                Address = null,
+                User = null,
+            },
+            new Person()
+            {
+                BirthNumber = "012345/1214",
+                FirstName = "Marek",
+                LastName = "Marekovy",
+                Email = "marek@gmail.com",
+                Telephone = "+421987654321",
+                Address = null,
+                User = null,
             }
         );
 
@@ -52,6 +72,14 @@ public class ApiDbContext : DbContext
             {
                 Id = 1,
                 BirthNumber = "012345/1234",
+                Specialization = "Všeobecný lekár",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Doctor()
+            {
+                Id = 2,
+                BirthNumber = "012345/1265",
                 Specialization = "Všeobecný lekár",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -64,6 +92,14 @@ public class ApiDbContext : DbContext
                 Id = 1,
                 DoctorId = 1,
                 BirthNumber = "012345/1235",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Patient()
+            {
+                Id = 2,
+                DoctorId = 2,
+                BirthNumber = "012345/1214",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             }

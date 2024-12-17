@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HospitalManager.API.Entities;
 using HospitalManager.API.Repositories;
+using HospitalManager.Shared.Utils;
 
 namespace HospitalManager.API.Services;
 
@@ -11,7 +12,7 @@ public class AuthenticationService : IAuthenticationService
     private readonly IPersonRepository _personRepository;
     private readonly string _email;
     private readonly string _sub;
-    private readonly string _role;
+    private readonly Roles _role;
     public AuthenticationService(
         IHttpContextAccessor httpContextAccessor,
         IUserRepository userRepository,
@@ -60,7 +61,7 @@ public class AuthenticationService : IAuthenticationService
         await _personRepository.SaveChanges();
     }
 
-    public (String Email, String Role, String Subject) GetUserClaims()
+    public (String Email, Roles Role, String Subject) GetUserClaims()
     {
         return (_email, _role, _sub);
     }
@@ -70,11 +71,11 @@ public class AuthenticationService : IAuthenticationService
         return await _userRepository.GetUserBySubId(_sub);
     }
 
-    private (string Subject, string Email, string Role) GetSubEmailRoleClaim()
+    private (string Subject, string Email, Roles Role) GetSubEmailRoleClaim()
     {
         string email = "";
         string subject = "";
-        string role = "";
+        Roles role = Roles.Unknown;
         
         foreach (var claim in _httpContextAccessor.HttpContext.User.Claims)
         {
@@ -90,11 +91,12 @@ public class AuthenticationService : IAuthenticationService
             
             if (claim.Type == "Role")
             {
-                role = claim.Value;
+                role = RolesHelper.TranslateRoleFromString(claim.Value);
             }
         }
         
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(subject) || string.IsNullOrEmpty(role))
+        
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(subject) || role == Roles.Unknown)
         {
             throw new Exception("Either 'Email', 'sub' or 'Role' claim is missing");
         }

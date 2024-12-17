@@ -21,7 +21,6 @@ public class RecipeController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipes()
     {
-        Console.WriteLine("GetRecipes");
         var result = await _recipeService.GetRecipes(true);
         return Ok(result.Data);
     }

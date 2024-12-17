@@ -88,10 +88,9 @@ public static class HostingExtensions
         app.UseStaticFiles();
         
         app.UseAuthentication();
+        app.UseAuthorization();
         
         app.UseMiddleware<AuthServiceMiddleware>();
-        
-        app.UseAuthorization();
         
         app.MapControllers();
         

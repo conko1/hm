@@ -16,10 +16,23 @@ public class DoctorRepository : IDoctorRepository
     
     public async Task<IEnumerable<Doctor>> GetAllDoctors()
     {
-        var doctors = await _context.Doctors.ToListAsync();
+        var doctors = await _context.Doctors
+            .Include(d => d.Person)
+            .ToListAsync();
         return doctors;
     }
 
+    public async Task<IEnumerable<Doctor>> GetDoctorsForPatient(string subjectId)
+    {
+        var doctors = await _context.Doctors
+            .Include(d => d.Person)
+            .Include(d => d.Patients)
+            .Where(d => d.Patients.Any(p => p.Person.User.SubjectId == subjectId))
+            .ToListAsync();
+        
+        return doctors;
+    }
+    
     public async Task<Doctor?> GetDoctorById(int id)
     {
         var doctor = await _context.Doctors
@@ -43,6 +56,15 @@ public class DoctorRepository : IDoctorRepository
             .Include(d => d.Person)
             .Where(d => d.Id == id)
             .FirstOrDefaultAsync();
+        return doctor;
+    }
+
+    public async Task<Doctor?> GetDoctorByUserId(int id)
+    {
+        var doctor = await _context.Doctors
+            .Include(d => d.Person)
+            .ThenInclude(p => p.User)
+            .FirstOrDefaultAsync(d => d.Person.User.Id == id);
         return doctor;
     }
     
