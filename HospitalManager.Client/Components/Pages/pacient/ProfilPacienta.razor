@@ -1,0 +1,56 @@
+﻿@page "/profil"
+@attribute [Authorize(Roles = "Pacient")]
+@using HospitalManager.Client.Components.Layout.Patient
+@using Microsoft.AspNetCore.Authorization
+
+<div class="container row">
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="bi bi-person-circle m-5" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+    </svg>
+
+    <div class="row align-items-center mb-3 mt-4">
+        <p class="col-auto text-muted fs-5 fw-bold">Vaše kontaknté údaje</p>
+        <hr class="col"/>
+    </div>
+
+    <div class="ms-4">
+        <ProfileField Text="Meno" Value="@Name"/>
+
+        <ProfileField Text="Priezvisko" Value="@Surname" />
+
+        <ProfileField Text="Telefón" Value="@Phone" />
+
+        <ProfileField Text="E-mail" Value="@Mail" />
+
+        <ProfileField Text="Ulica" Value="@Street" />
+
+        <ProfileField Text="Mesto" Value="@City" />
+
+        <ProfileField Text="PSČ" Value="@PostCode" />
+    </div>
+
+
+    <div class="row align-items-center mb-3 mt-5">
+        <p class="col-auto text-muted fs-5 fw-bold">Poisťovňa</p>
+        <hr class="col" />
+    </div>
+
+    <div class="ms-4">
+        <ProfileField Text="Zdravotná poisťovňa"/>
+    </div>
+
+    <button type="button" class="btn btn-success w-25 m-4">Uložiť</button>
+</div>
+
+
+@code {
+    public string Name { get; set; } = "michal";
+    public string Surname { get; set; } = "bezo";
+    public string Phone { get; set; } = "526622";
+    public string Mail { get; set; } = "michalko@gmail.com";
+    public string Street { get; set; } = "Vajnorska";
+    public string City { get; set; } = "Bratislava";
+    public string PostCode { get; set; } = "255 65";
+}

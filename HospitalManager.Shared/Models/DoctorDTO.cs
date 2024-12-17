@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HospitalManager.Shared.Models;
 
 public class DoctorDTO
