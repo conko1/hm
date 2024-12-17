@@ -26,4 +26,17 @@ public class MedicineRepository : IMedicineRepository
             .FirstOrDefaultAsync();
         return medicine;
     }
+
+    public async Task<IEnumerable<Medicine>> GetMedicinesIds(IEnumerable<int> medicineIds)
+    {
+        var medicines = await _context.Medicines
+            .Where(m => medicineIds.Contains(m.Id))
+            .ToListAsync();
+        return medicines;
+    }
+
+    public async Task SaveChanges()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

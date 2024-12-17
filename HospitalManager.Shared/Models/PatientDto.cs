@@ -9,5 +9,6 @@
         public string BloodGroup { get; set; }
         public string Medications { get; set; }
         public string Vaccines { get; set; }
+        public PersonDTO? Person { get; set; }
     }
 }

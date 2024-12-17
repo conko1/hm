@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalManager.API", "HospitalManager.API\HospitalManager.API.csproj", "{62B7F88B-C410-44B2-AEAE-751A383D5B91}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalManager.IDP", "HospitalManager.IDP\HospitalManager.IDP.csproj", "{E0FC1822-8BEC-46AF-B67C-09E005ABF8A8}"
@@ -30,5 +33,8 @@ Global
 		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94178C8C-2CC0-4DD1-81D8-9577D531D679}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -12,7 +12,8 @@ public static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllers()
-            .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
+            .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null)
+            .AddNewtonsoftJson();
 
         builder.Services.AddHttpContextAccessor();
 
@@ -24,15 +25,27 @@ public static class HostingExtensions
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
-
         builder.Services.AddScoped<IMedicineService, MedicineService>();
 
         builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-
         builder.Services.AddScoped<IPatientService, PatientService>();
 
+        builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+        builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+        builder.Services.AddScoped<IAddressService, AddressService>();
+        
+        builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+        builder.Services.AddScoped<IDoctorService, DoctorService>();
+
+        builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+        builder.Services.AddScoped<IRecipeService, RecipeService>();
+
+        builder.Services.AddScoped<IExaminationRepository, ExaminationRepository>();
+        builder.Services.AddScoped<IExaminationService, ExaminationService>();
+        
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

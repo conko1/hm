@@ -12,5 +12,8 @@ public class Doctor : BaseEntity
     [ForeignKey(nameof(Person))]
     public string BirthNumber { get; set; }
     
+    [MaxLength(50)]
+    public string? Specialization { get; set; }
+    
     public IEnumerable<Patient> Patients { get; set; } = new List<Patient>();
 }

@@ -1,5 +1,10 @@
 ﻿@page "/patients"
+@using HospitalManager.Shared.Models
+@using Microsoft.AspNetCore.Authorization
+@inject IHttpClientFactory httpClientFactory
+@using System.Text.Json
 @attribute [StreamRendering]
+@attribute [Authorize(Roles = "Doktor")]
 
 <PageTitle>Patients</PageTitle>
 <h1 class="text-center my-4">Zoznam pacientov</h1>
@@ -21,25 +26,36 @@
             <th scope="col">Priezvisko</th>
             <th scope="col">Rodné číslo</th>
             <th scope="col">Tel. číslo</th>
+            <th scope="col">Email</th>
             <th scope="col" style="width: 160px">Detaily pacienta</th>
             <th scope="col" style="width: 100px">Prehliadka</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var patient in patients)
+        @if (patients != null)
         {
-        <tr>
-            <td>@patient.FirstName</td>
-            <td>@patient.LastName</td>
-            <td>@patient.BirthNumber</td>
-            <td></td>
-            <td>
-                <NavLink href="@($"/patients/details/{patient.BirthNumber}")" class="btn btn-info">Detaily pacienta</NavLink>
-            </td>
-            <td>
-                <NavLink href="@($"/examination/{patient.BirthNumber}")" class="btn btn-success">Vytvoriť</NavLink>
-            </td>
-        </tr>
+            @foreach (var patient in patients)
+            {
+                <tr>
+                    <td>@patient?.Person?.FirstName</td>
+                    <td>@patient?.Person?.LastName</td>
+                    <td>@patient?.BirthNumber</td>
+                    <td>@patient?.Person?.Telephone</td>
+                    <td>@patient?.Person?.Email</td>
+                    <td>
+                        <NavLink href="@($"/patients/details/{patient?.Id}")" class="btn btn-info">Detaily pacienta</NavLink>
+                    </td>
+                    <td>
+                        <NavLink href="@($"/examination/{patient?.Id}")" class="btn btn-success">Vytvoriť</NavLink>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">Načítavam dáta...</td>
+            </tr>
         }
         </tbody>
     </table>
@@ -47,76 +63,94 @@
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="patientDetailsOffcanvas" aria-labelledby="patientDetailsOffcanvas">
     <div class="offcanvas-header">
-        <h5 id="editPatientOffcanvasLabel">Editovať údaje pacienta</h5>
+        <h5 id="editPatientOffcanvasLabel">Pridať pacienta</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form>
+        <EditForm Model="newPatient" OnValidSubmit="AddPatient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
             <div class="mb-3">
                 <label for="name" class="form-label">Meno</label>
-                <input type="text" class="form-control" id="name">
+                <InputText id="name" class="form-control" @bind-Value="newPatient.FirstName" />
             </div>
             <div class="mb-3">
                 <label for="surname" class="form-label">Priezvisko</label>
-                <input type="text" class="form-control" id="surname">
+                <InputText id="surname" class="form-control" @bind-Value="newPatient.LastName" />
             </div>
             <div class="mb-3">
-                <label for="birthDate" class="form-label">Dátum narodenia</label>
-                <input type="date" class="form-control" id="birthDate">
+                <label for="birthNumber" class="form-label">Rodné číslo</label>
+                <InputText id="birthNumber" class="form-control" @bind-Value="newPatient.BirthNumber" />
             </div>
             <div class="mb-3">
-                <label for="address" class="form-label">PSČ</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Mesto</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Štát</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Ulica</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Číslo domu</label>
-                <input type="text" class="form-control" id="address">
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Telefón</label>
-                <input type="text" class="form-control" id="phone">
+                <label for="telephone" class="form-label">Telefón</label>
+                <InputText id="telephone" class="form-control" @bind-Value="newPatient.Telephone" />
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email">
+                <InputText id="email" type="email" class="form-control" @bind-Value="newPatient.Email" />
             </div>
             <button type="submit" class="btn btn-primary">Uložiť</button>
-        </form>
+        </EditForm>
     </div>
 </div>
 
 @code {
-[Inject] private NavigationManager NavigationManager { get; set; }
+    private List<PatientDTO> patients = new List<PatientDTO>();
+    private PersonDTO newPatient = new PersonDTO();
 
-private List<Patient> patients = new List<Patient>
-{
-    new Patient { FirstName = "Mark", LastName = "Otto", BirthNumber = "111111" },
-    new Patient { FirstName = "Jacob", LastName = "Thornton", BirthNumber = "000000" },
-    new Patient { FirstName = "Larry", LastName = "Bird", BirthNumber = "88888888" }
-}; 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPatients();
+    }
+    private async Task LoadPatients()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
 
-private void NavigateToDetails(string birthNumber) {
-    Console.WriteLine($"Navigating to patient details with BirthNumber: {birthNumber}");
-    NavigationManager.NavigateTo($"/patientDetails/{birthNumber}");
-}
+        try
+        {
+            // Načítanie pacientov
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/patients");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
 
+            var responseString = await response.Content.ReadAsStringAsync();
+            patients = JsonSerializer.Deserialize<List<PatientDTO>>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+    private async Task AddPatient()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
 
-private class Patient
-{
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string BirthNumber { get; set; }
-}
+        try
+        {
+            var jsonContent = JsonSerializer.Serialize(newPatient);
+            var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync("/api/patients/register", content);
+            response.EnsureSuccessStatusCode();
+            
+            newPatient = new PersonDTO();
+            await LoadPatients();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
 }

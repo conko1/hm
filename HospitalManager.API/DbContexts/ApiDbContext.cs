@@ -20,6 +20,108 @@ public class ApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Person>().HasData(
+            new Person()
+            {
+                BirthNumber = "012345/1234",
+                FirstName = "Peter",
+                LastName = "Petrovič",
+                Email = "peter@gmail.com",
+                Telephone = "+421123456785",
+                Address = null,
+                User = null,
+            },
+            new Person()
+            {
+                BirthNumber = "012345/1235",
+                FirstName = "Daniel",
+                LastName = "Danielovič",
+                Email = "daniel@gmail.com",
+                Telephone = "+421987654321",
+                Address = null,
+                User = null,
+            },
+            new Person()
+            {
+                BirthNumber = "012345/1236",
+                FirstName = "Martina",
+                LastName = "Martinová",
+                Email = "martina@gmail.com",
+                Telephone = "+421976431285",
+                Address = null,
+                User = null,
+            },
+            new Person()
+            {
+                BirthNumber = "012345/1237",
+                FirstName = "Frederika",
+                LastName = "Frederiková",
+                Email = "frederika@gmail.com",
+                Telephone = "+421842862357",
+                Address = null,
+                User = null,
+            }
+        );
+
+        modelBuilder.Entity<Doctor>().HasData(
+            new Doctor()
+            {
+                Id = 1,
+                BirthNumber = "012345/1234",
+                Specialization = "Všeobecný lekár",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Doctor()
+            {
+                Id = 2,
+                BirthNumber = "012345/1236",
+                Specialization = "Detský lekár",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+        
+        modelBuilder.Entity<Patient>().HasData(
+            new Patient()
+            {
+                Id = 1,
+                DoctorId = 1,
+                BirthNumber = "012345/1235",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Patient()
+            {
+                Id = 2,
+                DoctorId = 2,
+                BirthNumber = "012345/1237",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+
+        modelBuilder.Entity<Examination>().HasData(
+            new Examination()
+            {
+                Id = 1,
+                DoctorId = 1,
+                PatientId = 2,
+                ExaminationDate = DateTime.Now.AddMonths(-1),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Examination()
+            {
+                Id = 2,
+                DoctorId = 2,
+                PatientId = 1,
+                ExaminationDate = DateTime.Now.AddMonths(2),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+        
         modelBuilder.Entity<Medicine>().HasData(
             new Medicine() {
                 Id = 1,
@@ -42,6 +144,64 @@ public class ApiDbContext : DbContext
                 Price = 6.40m,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
+            },
+            new Medicine { 
+                Id = 3,
+                Name = "Ibuprofen",
+                Price = 6.25m,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+        
+        modelBuilder.Entity<Recipe>().HasData(
+            new Recipe
+            {
+                Id = 1,
+                Expiration = DateTime.Now.AddMonths(1),
+                Used = 0,
+                ExaminationId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new Recipe { 
+                Id = 2,
+                Expiration = DateTime.Now.AddMonths(2),
+                Used = 1,
+                ExaminationId = 2,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        );
+
+        modelBuilder.Entity<Recipe>()
+            .HasMany(r => r.Medicines)
+            .WithMany(m => m.Recipes)
+            .UsingEntity(j => j.HasData(
+                new { RecipesId = 1, MedicinesId = 1 },
+                new { RecipesId = 1, MedicinesId = 2 },
+                new { RecipesId = 2, MedicinesId = 2 },
+                new { RecipesId = 2, MedicinesId = 3 }
+            ));
+
+        modelBuilder.Entity<Insurance>().HasData(
+            new Insurance()
+            {
+                Code = 27,
+                FullName = "Union zdravotná poisťovňa, a.s.",
+                Abbreviation = "UNION"
+            },
+            new Insurance()
+            {
+                Code = 24,
+                FullName = "Dôvera zdravotná poisťovňa, a.s.",
+                Abbreviation = "Dôvera"
+            },
+            new Insurance()
+            {
+                Code = 25,
+                FullName = "Všeobecná zdravotná poisťovňa, a.s.",
+                Abbreviation = "VZP"
             }
         );
         

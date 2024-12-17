@@ -10,19 +10,16 @@ namespace HospitalManager.API.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IPatientService patientService;
-
         public PatientController(IPatientService patientService)
         {
             this.patientService = patientService;
         }
-
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPatient(int id)
+        public async Task<IActionResult> GetPatient(int id, [FromQuery] bool expandPerson = false)
         {
             try
             {
-                var patient = await this.patientService.GetById(id);
+                var patient = await this.patientService.GetById(id, expandPerson);
                 return Ok(patient);
             }
             catch (KeyNotFoundException ex)
@@ -36,11 +33,11 @@ namespace HospitalManager.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPatients()
+        public async Task<IActionResult> GetAllPatients([FromQuery] bool expandPerson = false)
         {
             try
             {
-                var patients = await this.patientService.GetAll();
+                var patients = await this.patientService.GetAll(expandPerson);
                 return Ok(patients);
             }
             catch (InvalidOperationException ex)
@@ -71,13 +68,13 @@ namespace HospitalManager.API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdatePatient([FromBody] PatientDTO patientDto)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdatePatient(int id, [FromBody] PatientForUpdateDTO patientDto)
         {
             try
             {
-                await this.patientService.Update(patientDto);
-                return Ok();
+                var updatedPatient = await this.patientService.Update(id, patientDto);
+                return Ok(updatedPatient);
             }
             catch (KeyNotFoundException ex)
             {
@@ -89,12 +86,12 @@ namespace HospitalManager.API.Controllers
             }
         }
 
-        [HttpPost("/register")]
-        public async Task<IActionResult> AddPatient([FromBody] PatientDTO patientDto)
+        [HttpPost("register")]
+        public async Task<IActionResult> AddPatient([FromBody] RegisterPatientDTO registerPatientDTO)
         {
             try
             {
-                await this.patientService.Add(patientDto);
+                await this.patientService.Add(registerPatientDTO);
                 return Ok();
             }
             catch (Exception ex)
