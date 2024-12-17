@@ -4,8 +4,8 @@
 @inject IHttpClientFactory httpClientFactory
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
-<PageTitle>Examination</PageTitle>
 
+<PageTitle>Examination</PageTitle>
 <div class="container">
     @if (patient != null)
     {
@@ -33,19 +33,30 @@
     {
         <p>Načítavam údaje o pacientovi...</p>
     }
-
+    
+    
+    
+    <div class="container mt-4">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas" aria-controls="editPatientOffcanvas">
+                Predpísať Lieky
+            </button>
+        </div>
+    </div>
+    
+    
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label for="symptoms">Symptómy</label>
-                <textarea id="symptoms" class="form-control" rows="5"></textarea>
+                <textarea id="symptoms" class="form-control" rows="5" @bind="examination.Symptoms"></textarea>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
                 <label for="diagnosis">Diagnóza</label>
-                <textarea id="diagnosis" class="form-control" rows="5"></textarea>
+                <textarea id="diagnosis" class="form-control" rows="5" @bind="examination.Diagnosis"></textarea>
             </div>
         </div>
     </div>
@@ -54,20 +65,20 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="treatment">Liečba</label>
-                <textarea id="treatment" class="form-control" rows="5"></textarea>
+                <textarea id="treatment" class="form-control" rows="5" @bind="examination.Treatment"></textarea>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="notes">Poznámky</label>
-                <textarea id="notes" class="form-control" rows="5"></textarea>
+                <textarea id="notes" class="form-control" rows="5" @bind="examination.Notes"></textarea>
             </div>
         </div>
     </div>
 
     <div>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary mt-2" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas">
+            <button class="btn btn-primary mt-2" @onClick="SubmitExamination">
                 Uložiť
             </button>
         </div>
@@ -80,30 +91,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        @if (medicines != null && medicines.Any())
-        {
-            <div class="form-group mb-3">
-                <label for="medicineSelect">Vyberte liek</label>
-                <select id="medicineSelect" class="form-select" @bind="selectedMedicineId">
-                    <option value="" disabled selected>Vyberte liek...</option>
-                    @foreach (var medicine in medicines)
-                    {
-                        <option value="@medicine.Id">@medicine.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group mb-3">
-                <label for="dosage">Dávkovanie</label>
-                <input type="text" id="dosage" class="form-control" placeholder="Zadajte dávkovanie">
-            </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-success">Pridať</button>
-            </div>
-        }
-        else
-        {
-            <p>Načítavam lieky...</p>
-        }
+        <div class="form-group mb-3">
+            <label for="medicineSelect">Vyberte liek</label>
+            <select id="medicineSelect" class="form-select" @bind="selectedMedicineId">
+                <option value="" disabled selected>Vyberte liek...</option>
+                @foreach (var medicine in medicines)
+                {
+                <option value="@medicine.Id">@medicine.Name</option>
+                }
+            </select>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-success" @onClick="SubmitRecipe">Pridať</button>
+        </div>
     </div>
 </div>
 
@@ -111,16 +111,19 @@
     [Parameter] public int Id { get; set; }
     private List<MedicineDTO> medicines = new List<MedicineDTO>();
     private PatientDTO? patient;
-
+    private ExaminationForCreateDTO examination = new ExaminationForCreateDTO();
+    private RecipeDTO recipe = new RecipeDTO();
     private int? selectedMedicineId;
+    private string dosage = "";
+    
+    
 
     protected override async Task OnInitializedAsync()
     {
         var httpClient = httpClientFactory.CreateClient("APIClient");
-
         try
         {
-// Načítanie pacienta
+            // Načítanie pacienta
             var patientRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}");
             var patientResponse = await httpClient.SendAsync(patientRequest, HttpCompletionOption.ResponseHeadersRead);
             patientResponse.EnsureSuccessStatusCode();
@@ -130,14 +133,96 @@
             {
                 PropertyNameCaseInsensitive = true
             });
-
-// Načítanie liekov
+            //Inicializacia PacientId a ExaminationDate
+            examination.PatientId = Id;
+            examination.ExaminationDate = DateTime.Now;
+            // Načítanie liekov
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/medicine/");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
             medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
+
+            //SubmitRecipe();
+            //SubmitExamination();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+    private async Task SubmitRecipe()
+    {
+        Console.WriteLine("hahaha");
+        var recipes = new RecipeDTO
+        {
+            Id = 1,
+            Medicines = new List<int> { 1 },
+            Expiration = DateTime.Now.AddDays(new Random().Next(7, 30)), 
+            ExaminationId = 15, 
+            Used = 0,
+            CreatedAt = DateTime.Now 
+        };
+
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+        var requestContent = new StringContent(JsonSerializer.Serialize(recipes), System.Text.Encoding.UTF8, "application/json");
+        Console.WriteLine("Request JSON:");
+        Console.WriteLine(JsonSerializer.Serialize(recipes, new JsonSerializerOptions { WriteIndented = true }));
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/recipe")
+            {
+                Content = requestContent
+                
+            };
+        var response = await httpClient.SendAsync(request);
+            
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+    
+    private async Task SubmitExamination()
+    {
+        Console.WriteLine("HahaSubmit");
+        if (examination.PatientId == null || examination.ExaminationDate == null)
+        {
+            return;
+        }
+
+        var examinatioon = new ExaminationForCreateDTO
+        {
+            PatientId = 1,
+            ExaminationDate = DateTime.Now.Date,
+            Symptoms = "skuska",
+            Diagnosis = "Jozo",
+            Treatment = "Liečba",
+            Notes = "Poznámky"
+        };
+
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+        var requestContent = new StringContent(JsonSerializer.Serialize(examinatioon), System.Text.Encoding.UTF8, "application/json");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/examination")
+            {
+                Content = requestContent
+            };
+            var response = await httpClient.SendAsync(request);
+            
         }
         catch (HttpRequestException ex)
         {

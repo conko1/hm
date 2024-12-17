@@ -55,25 +55,37 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Dátum vypršania</th>
+                <th scope="col">Id</th>
+                <th scope="col">Nazov</th>
                 <th scope="col">Vybraný</th>
+                <th scope="col">Dátum vypršania</th>
             </tr>
             </thead>
             <tbody>
             @foreach (var recipe in recipes)
             {
-                <tr data-bs-toggle="modal" data-bs-target="#recipeModal" @onclick="() => ShowRecipeDetails(recipe)">
+                var medicineNames = GetMedicinesForRecipe(recipe.Medicines); 
+                <tr>
                     <td>@recipe.Id</td>
+                    <td>
+                        @if (medicineNames.Any())
+                        {
+                            @string.Join(", ", medicineNames)
+                        }
+                        else
+                        {
+                            <span>Žiadne lieky</span>
+                        }
+                    </td>
                     <td>@recipe.Expiration.ToString("dd/MM/yyyy")</td>
                     <td>
                         @if (recipe.Used == 1)
                         {
-                            <span class="badge bg-success">Áno</span>
+                        <span class="badge bg-success">Áno</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Nie</span>
+                        <span class="badge bg-danger">Nie</span>
                         }
                     </td>
                 </tr>
@@ -82,76 +94,8 @@
         </table>
     </div>
 
-   
-    <div class="container mt-4">
-        <h5>Prehliadky</h5>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>twitter</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
     
-    <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="recipeModalLabel">Lieky v recepte</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5>Predpísané lieky:</h5>
-                    @if (selectedMedicines.Any()) 
-                    {
-                    <ul>
-                        @foreach (var medicine in selectedMedicines)
-                        {
-                        <li>
-                            <strong>@medicine.Name</strong><br />
-                            <em>@medicine.Dosage</em><br />
-                            @medicine.Description<br />
-                            @medicine.Quantity<br />
-                            @medicine.SideEffects<br />
-                            Cena: @medicine.Price €<br /><br />
-                        </li>
-                        }
-                    </ul>
-                    }
-                    else
-                    {
-                    <p>Žiadne lieky predpísané v tomto recepte.</p>
-                    }
-                </div>
 
-            </div>
-        </div>
-    </div>
-    
     <div class="offcanvas offcanvas-end" tabindex="-1" id="editPatientOffcanvas" aria-labelledby="editPatientOffcanvasLabel">
     <div class="offcanvas-header">
         <h5 id="editPatientOffcanvasLabel">Editovať údaje pacienta</h5>
@@ -233,7 +177,7 @@
         try
         {
             //Nacitanie pacienta
-            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}/?expandPerson=True");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
@@ -321,6 +265,22 @@
         }
     }
 
+    private List<string> GetMedicinesForRecipe(IEnumerable<int> medicineIds)
+    {
+        var medicineNames = new List<string>();
+
+        // Prejdeme cez všetky ID liekov a získame ich názvy
+        foreach (var medId in medicineIds)
+        {
+            var medicine = medicines.FirstOrDefault(m => m.Id == medId);
+            if (medicine != null)
+            {
+                medicineNames.Add(medicine.Name);  // Pridáme názov lieku do zoznamu
+            }
+        }
+
+        return medicineNames;  // Vrátime zoznam názvov liekov
+    }
 
 
     
