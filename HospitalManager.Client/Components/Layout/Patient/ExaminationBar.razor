@@ -1,4 +1,6 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components
+@rendermode InteractiveServer
+
 <div class="card m-3" style="width: 100%; border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
     <div class="card-body">
         <div class="d-flex justify-content-between">
@@ -10,12 +12,20 @@
         <p class="card-text">Creted: @Created</p>
 
         <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-link text-primary">Detail</a>
+            <button class="btn btn-link text-primary" @onclick="(() => OnClickDetail())">Detail</button>
         </div>
     </div>
 </div>
 
 @code {
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private void OnClickDetail()
+    {
+        Console.WriteLine("navigujem");
+        NavigationManager.NavigateTo($"/examinations/detail");
+    }
+
     [Parameter]
     public string ExaminationName { get; set; }
 
