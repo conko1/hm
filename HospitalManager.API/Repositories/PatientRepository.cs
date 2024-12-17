@@ -19,7 +19,7 @@ namespace HospitalManager.API.Repositories
             await this._context.SaveChangesAsync();
         }
 
-        public async Task<Patient> GetById(int id)
+        public async Task<Patient?> GetById(int? id)
         {
             return await this._context.Patients.FindAsync(id);
         }

@@ -45,7 +45,8 @@ public class RecipeService : IRecipeService
         return ServiceResponse<RecipeDTO>.Success(recipeDto);
     }
 
-    public async Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
+    public async Task<ServiceResponse<RecipeDTO>> UpdateRecipe(int id, 
+        JsonPatchDocument<RecipeForUpdateDTO> patchDocument)
     {
         var recipeEntity = await _recipeRepository.GetRecipeById(id, true);
         if (recipeEntity == null)
