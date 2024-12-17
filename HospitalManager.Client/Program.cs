@@ -48,8 +48,10 @@ builder.Services.AddAuthentication(options =>
         options.SaveTokens = true;
         options.GetClaimsFromUserInfoEndpoint = true;
         options.Scope.Add("roles");
+        options.Scope.Add("email");
         options.Scope.Add("hospitalmanagerapi.fullaccess");
         options.ClaimActions.MapJsonKey("Role", "Role");
+        options.ClaimActions.MapJsonKey("Email", "Email");
         options.ClaimActions.DeleteClaim("idp");
         options.TokenValidationParameters = new()
         {

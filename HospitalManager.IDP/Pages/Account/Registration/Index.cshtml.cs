@@ -67,6 +67,12 @@ public class IndexModel : PageModel
             Value = Input.Role
         });
         
+        userToCreate.Claims.Add(new Entities.UserClaim()
+        {
+            Type = "Email",
+            Value = Input.Email
+        });
+        
         _localUserService.AddUser(userToCreate, Input.Password);
         await _localUserService.SaveChangesAsync();
 
