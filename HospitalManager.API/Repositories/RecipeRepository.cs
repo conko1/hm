@@ -48,14 +48,17 @@ public class RecipeRepository : IRecipeRepository
         return recipe;
     }
 
-    public async Task DeleteRecipe(int id)
+    public async Task DeleteRecipe(Recipe recipe)
     {
-        var recipe = await _context.Recipes
-            .Where(r => r.Id == id)
-            .FirstOrDefaultAsync();
         _context.Recipes.Remove(recipe);
     }
 
+    public async Task<Recipe> AddRecipe(Recipe recipe)
+    {
+        await _context.Recipes.AddAsync(recipe);
+        return recipe;
+    }
+    
     public async Task SaveChanges()
     {
         await _context.SaveChangesAsync();

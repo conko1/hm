@@ -35,15 +35,16 @@ public class DoctorController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ActionResult<DoctorDTO>> UpdateDoctor(int id, [FromBody] JsonPatchDocument<DoctorForUpdateDTO> patchDoctor)
+    public async Task<ActionResult<DoctorDTO>> UpdateDoctor(int id,
+        [FromBody] JsonPatchDocument<DoctorForUpdateDTO> patchDoctor)
     {
         var result = await _doctorService.UpdateDoctor(id, patchDoctor);
-        if (result is { IsSuccess: true, StatusCode: 404 })
+        if (result is { IsSuccess: false, StatusCode: 404 })
         {
             return NotFound(result.Data);
         }
 
-        if (result is { IsSuccess: true, StatusCode: 400 })
+        if (result is { IsSuccess: false, StatusCode: 400 })
         {
             return BadRequest(result.Data);
         }

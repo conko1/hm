@@ -39,9 +39,9 @@ public class DoctorService : IDoctorService
         return ServiceResponse<DoctorDTO>.Success(doctorDto);
     }
 
-    public async Task<ServiceResponse<DoctorDTO>> UpdateDoctor(int doctorId, JsonPatchDocument<DoctorForUpdateDTO> patchDoctor)
+    public async Task<ServiceResponse<DoctorDTO>> UpdateDoctor(int id, JsonPatchDocument<DoctorForUpdateDTO> patchDoctor)
     {
-        var doctorEntity = await _doctorRepository.GetDoctorById(doctorId);
+        var doctorEntity = await _doctorRepository.GetDoctorById(id);
         if (doctorEntity == null)
         {
             return ServiceResponse<DoctorDTO>.Failure("Doctor not found", 404);
