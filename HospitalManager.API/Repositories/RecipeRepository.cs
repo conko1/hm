@@ -13,20 +13,18 @@ public class RecipeRepository : IRecipeRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Recipe>> GetAllRecipes(bool includeMedicine = false)
+    public async Task<IEnumerable<Recipe>> GetAllRecipes(int? recipesForPatient = null)
     {
-        List<Recipe> recipes;
-        if (includeMedicine)
+        IQueryable<Recipe> query = _context.Recipes.Include(r => r.Medicines);
+        
+        if (recipesForPatient != null)
         {
-            recipes = await _context.Recipes
-                .Include(r => r.Medicines)
-                .ToListAsync();
+            query = query
+                .Include(r => r.Examination.Patient)
+                .Where(r => r.Examination.Patient.Id == recipesForPatient.Value);
         }
-        else
-        {
-            recipes = await _context.Recipes.ToListAsync();
-        }
-        return recipes;
+        
+        return await query.ToListAsync();
     }
 
     public async Task<Recipe?> GetRecipeById(int id, bool includeMedicine = false)

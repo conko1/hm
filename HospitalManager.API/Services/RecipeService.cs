@@ -25,9 +25,9 @@ public class RecipeService : IRecipeService
         _mapper = mapper;
     }
 
-    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(bool includeMedicine = false)
+    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(int? recipesForPatient = null)
     {
-        var recipes = await _recipeRepository.GetAllRecipes(includeMedicine);
+        var recipes = await _recipeRepository.GetAllRecipes(recipesForPatient);
         var recipesDto = _mapper.Map<IEnumerable<RecipeDTO>>(recipes);
         return ServiceResponse<IEnumerable<RecipeDTO>>.Success(recipesDto);
     }
