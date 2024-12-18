@@ -5,6 +5,7 @@
 @using System.Text.Json
 @attribute [StreamRendering]
 @attribute [Authorize(Roles = "Doktor")]
+@rendermode InteractiveServer
 
 <PageTitle>Patients</PageTitle>
 <h1 class="text-center my-4">Zoznam pacientov</h1>
@@ -91,6 +92,7 @@
                 <InputText id="email" type="email" class="form-control" @bind-Value="newPatient.Person.Email" />
             </div>
             <button class="btn btn-primary" @onclick="async () => await AddPatient()">Uložiť</button>
+            @* <Button class="btn btn-primary" @onclick="AddPatient()">Dokoncit</Button> *@
         </EditForm>
     </div>
 </div>

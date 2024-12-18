@@ -4,6 +4,7 @@
 @inject IHttpClientFactory httpClientFactory
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
 
 <PageTitle>Examination</PageTitle>
 <div class="container">
@@ -36,13 +37,13 @@
     
     
     
-    <div class="container mt-4">
-        <div class="col-md-12 d-flex justify-content-end">
-            <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas" aria-controls="editPatientOffcanvas">
-                Predpísať Lieky
-            </button>
-        </div>
-    </div>
+    @* <div class="container mt-4"> *@
+    @*     <div class="col-md-12 d-flex justify-content-end"> *@
+    @*         <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas" aria-controls="editPatientOffcanvas"> *@
+    @*             Predpísať Lieky *@
+    @*         </button> *@
+    @*     </div> *@
+    @* </div> *@
     
     
     <div class="row">
@@ -77,10 +78,8 @@
     </div>
 
     <div>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-primary mt-2" @onClick="SubmitExamination">
-                Uložiť
-            </button>
+        <div class="d-flex justify-content-end mt-2">
+            <Button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas" aria-controls="editPatientOffcanvas"  @onclick="SubmitExamination">Ďalej</Button>
         </div>
     </div>
 </div>
@@ -91,9 +90,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
+        @foreach (var medicineSelection in medicineSelections)
+        {
         <div class="form-group mb-3">
-            <label for="medicineSelect">Vyberte liek</label>
-            <select id="medicineSelect" class="form-select" @bind="selectedMedicineId">
+            <label for="medicineSelect"></label>
+            <select class="form-select" @bind="medicineSelection.SelectedMedicineId">
                 <option value="" disabled selected>Vyberte liek...</option>
                 @foreach (var medicine in medicines)
                 {
@@ -101,8 +102,13 @@
                 }
             </select>
         </div>
+
+        }
         <div class="d-flex justify-content-end">
-            <button class="btn btn-success" @onClick="SubmitRecipe">Pridať</button>
+            <button class="btn btn-secondary" @onclick="AddMedicineSelection">Pridať liek</button>
+        </div>
+        <div class="d-flex justify-content-end mt-5">
+            <button class="btn btn-primary" data-bs-dismiss="offcanvas" @onclick="SubmitRecipe">Dokoncit</button>
         </div>
     </div>
 </div>
@@ -112,11 +118,20 @@
     private List<MedicineDTO> medicines = new List<MedicineDTO>();
     private PatientDTO? patient;
     private ExaminationForCreateDTO examination = new ExaminationForCreateDTO();
-    private RecipeDTO recipe = new RecipeDTO();
+    private List<MedicineSelection> medicineSelections = new List<MedicineSelection>(); // Zoznam pre výbery liekov
+    private int examinationId; 
+
+    public class MedicineSelection
+    {
+        public int? SelectedMedicineId { get; set; }
+    }
+    private async Task AddMedicineSelection()
+    {
+        // Pridáme nový prázdny výber lieku a dávkovanie
+        medicineSelections.Add(new MedicineSelection());
+    }
+    private RecipeForCreateDTO recipe = new RecipeForCreateDTO();
     private int? selectedMedicineId;
-    private string dosage = "";
-    
-    
 
     protected override async Task OnInitializedAsync()
     {
@@ -142,8 +157,10 @@
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
-            medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString);
-
+            medicines = JsonSerializer.Deserialize<List<MedicineDTO>>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
             //SubmitRecipe();
             //SubmitExamination();
         }
@@ -156,33 +173,37 @@
             Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
-    private async Task SubmitRecipe()
+    public async void SubmitRecipe()
     {
-        Console.WriteLine("hahaha");
-        var recipes = new RecipeDTO
+        if (medicineSelections.Count == 0)
         {
-            Id = 1,
-            Medicines = new List<int> { 1 },
-            Expiration = DateTime.Now.AddDays(new Random().Next(7, 30)), 
-            ExaminationId = 15, 
-            Used = 0,
-            CreatedAt = DateTime.Now 
-        };
+            Console.WriteLine("No medicines selected.");
+            return; // Handle the case when no medicine is selected
+        }
+    
+        // Zoznam vybraných liekov a dávkovaní
+        var selectedMedicineIds = medicineSelections.Where(ms => ms.SelectedMedicineId.HasValue)
+            .Select(ms => ms.SelectedMedicineId.Value)
+            .ToList();
+    
+        recipe.Medicines = selectedMedicineIds; // Zoznam vybraných liekov
+        recipe.Used = false;
+        recipe.ExaminationId = examinationId;
+        recipe.Expiration = DateTime.Now.AddMonths(1);
 
         var httpClient = httpClientFactory.CreateClient("APIClient");
-        var requestContent = new StringContent(JsonSerializer.Serialize(recipes), System.Text.Encoding.UTF8, "application/json");
+        var requestContent = new StringContent(JsonSerializer.Serialize(recipe), System.Text.Encoding.UTF8, "application/json");
         Console.WriteLine("Request JSON:");
-        Console.WriteLine(JsonSerializer.Serialize(recipes, new JsonSerializerOptions { WriteIndented = true }));
-
+        Console.WriteLine(JsonSerializer.Serialize(recipe, new JsonSerializerOptions { WriteIndented = true }));
+    
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "/api/recipe")
             {
                 Content = requestContent
-                
             };
-        var response = await httpClient.SendAsync(request);
-            
+            var response = await httpClient.SendAsync(request);
+            // Handle response if needed
         }
         catch (HttpRequestException ex)
         {
@@ -201,19 +222,8 @@
         {
             return;
         }
-
-        var examinatioon = new ExaminationForCreateDTO
-        {
-            PatientId = 1,
-            ExaminationDate = DateTime.Now.Date,
-            Symptoms = "skuska",
-            Diagnosis = "Jozo",
-            Treatment = "Liečba",
-            Notes = "Poznámky"
-        };
-
         var httpClient = httpClientFactory.CreateClient("APIClient");
-        var requestContent = new StringContent(JsonSerializer.Serialize(examinatioon), System.Text.Encoding.UTF8, "application/json");
+        var requestContent = new StringContent(JsonSerializer.Serialize(examination), System.Text.Encoding.UTF8, "application/json");
 
         try
         {
@@ -222,7 +232,18 @@
                 Content = requestContent
             };
             var response = await httpClient.SendAsync(request);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var jsonResponse = JsonSerializer.Deserialize<JsonElement>(responseContent);
             
+            if (jsonResponse.TryGetProperty("id", out JsonElement examinationIdElement))
+            {
+                examinationId = examinationIdElement.GetInt32();
+                Console.WriteLine($"id: {examinationId}");
+            }
+            else
+            {
+                Console.WriteLine("ExaminationId not found in response.");
+            }
         }
         catch (HttpRequestException ex)
         {
