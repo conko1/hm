@@ -4,6 +4,7 @@ using HospitalManager.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using HospitalManager.Shared.Models;
 using HospitalManager.Shared.Service;
+using HospitalManager.Shared.Utils;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -11,19 +12,37 @@ namespace HospitalManager.API.Services;
 
 public class DoctorService : IDoctorService
 {
+    private readonly IAuthenticationService _authenticationService;
     private readonly IDoctorRepository _doctorRepository;
     private readonly IMapper _mapper;
 
-    public DoctorService(IDoctorRepository doctorRepository, IMapper mapper)
+    public DoctorService(
+        IAuthenticationService authenticationService,
+        IDoctorRepository doctorRepository,
+        IMapper mapper)
     {
+        _authenticationService = authenticationService;
         _doctorRepository = doctorRepository;
         _mapper = mapper;
     }
     
     public async Task<ServiceResponse<IEnumerable<DoctorDTO>>> GetDoctors()
     {
-        var doctors = await _doctorRepository.GetAllDoctors();
+        IEnumerable<Doctor> doctors = new List<Doctor>();
+        
+        var claims = _authenticationService.GetUserClaims();
+        
+        if (claims.Role == Roles.Doctor)
+        {
+            doctors = await _doctorRepository.GetAllDoctors();
+        }
+        else
+        {
+            doctors = await _doctorRepository.GetDoctorsForPatient(claims.Subject);
+        }
+        
         var doctorsDto = _mapper.Map<IEnumerable<DoctorDTO>>(doctors);
+        
         return ServiceResponse<IEnumerable<DoctorDTO>>.Success(doctorsDto);
     }
 

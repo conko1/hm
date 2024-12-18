@@ -11,26 +11,23 @@ namespace HospitalManager.API.Services;
 
 public class RecipeService : IRecipeService
 {
-    private readonly IAuthenticationService _authenticationService;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IMedicineRepository _medicineRepository;
     private readonly IMapper _mapper;
 
     public RecipeService(
-        IAuthenticationService authenticationService,
         IRecipeRepository recipeRepository,
         IMedicineRepository medicineRepository,
         IMapper mapper)
     {
-        _authenticationService = authenticationService;
         _recipeRepository = recipeRepository;
         _medicineRepository = medicineRepository;
         _mapper = mapper;
     }
 
-    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(bool includeMedicine = false)
+    public async Task<ServiceResponse<IEnumerable<RecipeDTO>>> GetRecipes(int? recipesForPatient = null)
     {
-        var recipes = await _recipeRepository.GetAllRecipes(includeMedicine);
+        var recipes = await _recipeRepository.GetAllRecipes(recipesForPatient);
         var recipesDto = _mapper.Map<IEnumerable<RecipeDTO>>(recipes);
         return ServiceResponse<IEnumerable<RecipeDTO>>.Success(recipesDto);
     }

@@ -3,6 +3,7 @@ using System;
 using HospitalManager.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace HospitalManager.API.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241217235542_UpdatedUserSeed")]
+    partial class UpdatedUserSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,17 +103,17 @@ namespace HospitalManager.API.Migrations
                         {
                             Id = 1,
                             BirthNumber = "012345/1234",
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9838),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5356),
                             Specialization = "Všeobecný lekár",
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9839)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5357)
                         },
                         new
                         {
                             Id = 2,
                             BirthNumber = "012345/1265",
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9843),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5360),
                             Specialization = "Všeobecný lekár",
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9844)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5361)
                         });
                 });
 
@@ -165,20 +168,20 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9929),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5463),
                             DoctorId = 1,
-                            ExaminationDate = new DateTime(2024, 11, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9921),
+                            ExaminationDate = new DateTime(2024, 11, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5454),
                             PatientId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9929)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5463)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9934),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5468),
                             DoctorId = 1,
-                            ExaminationDate = new DateTime(2025, 2, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9932),
+                            ExaminationDate = new DateTime(2025, 2, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5466),
                             PatientId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9935)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5469)
                         });
                 });
 
@@ -298,80 +301,35 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9977),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5510),
                             Description = "Sterilný roztok chloridu sodného (NaCl) určený na intravenózne podávanie. Používa sa na rehydratáciu organizmu, doplnenie elektrolytov a ako nosič pre iné lieky pri intravenóznej infúzii",
                             Dosage = "100 ml",
                             Name = "0,9 % Chlorid sodný Baxter-Viaflo",
                             Price = 6.79m,
                             Quantity = "1000 ml",
                             SideEffects = "Nerovnováha elektrolytov, preťaženie tekutinami, zvýšená hladina chloridov v krvi",
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9978)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5510)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9982),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5515),
                             Description = "Liečba rôznych bakteriálnych infekcií",
                             Dosage = "800 mg",
                             Name = "Abaktal 400 mg",
                             Price = 6.40m,
                             Quantity = "10 tabliet",
                             SideEffects = "Hnačka, nevolnosť, vracanie",
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9982)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5515)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9985),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5518),
                             Name = "Ibuprofen",
                             Price = 6.25m,
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9986)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5519)
                         });
-                });
-
-            modelBuilder.Entity("HospitalManager.API.Entities.MedicineImport", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasColumnType("NVARCHAR2(450)")
-                        .HasColumnName("sukl_kod");
-
-                    b.Property<string>("Complement")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("doplnok");
-
-                    b.Property<int>("Expiration")
-                        .HasColumnType("NUMBER(10)")
-                        .HasColumnName("exspiracia");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("nazov");
-
-                    b.Property<string>("Recipe")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("vydaj");
-
-                    b.Property<string>("RegCode")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("reg_cislo");
-
-                    b.Property<string>("RegistrationDate")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(10)")
-                        .HasColumnName("dat_reg");
-
-                    b.Property<string>("StateCode")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("kod_statu");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("liek");
                 });
 
             modelBuilder.Entity("HospitalManager.API.Entities.Patient", b =>
@@ -429,17 +387,17 @@ namespace HospitalManager.API.Migrations
                         {
                             Id = 1,
                             BirthNumber = "012345/1235",
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9879),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5407),
                             DoctorId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9880)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5408)
                         },
                         new
                         {
                             Id = 2,
                             BirthNumber = "012345/1214",
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9886),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5411),
                             DoctorId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 434, DateTimeKind.Local).AddTicks(9886)
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5411)
                         });
                 });
 
@@ -549,19 +507,19 @@ namespace HospitalManager.API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(20),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5568),
                             ExaminationId = 1,
-                            Expiration = new DateTime(2025, 1, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(17),
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(20),
+                            Expiration = new DateTime(2025, 1, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5565),
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5569),
                             Used = 0
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(24),
+                            CreatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5573),
                             ExaminationId = 2,
-                            Expiration = new DateTime(2025, 2, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(23),
-                            UpdatedAt = new DateTime(2024, 12, 18, 8, 15, 35, 435, DateTimeKind.Local).AddTicks(24),
+                            Expiration = new DateTime(2025, 2, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5572),
+                            UpdatedAt = new DateTime(2024, 12, 17, 23, 55, 41, 565, DateTimeKind.Local).AddTicks(5574),
                             Used = 1
                         });
                 });

@@ -5,6 +5,7 @@
 @using HospitalManager.Shared.Models
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Doktor")]
+@rendermode InteractiveServer
 
 <PageTitle>Patient Details</PageTitle>
 
@@ -55,25 +56,37 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Dátum vypršania</th>
+                <th scope="col">Id</th>
+                <th scope="col">Nazov</th>
                 <th scope="col">Vybraný</th>
+                <th scope="col">Dátum vypršania</th>
             </tr>
             </thead>
             <tbody>
             @foreach (var recipe in recipes)
             {
-                <tr data-bs-toggle="modal" data-bs-target="#recipeModal" @onclick="() => ShowRecipeDetails(recipe)">
+                var medicineNames = GetMedicinesForRecipe(recipe.Medicines); 
+                <tr>
                     <td>@recipe.Id</td>
+                    <td>
+                        @if (medicineNames.Any())
+                        {
+                            @string.Join(", ", medicineNames)
+                        }
+                        else
+                        {
+                            <span>Žiadne lieky</span>
+                        }
+                    </td>
                     <td>@recipe.Expiration.ToString("dd/MM/yyyy")</td>
                     <td>
                         @if (recipe.Used == 1)
                         {
-                            <span class="badge bg-success">Áno</span>
+                        <span class="badge bg-success">Áno</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Nie</span>
+                        <span class="badge bg-danger">Nie</span>
                         }
                     </td>
                 </tr>
@@ -82,137 +95,45 @@
         </table>
     </div>
 
-   
-    <div class="container mt-4">
-        <h5>Prehliadky</h5>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>twitter</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
     
-    <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="recipeModalLabel">Lieky v recepte</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5>Predpísané lieky:</h5>
-                    @if (selectedMedicines.Any()) 
-                    {
-                    <ul>
-                        @foreach (var medicine in selectedMedicines)
-                        {
-                        <li>
-                            <strong>@medicine.Name</strong><br />
-                            <em>@medicine.Dosage</em><br />
-                            @medicine.Description<br />
-                            @medicine.Quantity<br />
-                            @medicine.SideEffects<br />
-                            Cena: @medicine.Price €<br /><br />
-                        </li>
-                        }
-                    </ul>
-                    }
-                    else
-                    {
-                    <p>Žiadne lieky predpísané v tomto recepte.</p>
-                    }
-                </div>
 
-            </div>
-        </div>
-    </div>
-    
     <div class="offcanvas offcanvas-end" tabindex="-1" id="editPatientOffcanvas" aria-labelledby="editPatientOffcanvasLabel">
     <div class="offcanvas-header">
         <h5 id="editPatientOffcanvasLabel">Editovať údaje pacienta</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-            <EditForm Model="patient" OnValidSubmit="HandleValidSubmit">
-                <div class="mb-3">
-                    <label for="FirstName" class="form-label">Meno</label>
-                    <InputText id="FirstName" class="form-control" @bind-Value="patient.Person.FirstName"/>
-                </div>
-                <div class="mb-3">
-                    <label for="LastName" class="form-label">Priezvisko</label>
-                    <InputText id="LastName" class="form-control" @bind-Value="patient.Person.LastName" />
-                </div>
-                <div class="mb-3">
-                    <label for="BirthNumber" class="form-label">Rodné číslo</label>
-                    <InputText id="BirthNumber" class="form-control" @bind-Value="patient.Person.BirthNumber" />
-                </div>
-                <div class="mb-3">
-                    <label for="Email" class="form-label">Email</label>
-                    <InputText id="Email" type="email" class="form-control" @bind-Value="patient.Person.Email" />
-                </div>
-                <div class="mb-3">
-                    <label for="Telephone" class="form-label">Tel. číslo</label>
-                    <InputText id="Telephone" class="form-control" @bind-Value="patient.Person.Telephone" />
-                </div>
-                <div class="mb-3">
-                    <label for="Allergies" class="form-label">Alergie</label>
-                    <InputText id="Allergies" class="form-control" @bind-Value="patient.Allergies"/>
-                </div>
-                <div class="mb-3">
-                    <label for="BloodGroup" class="form-label">Krvná skupina</label>
-                    <InputText id="BloodGroup" class="form-control" @bind-Value="patient.BloodGroup"/>
-                </div>
-                <div class="mb-3">
-                    <label for="Medications" class="form-label">Lieky</label>
-                    <InputText id="Medications" class="form-control" @bind-Value="patient.Medications"/>
-                </div>
-                <div class="mb-3">
-                    <label for="Vaccines" class="form-label">Očkovania</label>
-                    <InputText id="Vaccines" class="form-control" @bind-Value="patient.Vaccines"/>
-                </div>
-                <div class="mb-3">
-                    <label for="City" class="form-label">Mesto</label>
-                    @* <InputText id="City" class="form-control" @bind-Value="patient.City" /> *@
-                </div>
-                <div class="mb-3">
-                    <label for="Street" class="form-label">Ulica</label>
-                    @* <InputText id="Street" class="form-control" @bind-Value="patient.Street" /> *@
-                </div>
-                <div class="mb-3">
-                    <label for="StreetNumber" class="form-label">Číslo</label>
-                    @* <InputNumber id="StreetNumber" class="form-control" @bind-Value="patient.StreetNumber" /> *@
-                </div>
-                <div class="mb-3">
-                    <label for="PostalCode" class="form-label">PSČ</label>
-                    @* <InputNumber id="PostalCode" class="form-control" @bind-Value="patient.PostalCode" /> *@
-                </div>
-                <button type="submit" class="btn btn-primary">Uložiť zmeny</button>
-            </EditForm>
+        <EditForm Model="patientForUpdate" OnValidSubmit="HandleValidSubmit">
+            <div class="mb-3">
+                <label for="FirstName" class="form-label">Meno</label>
+                <InputText id="FirstName" class="form-control" @bind-Value="patientForUpdate.FirstName"/>
+            </div>
+            <div class="mb-3">
+                <label for="LastName" class="form-label">Priezvisko</label>
+                <InputText id="LastName" class="form-control" @bind-Value="patientForUpdate.LastName" />
+            </div>
+            <div class="mb-3">
+                <label for="Telephone" class="form-label">Tel. číslo</label>
+                <InputText id="Telephone" class="form-control" @bind-Value="patientForUpdate.Telephone" />
+            </div>
+            <div class="mb-3">
+                <label for="Allergies" class="form-label">Alergie</label>
+                <InputText id="Allergies" class="form-control" @bind-Value="patientForUpdate.Allergies"/>
+            </div>
+            <div class="mb-3">
+                <label for="BloodGroup" class="form-label">Krvná skupina</label>
+                <InputText id="BloodGroup" class="form-control" @bind-Value="patientForUpdate.BloodGroup"/>
+            </div>
+            <div class="mb-3">
+                <label for="Medications" class="form-label">Lieky</label>
+                <InputText id="Medications" class="form-control" @bind-Value="patientForUpdate.Medications"/>
+            </div>
+            <div class="mb-3">
+                <label for="Vaccines" class="form-label">Očkovania</label>
+                <InputText id="Vaccines" class="form-control" @bind-Value="patientForUpdate.Vaccines"/>
+            </div>
+            <button type="submit" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#editPatientOffcanvas" aria-controls="editPatientOffcanvas" @onclick="HandleValidSubmit">Uložiť zmeny</button>
+        </EditForm>
     </div>
 </div>
 }
@@ -221,10 +142,11 @@
     [Parameter] public int Id { get; set; }
 
     public PatientDTO? patient;
-    
     public List<RecipeDTO> recipes = new List<RecipeDTO>();
     public List<MedicineDTO> medicines = new List<MedicineDTO>();
     public List<MedicineDTO> selectedMedicines = new List<MedicineDTO>();
+    public PatientForUpdateDTO patientForUpdate  = new PatientForUpdateDTO();
+    
 
     
     protected override async Task OnInitializedAsync()
@@ -233,7 +155,7 @@
         try
         {
             //Nacitanie pacienta
-            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/patients/{Id}/?expandPerson=True");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
@@ -245,7 +167,7 @@
             });
             
             // Načítanie predpisov
-            var recipeRequest = new HttpRequestMessage(HttpMethod.Get, "/api/recipe");
+            var recipeRequest = new HttpRequestMessage(HttpMethod.Get, $"api/recipe/?recipesForPatient={Id}");
             var recipeResponse = await httpClient.SendAsync(recipeRequest, HttpCompletionOption.ResponseHeadersRead);
             recipeResponse.EnsureSuccessStatusCode();
             var recipeResponseString = await recipeResponse.Content.ReadAsStringAsync();
@@ -275,6 +197,15 @@
             {
                 patient.Person = new PersonDTO();
             }
+
+            patientForUpdate.FirstName = patient.Person.FirstName;
+            patientForUpdate.LastName = patient.Person.LastName;
+            patientForUpdate.Telephone = patient.Person.Telephone;
+            patientForUpdate.Allergies = patient.Allergies;
+            patientForUpdate.BloodGroup = patient.BloodGroup;
+            patientForUpdate.Medications = patient.Medications;
+            patientForUpdate.Vaccines = patient.Vaccines;
+            
         }
         catch (HttpRequestException ex)
         {
@@ -287,40 +218,46 @@
     }
     private async Task HandleValidSubmit()
     {
+        Console.WriteLine("Submit");
         var httpClient = httpClientFactory.CreateClient("APIClient");
+        
+        patientForUpdate.BirthNumber = patient.BirthNumber;
+        patientForUpdate.Email = patient.Person.Email;
         try
         {
-            var content = new StringContent(JsonSerializer.Serialize(patient), System.Text.Encoding.UTF8, "application/json");
-            var response = await httpClient.PutAsync($"/api/register/", content);
-            response.EnsureSuccessStatusCode();
-            Console.WriteLine("Údaje boli úspešne aktualizované.");
+            var response = await httpClient.PatchAsJsonAsync($"/api/patients/{Id}", patientForUpdate);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("GG");
+            }
+            else
+            {
+                Console.WriteLine("BG");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Chyba pri aktualizácii údajov: {ex.Message}");
+            Console.WriteLine("Error:" + ex.Message);
         }
     }
 
-    private void ShowRecipeDetails(RecipeDTO recipe)
+    private List<string> GetMedicinesForRecipe(IEnumerable<int> medicineIds)
     {
-        selectedMedicines.Clear();
-        Console.WriteLine($"Loading medicines for recipe ID {recipe.Id}: {string.Join(", ", recipe.Medicines)}");  // Výpis ID liekov
-    
-        foreach (var medId in recipe.Medicines)
+        var medicineNames = new List<string>();
+
+        // Prejdeme cez všetky ID liekov a získame ich názvy
+        foreach (var medId in medicineIds)
         {
             var medicine = medicines.FirstOrDefault(m => m.Id == medId);
             if (medicine != null)
             {
-                Console.WriteLine($"Found medicine: {medicine.Name}");  // Výpis nájdeného lieku
-                selectedMedicines.Add(medicine);
-            }
-            else
-            {
-                Console.WriteLine($"Medicine with ID {medId} not found.");
+                medicineNames.Add(medicine.Name);  // Pridáme názov lieku do zoznamu
             }
         }
-    }
 
+        return medicineNames;  // Vrátime zoznam názvov liekov
+    }
 
 
     

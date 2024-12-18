@@ -1,5 +1,6 @@
 using HospitalManager.API.Services;
 using HospitalManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace HospitalManager.API.Controllers;
 
 [ApiController]
 [Route("api/doctor")]
+[Authorize]
 public class DoctorController : ControllerBase
 {
     private readonly IDoctorService _doctorService;
