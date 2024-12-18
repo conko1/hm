@@ -16,6 +16,8 @@ public class ApiDbContext : DbContext
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<User> Users { get; set; }
     
+    public DbSet<MedicineImport> MedicineImports { get; set; }
+    
     public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options){}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
