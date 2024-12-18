@@ -1,58 +1,45 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">HospitalManager.Client</a>
-    </div>
-</div>
+﻿@using System.Text
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
+@code {
+    private string userClaims = string.Empty;
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi" aria-hidden="true"></span> Domov
-            </NavLink>
-        </div>
-    <div class="nav-item px-3">
-            <NavLink class="nav-link" href="doctors">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Doctors
-            </NavLink>
-        </div>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
+        var userClaimsStringBuilder = new StringBuilder();
+        foreach (var claim in user.Claims)
+        {
+            userClaimsStringBuilder.AppendLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link d-flex align-items-center" href="patients">
-                <span class="bi" aria-hidden="true"></span>
-                <span>Pacienti</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link d-flex align-items-center" href="medicine">
-                <span class="bi" aria-hidden="true"></span>
-                <span>Lieky</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link d-flex align-items-center" href="profile">
-                <span class="bi" aria-hidden="true"></span>
-                <span>Profil</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link d-flex align-items-center" href="patients">
-                <span class="bi bi-person fs-4 me-2" aria-hidden="true"></span>
-                <span>Patients</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="recipes">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipes
-            </NavLink>
-        </div>
+        userClaims = userClaimsStringBuilder.ToString();
+        
+        if (user.IsInRole("Doktor"))
+        {
+            ShowDoctorNavbar = true;
+        }
+        else if (user.IsInRole("Pacient"))
+        {
+            ShowPatientNavbar = true;
+        }
+    }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="profil">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Profile
-            </NavLink>
-        </div>
-    </nav>
+    private bool ShowDoctorNavbar { get; set; }
+    private bool ShowPatientNavbar { get; set; }
+}
+
+<div>
+    @if (ShowDoctorNavbar)
+    {
+        <DoctorNavbar />
+    }
+    else if (ShowPatientNavbar)
+    {
+        <PatientNavbar />
+    }
 </div>
