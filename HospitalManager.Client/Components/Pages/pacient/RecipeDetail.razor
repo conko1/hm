@@ -27,11 +27,13 @@
     </div>
 }
 </div>
-
+<button type="button" class="btn btn-primary w-25 m-4" @onclick="OnCllickOK">OK</button>
 
 @code {
     [Parameter]
     public string Id { get; set; }
+
+    [Inject] private NavigationManager NavigationManager { get; set; }
 
     private Recipe recipes = new Recipe();
     private List<Medicine> medicines = new List<Medicine>();
@@ -69,6 +71,11 @@
         {
             Console.WriteLine($"Unexpected error: {ex.Message}");
         }
+    }
+
+    private void OnCllickOK()
+    {
+        NavigationManager.NavigateTo($"/recipes");
     }
 
     // public class Medicine

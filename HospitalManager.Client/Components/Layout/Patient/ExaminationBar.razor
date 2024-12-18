@@ -1,29 +1,46 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components
+@rendermode InteractiveServer
+
 <div class="card m-3" style="width: 100%; border-radius: 8px; background-color: #FFFAFA; border: 1px solid #007bff;">
     <div class="card-body">
         <div class="d-flex justify-content-between">
-            <h5 class="card-title" style="font-weight: bold; color: #343a40;">@ExaminationName</h5>
+            <h5 class="card-title" style="font-weight: bold; color: #343a40;">Diagnóza: @Diagnosis</h5>
             <span class="badge bg-secondary" style="align-self: center;">@State</span>
         </div>
 
-        <p class="card-text text-muted" style="margin-bottom: 8px;">Last updated: @Edited</p>
-        <p class="card-text">Creted: @Created</p>
+        <p class="card-text text-muted" style="margin-bottom: 8px;">Symptómy: @Symptoms</p>
+        @* <p class="card-text text-muted" style="margin-bottom: 8px;">Liečba: @Tretment</p> *@
+        <p class="card-text">Dátum vyšetrenia: @ExaminationDate</p>
 
         <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-link text-primary">Detail</a>
+            <button class="btn btn-link text-primary" @onclick="(() => OnClickDetail(ExaminationId))">Detail</button>
         </div>
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public string ExaminationName { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private void OnClickDetail(int id)
+    {
+        Console.WriteLine("navigujem");
+        NavigationManager.NavigateTo($"/examinations/detail={id}");
+    }
 
     [Parameter]
-    public DateTime Edited { get; set; }
+    public int ExaminationId { get; set; }
 
     [Parameter]
-    public DateTime Created { get; set; }
+    public string Symptoms { get; set; }
+
+    [Parameter]
+    public string Diagnosis { get; set; }
+
+    [Parameter]
+    public string Tretment { get; set; }
+
+    [Parameter]
+    public DateTime ExaminationDate { get; set; }
 
     [Parameter]
     public string State { get; set; }

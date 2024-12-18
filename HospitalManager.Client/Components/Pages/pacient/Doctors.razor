@@ -28,20 +28,19 @@
                 <div class="d-flex align-items-center">
                     <i class="bi bi-person-circle text-primary fs-3 me-3"></i>
                     <div>
-                        <h5 class="card-title fw-bold mb-1">@doctor.BirthNumber</h5>
+                        <h5 class="card-title fw-bold mb-1">MUDr. @doctor.BirthNumber @doctor.BirthNumber @* @doctor.Person.FirstName @doctor.Person.LastName *@</h5>
                         <p class="mb-1">
                             <i class="bi bi-person text-primary"></i>
                             <span>@doctor.Specialization</span>
                         </p>
                         <p class="mb-1">
-                            <i class="bi bi-person text-primary"></i>
-                            <span>@doctor.Id  @*  doctor.Person.Telephone *@</span>
+                            <i class="bi bi-telephone text-primary"></i>
+                            <span>@doctor.Id  @*  doctor.Person.Telephone *@ </span>
                         </p>
                         <p class="mb-1">
-                            <i class="bi bi-geo-alt text-primary"></i>
+                            <i class="bi bi-envelope text-primary"></i>
                             <span>@doctor.Id  @* doctor.Person.Email *@</span>
                         </p>
-                        @* <p class="text-muted">Naposledny navštívené: @doctor.LastVisited.ToString("dd. MM. yyyy")</p> *@
                     </div>
                 </div>
                 <div class="text-end">
@@ -59,10 +58,6 @@
 
     private List<Doctor> doctors = new List<Doctor>();
     private List<Doctor> filteredDoctors = new List<Doctor>();
-    // {
-    //     new Doctor { Department = "Eye clinic", FirstName = "MUDR. mario vydra", Specialization = "chirurg", Phone = "023566", LastVisited = new DateTime(2024, 12, 13) }
-    // };
-
 
     private void Search()
     {
@@ -101,7 +96,6 @@
 
             Console.WriteLine($"Fetched {doctors.Count} doctors.");
 
-            // Debugging výpis
             foreach (var item in doctors)
             {
                 Console.WriteLine($"ID: {item.Id}");

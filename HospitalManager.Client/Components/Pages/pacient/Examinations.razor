@@ -1,28 +1,136 @@
 ﻿@page "/examinations"
+@page "/examinations={id}"
 @attribute [Authorize(Roles = "Pacient")]
 @using HospitalManager.Client.Components.Layout.Patient
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@rendermode InteractiveServer
 
-<h1 class="text-primary fw-bold">Moje aktívne požiadavky (pocet)</h1>
-<p class="text-muted">
-    Tu nájdete prehľad Vašich doposiaľ zadaných požiadaviek v tejto ordinácii. Kliknutím na požiadavku zobrazíte jej detaily a prebiehajúcu komunikáciu.
-</p>
+@inject IHttpClientFactory httpClientFactory
 
-<button type="button" class="btn btn-success m-3" @onClick="OnCreateNewRequestClick">Vytvoriť novú požiadavku</button>
+<h1 class="text-primary fw-bold">Môj zoznam vyšetrení (@examinations.Count)</h1>
 
-<h4 class="text-primary fw-bold">Vyriešené požiadavky</h4>
-<p>Tu nájdete prehľad minulých požiadaviek v tejto ordinácii. V detaile si zobrazíte podrobnosti.</p>
+<div class="dropdown m-3">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Vyberte lekára, ktorý vás vyšetroval.
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li class="dropdown-item" @onclick="() => OnClickSelectDoctor(-1)">žiadny</li>
+        @foreach (var doctorId in AllExaminations.Select(s => s.DoctorId).Distinct().ToList())
+        {
+            Console.WriteLine("doctor id" + doctorId);
+            var doctor = doctors.FirstOrDefault(c => c.Id == doctorId);
+            if (doctor != null)
+            {
+                <li class="dropdown-item" @onclick="() => OnClickSelectDoctor(doctorId)">@doctor.BirthNumber @* @doctor.Person.FirstName @doctor.Person.LastName *@</li>
+            }
+            else
+            {
+                <li><a class="dropdown-item" href="#">N/A</a></li>  <!-- Zobrazí 'N/A' ak lekár alebo person je null -->
+            }
+            @* <li><a class="dropdown-item" href="#">@doctors.Where(c => c.Id == doctorId).Select(s => s.Person.BirthNumber).FirstOrDefault()</a></li> *@
+        }
+        
+    </ul>
+</div>
 
-@for (int i = 0; i < 3; i++)
+<p>Tu nájdete prehľad Vašich vyšetrení. Kliknutím na detail zobrazíte detaily vyšetrenia.</p>
+
+@foreach (var examination in examinations)
 {
-    <ExaminationBar ExaminationName="konzultovat vysledky"></ExaminationBar>
+    <ExaminationBar ExaminationId="@examination.Id" Diagnosis="@examination.Diagnosis" Tretment="@examination.Treatment" Symptoms="@examination.Symptoms" ExaminationDate="@examination.ExaminationDate"></ExaminationBar>
 }
 
 
 
 @code {
-    private void OnCreateNewRequestClick()
-    {
+    [Parameter]
+    public string Id { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
 
+    private List<Examination> AllExaminations = new();
+    private List<Examination> examinations = new();
+    private List<Doctors.Doctor> doctors = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("APIClient");
+
+        try
+        {
+
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/examination");
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+
+            AllExaminations = JsonSerializer.Deserialize<List<Examination>>(responseString);
+
+
+            var requestD = new HttpRequestMessage(HttpMethod.Get, "/api/doctor");
+            var responseD = await httpClient.SendAsync(requestD, HttpCompletionOption.ResponseHeadersRead);
+            responseD.EnsureSuccessStatusCode();
+            var responseStringD = await responseD.Content.ReadAsStringAsync();
+            Console.WriteLine(responseStringD);
+
+            doctors = JsonSerializer.Deserialize<List<Doctors.Doctor>>(responseStringD);
+
+
+            if (Id is not null) //Id je int
+            {
+                examinations = AllExaminations.Where(c => c.DoctorId == int.Parse(Id)).ToList();
+            }
+            else
+            {
+                examinations = AllExaminations;
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    private void OnClickSelectDoctor(int doctorId)
+    {
+        if (doctorId < 0)
+            NavigationManager.NavigateTo($"/examinations");
+        else
+            NavigationManager.NavigateTo($"/examinations={doctorId}");
+    }
+
+    public class Examination
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("doctorId")]
+        public int DoctorId { get; set; }
+
+        [JsonPropertyName("patientId")]
+        public int PatientId { get; set; }
+
+        [JsonPropertyName("examinationDate")]
+        public DateTime ExaminationDate { get; set; }
+
+        [JsonPropertyName("symptoms")]
+        public string? Symptoms { get; set; }
+
+        [JsonPropertyName("diagnosis")]
+        public string? Diagnosis { get; set; }
+
+        [JsonPropertyName("treatment")]
+        public string? Treatment { get; set; }
+
+        [JsonPropertyName("notes")]
+        public string? Notes { get; set; }
     }
 }
